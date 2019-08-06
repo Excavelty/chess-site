@@ -1,13 +1,19 @@
 export class Piece
 {
-    constructor(cords)
+    constructor(square)
     {
-        this.cords = cords;
+        this.square = square;
+        this.cords = this.square.cords;
     }
 
     move(newCords)
     {
         this.cords = newCords;
         return true;
+    }
+
+    cleanIconFromPreviousSquare(oldSquareHTMLHandle)
+    {
+        oldSquareHTMLHandle.textContent = '';
     }
 }

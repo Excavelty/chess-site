@@ -1,6 +1,6 @@
 import {Piece} from './Piece.js';
 
-export class Knight extends Piece
+export class King extends Piece
 {
 
 }

@@ -1,4 +1,11 @@
 import {Square} from './Square.js';
+import {King} from './King.js';
+import {Queen} from './Queen.js';
+import {Bishop} from './Bishop.js';
+import {Knight} from './Knight.js';
+import {Pawn} from './Pawn.js';
+import {Rook} from './Rook.js';
+
 export class Game
 {
     constructor(boardContainer)
@@ -39,7 +46,12 @@ export class Game
 
     initializePieces()
     {
-        this.preparePawns()
+        this.pieces = [];
+        this.pieces.push(this.preparePawns());
+        this.pieces.push(this.prepareRooks());
+        this.pieces.push(this.prepareKnights());
+        this.pieces.push(this.prepareKings());
+        this.pieces.push(this.prepareQueens());
     }
 
     preparePawns()
@@ -59,25 +71,56 @@ export class Game
 
     prepareRooks()
     {
-        this.rooks = [
+        return [
             new Rook(this.squares[0][0], 'white'),
-            new Rook(this.squares[0][7], 'white'),
-            new Rook(this.squares[7][0], 'black'),
+            new Rook(this.squares[7][0], 'white'),
+            new Rook(this.squares[0][7], 'black'),
             new Rook(this.squares[7][7], 'black')
         ];
     }
 
     prepareKnights()
     {
-        this.knights = [
+        return [
             new Knight(this.squares[1][1], 'white'),
-            new Knight(this.squares[1][6], 'white'),
-            new Knight(this.squares[1][1], 'black'),
-            new Knight(this.squares[1][6], 'black')
+            new Knight(this.squares[6][1], 'white'),
+            new Knight(this.squares[1][7], 'black'),
+            new Knight(this.squares[6][7], 'black')
+        ];
+    }
+
+    prepareBishops()
+    {
+        return [
+            new Bishop(this.squares[2][1], 'white'),
+            new Bishop(this.squares[5][1], 'white'),
+            new Bishop(this.squares[2][7], 'black'),
+            new Bishop(this.squares[5][7], 'black')
+        ];
+    }
+
+    prepareKings()
+    {
+        return [
+            new King(this.squares[4][0], 'white'),
+            new King(this.squares[4][7], 'black')
+        ];
+    }
+
+    prepareQueens()
+    {
+        return [
+            new Queen(this.squares[3][0], 'white'),
+            new Queen(this.squares[3][7], 'black')
         ];
     }
 
     updateLogic()
+    {
+
+    }
+
+    updateDrawings()
     {
 
     }

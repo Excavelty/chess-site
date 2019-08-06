@@ -1,6 +1,5 @@
 <template>
     <div class="boardContainer mx-auto">
-
     </div>
 </template>
 
@@ -10,6 +9,7 @@
         mounted() {
             let boardContainer = document.querySelector('.boardContainer');
             let game = new Game(boardContainer);
+            game.initializePieces();
             //while(game.status != false)
             //{
               //  game.updateLogic();
@@ -20,8 +20,8 @@
 
 <style scoped>
 .boardContainer {
-    width: 48vw;
-    height: 48vw;
+    width: 72vh;
+    height: 72vh;
 }
 .square {
     border: 1px solid #ddd;
