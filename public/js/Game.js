@@ -49,6 +49,7 @@ export class Game
         this.pieces = [];
         this.pieces.push(this.preparePawns());
         this.pieces.push(this.prepareRooks());
+        this.pieces.push(this.prepareBishops());
         this.pieces.push(this.prepareKnights());
         this.pieces.push(this.prepareKings());
         this.pieces.push(this.prepareQueens());
@@ -82,8 +83,8 @@ export class Game
     prepareKnights()
     {
         return [
-            new Knight(this.squares[1][1], 'white'),
-            new Knight(this.squares[6][1], 'white'),
+            new Knight(this.squares[1][0], 'white'),
+            new Knight(this.squares[6][0], 'white'),
             new Knight(this.squares[1][7], 'black'),
             new Knight(this.squares[6][7], 'black')
         ];
@@ -92,8 +93,8 @@ export class Game
     prepareBishops()
     {
         return [
-            new Bishop(this.squares[2][1], 'white'),
-            new Bishop(this.squares[5][1], 'white'),
+            new Bishop(this.squares[2][0], 'white'),
+            new Bishop(this.squares[5][0], 'white'),
             new Bishop(this.squares[2][7], 'black'),
             new Bishop(this.squares[5][7], 'black')
         ];

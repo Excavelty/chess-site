@@ -52688,10 +52688,17 @@ var Bishop =
 function (_Piece) {
   _inherits(Bishop, _Piece);
 
-  function Bishop() {
+  function Bishop(square, color) {
+    var _this;
+
     _classCallCheck(this, Bishop);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Bishop).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Bishop).call(this, square, color));
+    if (color === 'white') _this.pieceIcon = '♗';else _this.pieceIcon = '♝';
+
+    _this.updateDrawings(_this.square);
+
+    return _this;
   }
 
   return Bishop;
@@ -52772,6 +52779,7 @@ function () {
       this.pieces = [];
       this.pieces.push(this.preparePawns());
       this.pieces.push(this.prepareRooks());
+      this.pieces.push(this.prepareBishops());
       this.pieces.push(this.prepareKnights());
       this.pieces.push(this.prepareKings());
       this.pieces.push(this.prepareQueens());
@@ -52797,12 +52805,12 @@ function () {
   }, {
     key: "prepareKnights",
     value: function prepareKnights() {
-      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[1][1], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[6][1], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[6][7], 'black')];
+      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[6][7], 'black')];
     }
   }, {
     key: "prepareBishops",
     value: function prepareBishops() {
-      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[2][1], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[5][1], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[5][7], 'black')];
+      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[5][7], 'black')];
     }
   }, {
     key: "prepareKings",
@@ -52858,10 +52866,18 @@ var King =
 function (_Piece) {
   _inherits(King, _Piece);
 
-  function King() {
+  function King(square, color) {
+    var _this;
+
     _classCallCheck(this, King);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(King).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(King).call(this, square, color));
+    if (color === 'white') _this.pieceIcon = '♔';else _this.pieceIcon = '♚';
+
+    _this.updateDrawings(_this.square);
+
+    _this.allowCastle = false;
+    return _this;
   }
 
   return King;
@@ -52900,10 +52916,17 @@ var Knight =
 function (_Piece) {
   _inherits(Knight, _Piece);
 
-  function Knight() {
+  function Knight(square, color) {
+    var _this;
+
     _classCallCheck(this, Knight);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Knight).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Knight).call(this, square, color));
+    if (color === 'white') _this.pieceIcon = '♘';else _this.pieceIcon = '♞';
+
+    _this.updateDrawings(_this.square);
+
+    return _this;
   }
 
   return Knight;
@@ -52925,10 +52948,6 @@ __webpack_require__.r(__webpack_exports__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
@@ -52959,16 +52978,6 @@ function (_Piece) {
     _this.allowDoubleMove = true;
     return _this;
   }
-
-  _createClass(Pawn, [{
-    key: "updateDrawings",
-    value: function updateDrawings(oldSquare) {
-      var oldSquareHTMLHandle = document.querySelector('#square' + oldSquare.cords.cordX + oldSquare.cords.cordY);
-      this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
-      var currentSquareHTMLHandle = document.querySelector('#square' + this.square.cords.cordX + this.square.cords.cordY);
-      currentSquareHTMLHandle.textContent = this.pieceIcon;
-    }
-  }]);
 
   return Pawn;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
@@ -53006,6 +53015,14 @@ function () {
     value: function move(newCords) {
       this.cords = newCords;
       return true;
+    }
+  }, {
+    key: "updateDrawings",
+    value: function updateDrawings(oldSquare) {
+      var oldSquareHTMLHandle = document.querySelector('#square' + oldSquare.cords.cordX + oldSquare.cords.cordY);
+      this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
+      var currentSquareHTMLHandle = document.querySelector('#square' + this.square.cords.cordX + this.square.cords.cordY);
+      currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
   }, {
     key: "cleanIconFromPreviousSquare",
@@ -53050,10 +53067,17 @@ var Queen =
 function (_Piece) {
   _inherits(Queen, _Piece);
 
-  function Queen() {
+  function Queen(square, color) {
+    var _this;
+
     _classCallCheck(this, Queen);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Queen).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Queen).call(this, square, color));
+    if (color === 'white') _this.pieceIcon = '♕';else _this.pieceIcon = '♛';
+
+    _this.updateDrawings(_this.square);
+
+    return _this;
   }
 
   return Queen;
@@ -53092,10 +53116,18 @@ var Rook =
 function (_Piece) {
   _inherits(Rook, _Piece);
 
-  function Rook() {
+  function Rook(square, color) {
+    var _this;
+
     _classCallCheck(this, Rook);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Rook).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Rook).call(this, square, color));
+    if (color === 'white') _this.pieceIcon = '♖';else _this.pieceIcon = '♜';
+
+    _this.updateDrawings(_this.square);
+
+    _this.allowCastle = false;
+    return _this;
   }
 
   return Rook;
