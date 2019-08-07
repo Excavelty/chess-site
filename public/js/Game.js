@@ -1,4 +1,5 @@
 import {Square} from './Square.js';
+import {SquareInput} from './SquareInput.js';
 import {King} from './King.js';
 import {Queen} from './Queen.js';
 import {Bishop} from './Bishop.js';
@@ -53,6 +54,17 @@ export class Game
         this.pieces.push(this.prepareKnights());
         this.pieces.push(this.prepareKings());
         this.pieces.push(this.prepareQueens());
+        this.pieces = this.flatArray(this.pieces);
+    }
+
+    initializeSquareInput()
+    {
+        this.squareInputs = [];
+        for(let i = 0; i < this.squaresNum; ++i)
+        {
+            for(let j = 0; j < this.squaresNum; ++j)
+              this.squareInputs.push(new SquareInput(this.squares[i][j]), this.pieces);
+        }
     }
 
     preparePawns()
@@ -68,6 +80,14 @@ export class Game
         {
             this.pawns[i + this.squaresNum] = new Pawn(this.squares[i][6], 'black');//for seventh line in fact
         }
+
+        return this.pawns;
+    }
+
+    flatArray(arr)
+    {
+        return arr.reduce((acc, val) => acc.concat(val), []);
+        //thanks to: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
     }
 
     prepareRooks()

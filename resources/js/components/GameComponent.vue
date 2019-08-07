@@ -10,6 +10,7 @@
             let boardContainer = document.querySelector('.boardContainer');
             let game = new Game(boardContainer);
             game.initializePieces();
+            game.initializeSquareInput();
             //while(game.status != false)
             //{
               //  game.updateLogic();

@@ -3,23 +3,39 @@ export class Square
     constructor(cords)
     {
         this.cords = cords;
+        switch(this.cords.cordY)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            {
+                this.containingPiece = true;
+            } break;
+            default: this.containingPiece = false;
+        }
         this.squareRep = document.createElement('div');
         this.squareRep.id = 'square' + this.cords.cordX + this.cords.cordY;
         this.squareRep.style.backgroundColor = this.chooseSquareColor();
         this.squareRep.style.width = '9vh';
         this.squareRep.style.height = '9vh';
         this.squareRep.style.float = 'left';
-        this.squareRep.style.fontSize = '7vh';
+        this.squareRep.style.fontSize = '7.6vh';
         this.squareRep.style.textAlign = 'center';
         //this.squareRep.style.marginLeft = 4 * (this.cords.cordX.charCodeAt(0) - 97) + 'vw';
-        const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
-        this.squareRep.append(text);
+        //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
+        //this.squareRep.append(text);
         this.squareRep.classList += 'square';
     }
 
     getHTMLRepresentation()
     {
         return this.squareRep;
+    }
+
+    getSquareHandle()
+    {
+        return document.querySelector('#'+this.squareRep.id);
     }
 
     chooseSquareColor()

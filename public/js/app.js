@@ -1708,7 +1708,8 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var boardContainer = document.querySelector('.boardContainer');
     var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer);
-    game.initializePieces(); //while(game.status != false)
+    game.initializePieces();
+    game.initializeSquareInput(); //while(game.status != false)
     //{
     //  game.updateLogic();
     //}
@@ -52717,17 +52718,19 @@ function (_Piece) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Game", function() { return Game; });
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
-/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
-/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
-/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
-/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
-/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
-/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
+/* harmony import */ var _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SquareInput.js */ "./public/js/SquareInput.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -52783,6 +52786,18 @@ function () {
       this.pieces.push(this.prepareKnights());
       this.pieces.push(this.prepareKings());
       this.pieces.push(this.prepareQueens());
+      this.pieces = this.flatArray(this.pieces);
+    }
+  }, {
+    key: "initializeSquareInput",
+    value: function initializeSquareInput() {
+      this.squareInputs = [];
+
+      for (var i = 0; i < this.squaresNum; ++i) {
+        for (var j = 0; j < this.squaresNum; ++j) {
+          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j]), this.pieces);
+        }
+      }
     }
   }, {
     key: "preparePawns",
@@ -52790,37 +52805,46 @@ function () {
       this.pawns = [];
 
       for (var i = 0; i < this.squaresNum; ++i) {
-        this.pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_5__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
+        this.pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_6__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
       }
 
       for (var _i = 0; _i < this.squaresNum; ++_i) {
-        this.pawns[_i + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_5__["Pawn"](this.squares[_i][6], 'black'); //for seventh line in fact
+        this.pawns[_i + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_6__["Pawn"](this.squares[_i][6], 'black'); //for seventh line in fact
       }
+
+      return this.pawns;
+    }
+  }, {
+    key: "flatArray",
+    value: function flatArray(arr) {
+      return arr.reduce(function (acc, val) {
+        return acc.concat(val);
+      }, []); //thanks to: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
     }
   }, {
     key: "prepareRooks",
     value: function prepareRooks() {
-      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_6__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_6__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_6__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_6__["Rook"](this.squares[7][7], 'black')];
+      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_7__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_7__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_7__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_7__["Rook"](this.squares[7][7], 'black')];
     }
   }, {
     key: "prepareKnights",
     value: function prepareKnights() {
-      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_4__["Knight"](this.squares[6][7], 'black')];
+      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_5__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_5__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_5__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_5__["Knight"](this.squares[6][7], 'black')];
     }
   }, {
     key: "prepareBishops",
     value: function prepareBishops() {
-      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_3__["Bishop"](this.squares[5][7], 'black')];
+      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_4__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_4__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_4__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_4__["Bishop"](this.squares[5][7], 'black')];
     }
   }, {
     key: "prepareKings",
     value: function prepareKings() {
-      return [new _King_js__WEBPACK_IMPORTED_MODULE_1__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_1__["King"](this.squares[4][7], 'black')];
+      return [new _King_js__WEBPACK_IMPORTED_MODULE_2__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_2__["King"](this.squares[4][7], 'black')];
     }
   }, {
     key: "prepareQueens",
     value: function prepareQueens() {
-      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_2__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_2__["Queen"](this.squares[3][7], 'black')];
+      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_3__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_3__["Queen"](this.squares[3][7], 'black')];
     }
   }, {
     key: "updateLogic",
@@ -53003,25 +53027,31 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Piece =
 /*#__PURE__*/
 function () {
-  function Piece(square) {
+  function Piece(square, color) {
     _classCallCheck(this, Piece);
 
     this.square = square;
+    this.color = color;
     this.cords = this.square.cords;
+    this.isOwned = false;
   }
 
   _createClass(Piece, [{
     key: "move",
-    value: function move(newCords) {
-      this.cords = newCords;
+    value: function move(newSquare) {
+      this.square = newSquare;
       return true;
     }
   }, {
     key: "updateDrawings",
     value: function updateDrawings(oldSquare) {
-      var oldSquareHTMLHandle = document.querySelector('#square' + oldSquare.cords.cordX + oldSquare.cords.cordY);
+      var oldSquareHTMLHandle = oldSquare.getSquareHandle(); ///document.querySelector('#square'+oldSquare.cords.cordX
+      //+oldSquare.cords.cordY);
+
       this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
-      var currentSquareHTMLHandle = document.querySelector('#square' + this.square.cords.cordX + this.square.cords.cordY);
+      var currentSquareHTMLHandle = this.square.getSquareHandle(); //this.square.getSquareHandle();//document.querySelector('#square'
+      //+this.square.cords.cordX+this.square.cords.cordY);
+
       currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
   }, {
@@ -53158,17 +53188,32 @@ function () {
     _classCallCheck(this, Square);
 
     this.cords = cords;
+
+    switch (this.cords.cordY) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        {
+          this.containingPiece = true;
+        }
+        break;
+
+      default:
+        this.containingPiece = false;
+    }
+
     this.squareRep = document.createElement('div');
     this.squareRep.id = 'square' + this.cords.cordX + this.cords.cordY;
     this.squareRep.style.backgroundColor = this.chooseSquareColor();
     this.squareRep.style.width = '9vh';
     this.squareRep.style.height = '9vh';
     this.squareRep.style["float"] = 'left';
-    this.squareRep.style.fontSize = '7vh';
+    this.squareRep.style.fontSize = '7.6vh';
     this.squareRep.style.textAlign = 'center'; //this.squareRep.style.marginLeft = 4 * (this.cords.cordX.charCodeAt(0) - 97) + 'vw';
+    //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
+    //this.squareRep.append(text);
 
-    var text = document.createTextNode(this.cords.cordX + this.cords.cordY);
-    this.squareRep.append(text);
     this.squareRep.classList += 'square';
   }
 
@@ -53176,6 +53221,11 @@ function () {
     key: "getHTMLRepresentation",
     value: function getHTMLRepresentation() {
       return this.squareRep;
+    }
+  }, {
+    key: "getSquareHandle",
+    value: function getSquareHandle() {
+      return document.querySelector('#' + this.squareRep.id);
     }
   }, {
     key: "chooseSquareColor",
@@ -53217,6 +53267,116 @@ function () {
   }]);
 
   return Square;
+}();
+
+/***/ }),
+
+/***/ "./public/js/SquareInput.js":
+/*!**********************************!*\
+  !*** ./public/js/SquareInput.js ***!
+  \**********************************/
+/*! exports provided: SquareInput */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SquareInput", function() { return SquareInput; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var SquareInput =
+/*#__PURE__*/
+function () {
+  function SquareInput(square, pieces) {
+    _classCallCheck(this, SquareInput);
+
+    this.square = square;
+    this.pieces = pieces;
+    this.prepareSquareClick();
+  }
+
+  _createClass(SquareInput, [{
+    key: "prepareSquareClick",
+    value: function prepareSquareClick() {
+      var _this = this;
+
+      var squareHandle = this.square.getSquareHandle();
+      var self = this;
+      squareHandle.addEventListener('click', function () {
+        _this.squareClick();
+      });
+    }
+  }, {
+    key: "squareClick",
+    value: function squareClick() {
+      console.log(this);
+      var containedPiece = this.checkIfSquareContainingPiece();
+      var ownedPiece = this.checkIfPieceOwned();
+
+      if (containedPiece !== null) {
+        if (ownedPiece !== null) {
+          var sameColors = this.checkIfSameColors(ownedPiece, containedPiece);
+          if (sameColors) this.ownPiece(containedPiece);else {
+            this.takePiece(containedPiece);
+            this.putPiece(ownedPiece);
+          }
+        } else {
+          this.ownPiece(containedPiece);
+        }
+      } else {
+        if (isOwned) {
+          this.putPiece(ownedPiece);
+        }
+      }
+    }
+  }, {
+    key: "checkIfSquareContainingPiece",
+    value: function checkIfSquareContainingPiece() {
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i].square === this.square) return i;
+      }
+
+      return null;
+    }
+  }, {
+    key: "ownPiece",
+    value: function ownPiece(piece) {
+      for (var i = 0; i < piece.length; ++i) {
+        if (piece.square === this.square) piece.isOwned = true;
+      }
+    }
+  }, {
+    key: "checkIfPieceOwned",
+    value: function checkIfPieceOwned() {
+      for (var i = 0; i < piece.length; ++i) {
+        if (this.pieces[i].isOwned) return i;
+      }
+
+      return null;
+    }
+  }, {
+    key: "checkIfSameColors",
+    value: function checkIfSameColors(ownedPiece, containedPiece) {
+      return pieces[ownedPiece].color === pieces[containedPiece].color;
+    }
+  }, {
+    key: "putPiece",
+    value: function putPiece(pieceIndex) {
+      var oldSquare = this.pieces[pieceIndex].square;
+      this.pieces[pieceIndex].move(square);
+      this.pieces[pieceIndex].updateDrawings(square);
+    }
+  }, {
+    key: "takePiece",
+    value: function takePiece(pieceIndex) {
+      this.pieces.splice(pieceIndex);
+    }
+  }]);
+
+  return SquareInput;
 }();
 
 /***/ }),
