@@ -1,3 +1,5 @@
+//thanks to: https://developer.mozilla.org/pl/profiles/raszta
+//author of flat array snippet: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
 import {Square} from './Square.js';
 import {SquareInput} from './SquareInput.js';
 import {King} from './King.js';
@@ -84,10 +86,9 @@ export class Game
         return this.pawns;
     }
 
-    flatArray(arr)
+    flatArray(array)
     {
-        return arr.reduce((acc, val) => acc.concat(val), []);
-        //thanks to: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+        return array.reduce((acc, val) => acc.concat(val), []);
     }
 
     prepareRooks()

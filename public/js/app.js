@@ -52731,6 +52731,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+//thanks to: https://developer.mozilla.org/pl/profiles/raszta
+//author of flat array snippet: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
 
 
 
@@ -52816,10 +52818,10 @@ function () {
     }
   }, {
     key: "flatArray",
-    value: function flatArray(arr) {
-      return arr.reduce(function (acc, val) {
+    value: function flatArray(array) {
+      return array.reduce(function (acc, val) {
         return acc.concat(val);
-      }, []); //thanks to: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+      }, []);
     }
   }, {
     key: "prepareRooks",
