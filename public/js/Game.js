@@ -22,6 +22,9 @@ export class Game
           this.boardContainer = boardContainer;
           const boardContent = this.initializeBoard();
           this.boardContainer.innerHTML = boardContent;
+          for(let i = 0; i < this.squaresNum; ++i)
+            for(let j = 0; j < this.squaresNum; ++j)
+                this.squares[i][j].attachCursorEvent();
     }
 
     initializeBoard()
@@ -49,14 +52,14 @@ export class Game
 
     initializePieces()
     {
-        this.pieces = [];
-        this.pieces.push(this.preparePawns());
-        this.pieces.push(this.prepareRooks());
-        this.pieces.push(this.prepareBishops());
-        this.pieces.push(this.prepareKnights());
-        this.pieces.push(this.prepareKings());
-        this.pieces.push(this.prepareQueens());
-        this.pieces = this.flatArray(this.pieces);
+          this.pieces = [];
+          this.pieces.push(this.preparePawns());
+          this.pieces.push(this.prepareRooks());
+          this.pieces.push(this.prepareBishops());
+          this.pieces.push(this.prepareKnights());
+          this.pieces.push(this.prepareKings());
+          this.pieces.push(this.prepareQueens());
+          this.pieces = this.flatArray(this.pieces);
     }
 
     initializeSquareInput()
@@ -65,25 +68,29 @@ export class Game
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)
-              this.squareInputs.push(new SquareInput(this.squares[i][j]), this.pieces);
+            {
+                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces));
+            }
         }
     }
 
     preparePawns()
     {
-        this.pawns = [];
+        let pawns = [];
 
         for(let i = 0; i < this.squaresNum; ++i)
         {
-            this.pawns[i] = new Pawn(this.squares[i][1], 'white');//for second line in fact
+            pawns[i] = new Pawn(this.squares[i][1], 'white');//for second line in fact
         }
 
         for(let i = 0; i < this.squaresNum; ++i)
         {
-            this.pawns[i + this.squaresNum] = new Pawn(this.squares[i][6], 'black');//for seventh line in fact
+            pawns[i + this.squaresNum] = new Pawn(this.squares[i][6], 'black');//for seventh line in fact
         }
 
-        return this.pawns;
+
+        console.log(pawns);
+        return pawns;
     }
 
     flatArray(array)

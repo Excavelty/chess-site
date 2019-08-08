@@ -27,4 +27,8 @@
 .square {
     border: 1px solid #ddd;
 }
+
+.square:hover {
+    cursour: pointer;
+}
 </style>

@@ -16,6 +16,7 @@ export class Square
         }
         this.squareRep = document.createElement('div');
         this.squareRep.id = 'square' + this.cords.cordX + this.cords.cordY;
+        this.colorDefault = this.chooseSquareColor();
         this.squareRep.style.backgroundColor = this.chooseSquareColor();
         this.squareRep.style.width = '9vh';
         this.squareRep.style.height = '9vh';
@@ -36,6 +37,14 @@ export class Square
     getSquareHandle()
     {
         return document.querySelector('#'+this.squareRep.id);
+    }
+
+    attachCursorEvent()
+    {
+        const squareHandle = this.getSquareHandle();
+        squareHandle.addEventListener('mouseover', function(){
+            this.style.cursor = 'pointer';
+        });
     }
 
     chooseSquareColor()
@@ -74,5 +83,11 @@ export class Square
                 default: return emptyDark;
             }
         }
+    }
+
+    changeColor(color = this.colorDefault)
+    {
+        const squareHandle = this.getSquareHandle();
+        squareHandle.style.backgroundColor = color;
     }
 }
