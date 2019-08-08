@@ -53232,7 +53232,7 @@ function () {
     value: function chooseSquareColor() {
       var emptyLight = '#ffffff'; //'#DEB887';
 
-      var emptyDark = '#B0E0E6'; //'#DEB887';//'#8B4513';
+      var emptyDark = '#DEB887'; //'#B0E0E6';//'#8B4513';
 
       if (this.cords.cordY % 2 === 1) {
         switch (this.cords.cordX) {

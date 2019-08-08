@@ -41,7 +41,7 @@ export class Square
     chooseSquareColor()
     {
         const emptyLight = '#ffffff';//'#DEB887';
-        const emptyDark = '#B0E0E6';//'#DEB887';//'#8B4513';
+        const emptyDark = '#DEB887';//'#B0E0E6';//'#8B4513';
 
         if(this.cords.cordY % 2 === 1)
         {
