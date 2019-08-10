@@ -17,7 +17,7 @@ export class Square
         this.squareRep = document.createElement('div');
         this.squareRep.id = 'square' + this.cords.cordX + this.cords.cordY;
         this.colorDefault = this.chooseSquareColor();
-        this.squareRep.style.backgroundColor = this.chooseSquareColor();
+        this.squareRep.style.backgroundColor = this.colorDefault;//this.chooseSquareColor();
         this.squareRep.style.width = '9vh';
         this.squareRep.style.height = '9vh';
         this.squareRep.style.float = 'left';
@@ -50,7 +50,7 @@ export class Square
     chooseSquareColor()
     {
         const emptyLight = '#ffffff';//'#DEB887';
-        const emptyDark = '#DEB887';//'#B0E0E6';//'#8B4513';
+        const emptyDark = '#D3D3D3';//'#DEB887';//'#B0E0E6';//'#8B4513';
 
         if(this.cords.cordY % 2 === 1)
         {
@@ -83,6 +83,11 @@ export class Square
                 default: return emptyDark;
             }
         }
+    }
+
+    getSquareByCords(cords)
+    {
+        return this.squares[cords.cordX.charCodeAt(0) - 97][cords.cordY - 1];
     }
 
     changeColor(color = this.colorDefault)

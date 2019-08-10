@@ -1,11 +1,11 @@
 import {Square} from './Square.js';
-import {SquareInput} from './SquareInput.js';
 
 export class SpecialMoves
 {
-    castle(rookCords)
+    static castle(rook, newSquare)
     {
-        const rookSquare = Square.getByCords(rookCords);
-        const squareInput = SquareInput.getBySquare();//think of it somehow;
+        const oldSquare = rook.square;
+        rook.move(newSquare);
+        rook.updateDrawings(oldSquare);
     }
 }

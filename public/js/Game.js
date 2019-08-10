@@ -69,7 +69,7 @@ export class Game
         {
             for(let j = 0; j < this.squaresNum; ++j)
             {
-                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces));
+                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares));
             }
         }
     }

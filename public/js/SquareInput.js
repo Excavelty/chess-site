@@ -1,11 +1,13 @@
 import {SpecialMoves} from './SpecialMoves.js';
 import {King} from './King.js';
+import {Square} from './Square.js';
 
 export class SquareInput
 {
-    constructor(square, pieces)
+    constructor(square, pieces, squares)
     {
         this.square = square;
+        this.squares = squares;
         this.pieces = pieces;
         this.prepareSquareClick();
     }
@@ -28,7 +30,7 @@ export class SquareInput
 
         if(containedPiece !== null)
         {
-            console.log('conaining');
+
             if(ownedPiece !== null)
             {
                 const sameColors = this.checkIfSameColors(ownedPiece, containedPiece);
@@ -47,7 +49,6 @@ export class SquareInput
 
             else
             {
-                console.log('owningUnowned');
                 this.ownPiece(containedPiece);
             }
         }
@@ -56,34 +57,48 @@ export class SquareInput
         {
             if(ownedPiece !== null)
             {
-                /*if(this.pieces[ownedPiece] instanceof King)
+                if(this.pieces[ownedPiece] instanceof King)
                 {
-                    console.log(this.pieces[ownedPiece]);
-                    const rookCords = {
-                        cordX: this.pieces[ownedPiece].square.cordY,
-                        cordY: String.fromCharCode(this.pieces[ownedPiece].square.cords.cordX
-                          .charCodeAt(0) + 2)
-                    };
-                    if(this.square.cords === rookCords);
+                    let kingSquare = this.pieces[ownedPiece].square;
+                    const kingSqrCordXChrCode = kingSquare.cords.cordX.charCodeAt(0);
+                    const kingSqrCordYIndex = kingSquare.cords.cordY - 1;
+                    let firstRookSquare = this.squares
+                     [kingSqrCordXChrCode - 97 + 3][kingSquare.cords.cordY - 1];
+                    let secondRookSquare = this.squares
+                     [kingSqrCordXChrCode - 97 - 4][kingSquare.cords.cordY - 1];
+                    let firstCompSquare = this.squares[kingSqrCordXChrCode - 97 + 2][kingSqrCordYIndex];
+                    let secondCompSquare = this.squares[kingSqrCordXChrCode - 97 - 2][kingSqrCordYIndex];
+
+                    if(this.square === firstCompSquare)
                     {
-                        let rookPiece = this.findPieceByCords(rookCords);
+                        let newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
+                        let rook = this.getPieceBySquare(firstRookSquare);
+                        if(rook)
+                            SpecialMoves.castle(rook, newSquare);
                     }
-                }*/
-                console.log('puttingPiece');
+
+                    else if(this.square === secondCompSquare)
+                    {
+                        let newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
+                        let rook = this.getPieceBySquare(secondRookSquare);
+                        if(rook)
+                            SpecialMoves.castle(rook, newSquare);
+                    }
+                }
+
                 this.unOwnPiece(ownedPiece);
                 this.putPiece(ownedPiece);
             }
         }
     }
 
-    findPieceByCords(cords)
+    getPieceBySquare(sqr)
     {
         for(let i = 0; i < this.pieces.length; ++i)
         {
-            if(this.pieces[i].square.cords === cords)
+            if(this.pieces[i].square === sqr)
                 return this.pieces[i];
         }
-
         return null;
     }
 
@@ -94,7 +109,6 @@ export class SquareInput
             if(this.pieces[i].square === this.square)
                 return i;
         }
-        console.log('halo');
         return null;
     }
 
@@ -105,7 +119,6 @@ export class SquareInput
             if(this.pieces[i].isOwned)
                 return i;
         }
-        console.log('halo');
         return null;
     }
 

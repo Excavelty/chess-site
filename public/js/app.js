@@ -52803,7 +52803,7 @@ function () {
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
-          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces));
+          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares));
         }
       }
     }
@@ -53185,13 +53185,11 @@ function (_Piece) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpecialMoves", function() { return SpecialMoves; });
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
-/* harmony import */ var _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SquareInput.js */ "./public/js/SquareInput.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 
 
 var SpecialMoves =
@@ -53201,11 +53199,12 @@ function () {
     _classCallCheck(this, SpecialMoves);
   }
 
-  _createClass(SpecialMoves, [{
+  _createClass(SpecialMoves, null, [{
     key: "castle",
-    value: function castle(rookCords) {
-      var rookSquare = _Square_js__WEBPACK_IMPORTED_MODULE_0__["Square"].getByCords(rookCords);
-      var squareInput = _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"].getBySquare(); //think of it somehow;
+    value: function castle(rook, newSquare) {
+      var oldSquare = rook.square;
+      rook.move(newSquare);
+      rook.updateDrawings(oldSquare);
     }
   }]);
 
@@ -53255,7 +53254,8 @@ function () {
     this.squareRep = document.createElement('div');
     this.squareRep.id = 'square' + this.cords.cordX + this.cords.cordY;
     this.colorDefault = this.chooseSquareColor();
-    this.squareRep.style.backgroundColor = this.chooseSquareColor();
+    this.squareRep.style.backgroundColor = this.colorDefault; //this.chooseSquareColor();
+
     this.squareRep.style.width = '9vh';
     this.squareRep.style.height = '9vh';
     this.squareRep.style["float"] = 'left';
@@ -53290,7 +53290,7 @@ function () {
     value: function chooseSquareColor() {
       var emptyLight = '#ffffff'; //'#DEB887';
 
-      var emptyDark = '#DEB887'; //'#B0E0E6';//'#8B4513';
+      var emptyDark = '#D3D3D3'; //'#DEB887';//'#B0E0E6';//'#8B4513';
 
       if (this.cords.cordY % 2 === 1) {
         switch (this.cords.cordX) {
@@ -53323,6 +53323,11 @@ function () {
       }
     }
   }, {
+    key: "getSquareByCords",
+    value: function getSquareByCords(cords) {
+      return this.squares[cords.cordX.charCodeAt(0) - 97][cords.cordY - 1];
+    }
+  }, {
     key: "changeColor",
     value: function changeColor() {
       var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.colorDefault;
@@ -53348,6 +53353,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SquareInput", function() { return SquareInput; });
 /* harmony import */ var _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SpecialMoves.js */ "./public/js/SpecialMoves.js");
 /* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -53356,13 +53362,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var SquareInput =
 /*#__PURE__*/
 function () {
-  function SquareInput(square, pieces) {
+  function SquareInput(square, pieces, squares) {
     _classCallCheck(this, SquareInput);
 
     this.square = square;
+    this.squares = squares;
     this.pieces = pieces;
     this.prepareSquareClick();
   }
@@ -53387,8 +53395,6 @@ function () {
       console.log(ownedPiece);
 
       if (containedPiece !== null) {
-        console.log('conaining');
-
         if (ownedPiece !== null) {
           var sameColors = this.checkIfSameColors(ownedPiece, containedPiece);
 
@@ -53401,35 +53407,42 @@ function () {
             this.takePiece(containedPiece);
           }
         } else {
-          console.log('owningUnowned');
           this.ownPiece(containedPiece);
         }
       } else {
         if (ownedPiece !== null) {
-          /*if(this.pieces[ownedPiece] instanceof King)
-          {
-              console.log(this.pieces[ownedPiece]);
-              const rookCords = {
-                  cordX: this.pieces[ownedPiece].square.cordY,
-                  cordY: String.fromCharCode(this.pieces[ownedPiece].square.cords.cordX
-                    .charCodeAt(0) + 2)
-              };
-              if(this.square.cords === rookCords);
-              {
-                  let rookPiece = this.findPieceByCords(rookCords);
-              }
-          }*/
-          console.log('puttingPiece');
+          if (this.pieces[ownedPiece] instanceof _King_js__WEBPACK_IMPORTED_MODULE_1__["King"]) {
+            var kingSquare = this.pieces[ownedPiece].square;
+            var kingSqrCordXChrCode = kingSquare.cords.cordX.charCodeAt(0);
+            var kingSqrCordYIndex = kingSquare.cords.cordY - 1;
+            var firstRookSquare = this.squares[kingSqrCordXChrCode - 97 + 3][kingSquare.cords.cordY - 1];
+            var secondRookSquare = this.squares[kingSqrCordXChrCode - 97 - 4][kingSquare.cords.cordY - 1];
+            var firstCompSquare = this.squares[kingSqrCordXChrCode - 97 + 2][kingSqrCordYIndex];
+            var secondCompSquare = this.squares[kingSqrCordXChrCode - 97 - 2][kingSqrCordYIndex];
+
+            if (this.square === firstCompSquare) {
+              var newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
+              var rook = this.getPieceBySquare(firstRookSquare);
+              if (rook) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(rook, newSquare);
+            } else if (this.square === secondCompSquare) {
+              var _newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
+
+              var _rook = this.getPieceBySquare(secondRookSquare);
+
+              if (_rook) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(_rook, _newSquare);
+            }
+          }
+
           this.unOwnPiece(ownedPiece);
           this.putPiece(ownedPiece);
         }
       }
     }
   }, {
-    key: "findPieceByCords",
-    value: function findPieceByCords(cords) {
+    key: "getPieceBySquare",
+    value: function getPieceBySquare(sqr) {
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i].square.cords === cords) return this.pieces[i];
+        if (this.pieces[i].square === sqr) return this.pieces[i];
       }
 
       return null;
@@ -53441,7 +53454,6 @@ function () {
         if (this.pieces[i].square === this.square) return i;
       }
 
-      console.log('halo');
       return null;
     }
   }, {
@@ -53451,7 +53463,6 @@ function () {
         if (this.pieces[i].isOwned) return i;
       }
 
-      console.log('halo');
       return null;
     }
   }, {
