@@ -6,9 +6,16 @@
 <script>
     import {Game} from '../../../public/js/Game.js';
     export default {
+        data() {
+            return {
+                color: this.$route.params.color,
+            }
+        },
+
         mounted() {
+            console.log(this.$route.params.color);
             let boardContainer = document.querySelector('.boardContainer');
-            let game = new Game(boardContainer, 'white');
+            let game = new Game(boardContainer, this.color);
             game.initializePieces();
             game.initializeSquareInput();
         }

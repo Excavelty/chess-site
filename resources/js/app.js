@@ -33,7 +33,7 @@ Vue.use(VueRouter);
  */
 
 const routes = [
-    {path: '/game', component: require('./components/GameComponent.vue').default}
+    {path: '/game/:color', component: require('./components/GameComponent.vue').default}
 ]
 
 const router = new VueRouter({

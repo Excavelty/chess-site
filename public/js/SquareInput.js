@@ -4,8 +4,9 @@ import {Square} from './Square.js';
 
 export class SquareInput
 {
-    constructor(square, pieces, squares)
+    constructor(square, pieces, squares, playersColor)
     {
+        this.playersColor = playersColor;
         this.square = square;
         this.squares = squares;
         this.pieces = pieces;
@@ -124,8 +125,11 @@ export class SquareInput
 
     ownPiece(pieceIndex)
     {
-        this.pieces[pieceIndex].square.changeColor('green');
-        this.pieces[pieceIndex].isOwned = true;
+        if(this.pieces[pieceIndex].color === this.playersColor)
+        {
+            this.pieces[pieceIndex].square.changeColor('green');
+            this.pieces[pieceIndex].isOwned = true;
+        }
     }
 
     unOwnPiece(pieceIndex)

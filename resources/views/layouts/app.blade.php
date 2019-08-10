@@ -22,7 +22,8 @@
 <body>
     <div id="app">
             @yield('content')
-            <router-link to="/game">Zagraj z komputerem</router-link>
+            <router-link to="/game/white">Zagraj jako białe</router-link>
+            <router-link to="/game/black">Zagraj jako czarne</router-link>
             <router-view></router-view>
     </div>
 </body>

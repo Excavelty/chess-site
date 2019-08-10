@@ -1705,9 +1705,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      color: this.$route.params.color
+    };
+  },
   mounted: function mounted() {
+    console.log(this.$route.params.color);
     var boardContainer = document.querySelector('.boardContainer');
-    var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer, 'white');
+    var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer, this.color);
     game.initializePieces();
     game.initializeSquareInput();
   }
@@ -52809,7 +52815,7 @@ function () {
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
-          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares));
+          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor));
         }
       }
     }
@@ -53361,9 +53367,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var SquareInput =
 /*#__PURE__*/
 function () {
-  function SquareInput(square, pieces, squares) {
+  function SquareInput(square, pieces, squares, playersColor) {
     _classCallCheck(this, SquareInput);
 
+    this.playersColor = playersColor;
     this.square = square;
     this.squares = squares;
     this.pieces = pieces;
@@ -53463,8 +53470,10 @@ function () {
   }, {
     key: "ownPiece",
     value: function ownPiece(pieceIndex) {
-      this.pieces[pieceIndex].square.changeColor('green');
-      this.pieces[pieceIndex].isOwned = true;
+      if (this.pieces[pieceIndex].color === this.playersColor) {
+        this.pieces[pieceIndex].square.changeColor('green');
+        this.pieces[pieceIndex].isOwned = true;
+      }
     }
   }, {
     key: "unOwnPiece",
@@ -53537,7 +53546,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
  */
 
 var routes = [{
-  path: '/game',
+  path: '/game/:color',
   component: __webpack_require__(/*! ./components/GameComponent.vue */ "./resources/js/components/GameComponent.vue")["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
