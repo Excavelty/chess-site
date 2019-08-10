@@ -16,11 +16,9 @@ export class Piece
 
     updateDrawings(oldSquare)
     {
-          const oldSquareHTMLHandle = oldSquare.getSquareHandle();///document.querySelector('#square'+oldSquare.cords.cordX
-            //+oldSquare.cords.cordY);
+          const oldSquareHTMLHandle = oldSquare.getSquareHandle();
           this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
-          const currentSquareHTMLHandle = this.square.getSquareHandle();//this.square.getSquareHandle();//document.querySelector('#square'
-            //+this.square.cords.cordX+this.square.cords.cordY);
+          const currentSquareHTMLHandle = this.square.getSquareHandle();
           currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
 

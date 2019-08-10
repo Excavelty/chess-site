@@ -11,8 +11,9 @@ import {Rook} from './Rook.js';
 
 export class Game
 {
-    constructor(boardContainer)
+    constructor(boardContainer, playersColor)
     {
+          this.playersColor = playersColor;
           this.squaresNum = 8;
           this.squares = [];
           for(let i = 0; i < this.squaresNum; ++i)
@@ -20,34 +21,51 @@ export class Game
               this.squares[i] = [];
           }
           this.boardContainer = boardContainer;
-          const boardContent = this.initializeBoard();
+          const boardContent = this.initializeBoard(this.playersColor);
           this.boardContainer.innerHTML = boardContent;
+          //this.boardContainer.style.transform = 'rotate(180deg)';
           for(let i = 0; i < this.squaresNum; ++i)
             for(let j = 0; j < this.squaresNum; ++j)
                 this.squares[i][j].attachCursorEvent();
     }
 
-    initializeBoard()
+    initializeBoard(playersColor)
     {
           let htmlContent = '';
-          const aLetter = 'a';
 
-          for(let j = this.squaresNum - 1; j >= 0; --j)
-          {
-
-              for(let i = 0; i < this.squaresNum; ++i)
+          if(playersColor === 'white')
+              for(let j = this.squaresNum - 1; j >= 0; --j)
               {
-                  const cords = {
-                        cordX: String.fromCharCode(aLetter.charCodeAt(0) + i),
-                        cordY: 1 + j
-                  }
 
-                  this.squares[i][j] = new Square(cords);
-                  htmlContent += this.squares[i][j].getHTMLRepresentation().outerHTML;
+                  for(let i = 0; i < this.squaresNum; ++i)
+                  {
+                      htmlContent = this.fillSquaresAndAddToContent(htmlContent, i, j);
+                  }
               }
-          }
+
+          else
+              for(let j = 0; j < this.squaresNum; ++j)
+              {
+                  for(let i = this.squaresNum - 1; i >= 0; --i)
+                  {
+                      htmlContent = this.fillSquaresAndAddToContent(htmlContent, i, j)
+                  }
+              }
 
           return htmlContent;
+    }
+
+    fillSquaresAndAddToContent(htmlContent, i, j)
+    {
+        const aLetter = 'a';
+        const cords = {
+              cordX: String.fromCharCode(aLetter.charCodeAt(0) + i),
+              cordY: 1 + j
+        }
+
+        this.squares[i][j] = new Square(cords);
+        htmlContent += this.squares[i][j].getHTMLRepresentation().outerHTML;
+        return htmlContent;
     }
 
     initializePieces()
@@ -142,15 +160,5 @@ export class Game
             new Queen(this.squares[3][0], 'white'),
             new Queen(this.squares[3][7], 'black')
         ];
-    }
-
-    updateLogic()
-    {
-
-    }
-
-    updateDrawings()
-    {
-
     }
 }

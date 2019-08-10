@@ -8,13 +8,9 @@
     export default {
         mounted() {
             let boardContainer = document.querySelector('.boardContainer');
-            let game = new Game(boardContainer);
+            let game = new Game(boardContainer, 'white');
             game.initializePieces();
             game.initializeSquareInput();
-            //while(game.status != false)
-            //{
-              //  game.updateLogic();
-            //}
         }
     }
 </script>

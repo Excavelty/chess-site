@@ -1707,12 +1707,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var boardContainer = document.querySelector('.boardContainer');
-    var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer);
+    var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer, 'white');
     game.initializePieces();
-    game.initializeSquareInput(); //while(game.status != false)
-    //{
-    //  game.updateLogic();
-    //}
+    game.initializeSquareInput();
   }
 });
 
@@ -52744,9 +52741,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Game =
 /*#__PURE__*/
 function () {
-  function Game(boardContainer) {
+  function Game(boardContainer, playersColor) {
     _classCallCheck(this, Game);
 
+    this.playersColor = playersColor;
     this.squaresNum = 8;
     this.squares = [];
 
@@ -52755,8 +52753,8 @@ function () {
     }
 
     this.boardContainer = boardContainer;
-    var boardContent = this.initializeBoard();
-    this.boardContainer.innerHTML = boardContent;
+    var boardContent = this.initializeBoard(this.playersColor);
+    this.boardContainer.innerHTML = boardContent; //this.boardContainer.style.transform = 'rotate(180deg)';
 
     for (var _i = 0; _i < this.squaresNum; ++_i) {
       for (var j = 0; j < this.squaresNum; ++j) {
@@ -52767,21 +52765,29 @@ function () {
 
   _createClass(Game, [{
     key: "initializeBoard",
-    value: function initializeBoard() {
+    value: function initializeBoard(playersColor) {
       var htmlContent = '';
-      var aLetter = 'a';
-
-      for (var j = this.squaresNum - 1; j >= 0; --j) {
+      if (playersColor === 'white') for (var j = this.squaresNum - 1; j >= 0; --j) {
         for (var i = 0; i < this.squaresNum; ++i) {
-          var cords = {
-            cordX: String.fromCharCode(aLetter.charCodeAt(0) + i),
-            cordY: 1 + j
-          };
-          this.squares[i][j] = new _Square_js__WEBPACK_IMPORTED_MODULE_0__["Square"](cords);
-          htmlContent += this.squares[i][j].getHTMLRepresentation().outerHTML;
+          htmlContent = this.fillSquaresAndAddToContent(htmlContent, i, j);
+        }
+      } else for (var _j = 0; _j < this.squaresNum; ++_j) {
+        for (var _i2 = this.squaresNum - 1; _i2 >= 0; --_i2) {
+          htmlContent = this.fillSquaresAndAddToContent(htmlContent, _i2, _j);
         }
       }
-
+      return htmlContent;
+    }
+  }, {
+    key: "fillSquaresAndAddToContent",
+    value: function fillSquaresAndAddToContent(htmlContent, i, j) {
+      var aLetter = 'a';
+      var cords = {
+        cordX: String.fromCharCode(aLetter.charCodeAt(0) + i),
+        cordY: 1 + j
+      };
+      this.squares[i][j] = new _Square_js__WEBPACK_IMPORTED_MODULE_0__["Square"](cords);
+      htmlContent += this.squares[i][j].getHTMLRepresentation().outerHTML;
       return htmlContent;
     }
   }, {
@@ -52816,8 +52822,8 @@ function () {
         pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_6__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
       }
 
-      for (var _i2 = 0; _i2 < this.squaresNum; ++_i2) {
-        pawns[_i2 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_6__["Pawn"](this.squares[_i2][6], 'black'); //for seventh line in fact
+      for (var _i3 = 0; _i3 < this.squaresNum; ++_i3) {
+        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_6__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
       }
 
       console.log(pawns);
@@ -52855,12 +52861,6 @@ function () {
     value: function prepareQueens() {
       return [new _Queen_js__WEBPACK_IMPORTED_MODULE_3__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_3__["Queen"](this.squares[3][7], 'black')];
     }
-  }, {
-    key: "updateLogic",
-    value: function updateLogic() {}
-  }, {
-    key: "updateDrawings",
-    value: function updateDrawings() {}
   }]);
 
   return Game;
@@ -53054,13 +53054,9 @@ function () {
   }, {
     key: "updateDrawings",
     value: function updateDrawings(oldSquare) {
-      var oldSquareHTMLHandle = oldSquare.getSquareHandle(); ///document.querySelector('#square'+oldSquare.cords.cordX
-      //+oldSquare.cords.cordY);
-
+      var oldSquareHTMLHandle = oldSquare.getSquareHandle();
       this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
-      var currentSquareHTMLHandle = this.square.getSquareHandle(); //this.square.getSquareHandle();//document.querySelector('#square'
-      //+this.square.cords.cordX+this.square.cords.cordY);
-
+      var currentSquareHTMLHandle = this.square.getSquareHandle();
       currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
   }, {
@@ -53257,13 +53253,12 @@ function () {
     this.squareRep.style.backgroundColor = this.colorDefault; //this.chooseSquareColor();
 
     this.squareRep.style.width = '9vh';
-    this.squareRep.style.height = '9vh';
-    this.squareRep.style["float"] = 'left';
-    this.squareRep.style.fontSize = '7.6vh';
-    this.squareRep.style.textAlign = 'center'; //this.squareRep.style.marginLeft = 4 * (this.cords.cordX.charCodeAt(0) - 97) + 'vw';
-    //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
+    this.squareRep.style.height = '9vh'; //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
     //this.squareRep.append(text);
 
+    this.squareRep.style["float"] = 'left';
+    this.squareRep.style.fontSize = '7.6vh';
+    this.squareRep.style.textAlign = 'center';
     this.squareRep.classList += 'square';
   }
 

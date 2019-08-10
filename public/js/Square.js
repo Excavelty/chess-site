@@ -20,12 +20,11 @@ export class Square
         this.squareRep.style.backgroundColor = this.colorDefault;//this.chooseSquareColor();
         this.squareRep.style.width = '9vh';
         this.squareRep.style.height = '9vh';
+        //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
+        //this.squareRep.append(text);
         this.squareRep.style.float = 'left';
         this.squareRep.style.fontSize = '7.6vh';
         this.squareRep.style.textAlign = 'center';
-        //this.squareRep.style.marginLeft = 4 * (this.cords.cordX.charCodeAt(0) - 97) + 'vw';
-        //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
-        //this.squareRep.append(text);
         this.squareRep.classList += 'square';
     }
 
