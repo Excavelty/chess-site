@@ -52963,10 +52963,17 @@ function (_Piece) {
       }
 
       if (cords.cordY === newCords.cordY) {
-        if (cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === this.shiftChar(newCords.cordX, 1)) return true;
+        if (cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === this.shiftChar(newCords.cordX, 1)) {
+          this.allowCastle = false;
+          return true;
+        }
+
         return false;
       } else if (cords.cordY === newCords.cordY + 1 || cords.cordY === newCords.cordY - 1) {
-        if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === newCords.cordX) return true;
+        if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === newCords.cordX) {
+          this.allowCastle = false;
+          return true;
+        }
       } else return false;
     }
   }]);
@@ -53063,6 +53070,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -53090,8 +53101,54 @@ function (_Piece) {
     _this.updateDrawings(_this.square);
 
     _this.allowDoubleMove = true;
+    _this.allowTake = false;
     return _this;
   }
+
+  _createClass(Pawn, [{
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) {
+      var cords = this.square.cords;
+      var newCords = newSquare.cords;
+
+      if (this.allowTake) {
+        this.allowTake = false;
+
+        if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1)) {
+          if (this.color === 'white' && cords.cordY === newCords.cordY - 1) return true;else if (this.color === 'black' && cord.cordY === newCords.cordY + 1) return true;else return false;
+        }
+      }
+
+      if (this.allowDoubleMove) {
+        switch (this.color) {
+          case 'white':
+            {
+              if (cords.cordY === newCords.cordY - 2 && cords.cordX === newCords.cordX) {
+                this.allowDoubleMove = false;
+                return true;
+              }
+            }
+            break;
+
+          default:
+            {
+              if (cords.cordY === newCords.cordY + 2 && cords.cordX === newCords.cordX) {
+                this.allowDoubleMove = false;
+                return true;
+              }
+            }
+        }
+      }
+
+      if (this.color === 'white' && cords.cordY === newCords.cordY - 1 && cords.cordX === newCords.cordX) {
+        this.allowDoubleMove = false;
+        return true;
+      } else if (this.color === 'black' && cords.cordY === newCords.cordY + 1 && cords.cordX === newCords.cordX) {
+        this.allowDoubleMove = false;
+        return true;
+      } else return false;
+    }
+  }]);
 
   return Pawn;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
@@ -53232,6 +53289,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -53261,6 +53322,17 @@ function (_Piece) {
     _this.allowCastle = false;
     return _this;
   }
+
+  _createClass(Rook, [{
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) //think of it low-priority
+    {
+      var cords = this.square.cords;
+      var newCords = newSquare.cords;
+      if (cords.cordX === newCords.cordX || cords.cordY === newCords.cordY) return true;
+      return false;
+    }
+  }]);
 
   return Rook;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
@@ -53445,12 +53517,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SquareInput", function() { return SquareInput; });
 /* harmony import */ var _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SpecialMoves.js */ "./public/js/SpecialMoves.js");
 /* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
-/* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -53484,8 +53558,6 @@ function () {
     value: function squareClick() {
       var containedPiece = this.checkIfSquareContainingPiece();
       var ownedPiece = this.checkIfPieceOwned();
-      console.log(containedPiece);
-      console.log(ownedPiece);
 
       if (containedPiece !== null) {
         if (ownedPiece !== null) {
@@ -53495,9 +53567,16 @@ function () {
             this.unOwnPiece(ownedPiece);
             this.ownPiece(containedPiece);
           } else {
+            if (this.pieces[ownedPiece] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
+              var pawn = this.pieces[ownedPiece];
+
+              if (this.pieces[containedPiece].color != pawn.color) {
+                pawn.allowTake = true;
+              }
+            }
+
             this.unOwnPiece(ownedPiece);
-            this.putPiece(ownedPiece);
-            this.takePiece(containedPiece);
+            if (this.putPiece(ownedPiece)) this.takePiece(containedPiece);
           }
         } else {
           this.ownPiece(containedPiece);
@@ -53567,7 +53646,7 @@ function () {
     key: "ownPiece",
     value: function ownPiece(pieceIndex) {
       if (this.pieces[pieceIndex].color === this.playersColor) {
-        this.pieces[pieceIndex].square.changeColor('#6B9362');
+        this.pieces[pieceIndex].square.changeColor('#26C281');
         this.pieces[pieceIndex].isOwned = true;
       }
     }
@@ -53586,7 +53665,14 @@ function () {
     key: "putPiece",
     value: function putPiece(pieceIndex) {
       var oldSquare = this.pieces[pieceIndex].square;
-      if (this.pieces[pieceIndex].move(this.square)) this.pieces[pieceIndex].updateDrawings(oldSquare);else this.ownPiece(pieceIndex);
+
+      if (this.pieces[pieceIndex].move(this.square)) {
+        this.pieces[pieceIndex].updateDrawings(oldSquare);
+        return true;
+      } else {
+        this.ownPiece(pieceIndex);
+        return false;
+      }
     }
   }, {
     key: "takePiece",

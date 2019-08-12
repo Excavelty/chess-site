@@ -1,5 +1,6 @@
 import {SpecialMoves} from './SpecialMoves.js';
 import {King} from './King.js';
+import {Pawn} from './Pawn.js';
 import {Square} from './Square.js';
 
 export class SquareInput
@@ -26,8 +27,6 @@ export class SquareInput
     {
         const containedPiece = this.checkIfSquareContainingPiece();
         const ownedPiece = this.checkIfPieceOwned();
-        console.log(containedPiece);
-        console.log(ownedPiece);
 
         if(containedPiece !== null)
         {
@@ -42,9 +41,19 @@ export class SquareInput
                 }
                 else
                 {
+
+
+                    if(this.pieces[ownedPiece] instanceof Pawn)
+                    {
+                        let pawn = this.pieces[ownedPiece];
+                        if(this.pieces[containedPiece].color != pawn.color)
+                        {
+                            pawn.allowTake = true;
+                        }
+                    }
                     this.unOwnPiece(ownedPiece);
-                    this.putPiece(ownedPiece);
-                    this.takePiece(containedPiece);
+                    if(this.putPiece(ownedPiece))
+                        this.takePiece(containedPiece);
                 }
             }
 
@@ -132,7 +141,7 @@ export class SquareInput
     {
         if(this.pieces[pieceIndex].color === this.playersColor)
         {
-            this.pieces[pieceIndex].square.changeColor('#6B9362');
+            this.pieces[pieceIndex].square.changeColor('#26C281');
             this.pieces[pieceIndex].isOwned = true;
         }
     }
@@ -152,9 +161,15 @@ export class SquareInput
     {
         const oldSquare = this.pieces[pieceIndex].square;
         if(this.pieces[pieceIndex].move(this.square))
+        {
             this.pieces[pieceIndex].updateDrawings(oldSquare);
+            return true;
+        }
         else
+        {
             this.ownPiece(pieceIndex);
+            return false;
+        }
     }
 
     takePiece(pieceIndex)

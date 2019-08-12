@@ -49,7 +49,10 @@ export class King extends Piece
         {
             if(cords.cordX === this.shiftChar(newCords.cordX, -1)
               || cords.cordX === this.shiftChar(newCords.cordX, 1))
-              return true;
+              {
+                  this.allowCastle = false;
+                  return true;
+              }
             return false;
         }
 
@@ -59,7 +62,10 @@ export class King extends Piece
             if(cords.cordX === this.shiftChar(newCords.cordX, 1)
               || cords.cordX === this.shiftChar(newCords.cordX, -1)
               || cords.cordX === newCords.cordX)
-              return true;
+              {
+                  this.allowCastle = false;
+                  return true;
+              }
         }
 
         else
