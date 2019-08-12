@@ -58,7 +58,8 @@ export class SquareInput
         {
             if(ownedPiece !== null)
             {
-                if(this.pieces[ownedPiece] instanceof King)
+                if(this.pieces[ownedPiece] instanceof King
+                  &&this.pieces[ownedPiece].allowCastle)
                 {
                     let kingSquare = this.pieces[ownedPiece].square;
                     const kingSqrCordXChrCode = kingSquare.cords.cordX.charCodeAt(0);
@@ -75,7 +76,9 @@ export class SquareInput
                         let newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
                         let rook = this.getPieceBySquare(firstRookSquare);
                         if(rook)
+                        {
                             SpecialMoves.castle(rook, newSquare);
+                        }
                     }
 
                     else if(this.square === secondCompSquare)
@@ -83,7 +86,9 @@ export class SquareInput
                         let newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
                         let rook = this.getPieceBySquare(secondRookSquare);
                         if(rook)
+                        {
                             SpecialMoves.castle(rook, newSquare);
+                        }
                     }
                 }
 
@@ -127,7 +132,7 @@ export class SquareInput
     {
         if(this.pieces[pieceIndex].color === this.playersColor)
         {
-            this.pieces[pieceIndex].square.changeColor('green');
+            this.pieces[pieceIndex].square.changeColor('#6B9362');
             this.pieces[pieceIndex].isOwned = true;
         }
     }

@@ -12,6 +12,8 @@ export class Piece
     {
         if(this.checkIfCouldMove(newSquare))
         {
+            //if(this instanceof King)
+                //this.allowCastle = false;
             this.square = newSquare;
             return true;
         }
@@ -36,5 +38,10 @@ export class Piece
     {
         return true;
         //override
+    }
+
+    shiftChar(character, number)
+    {
+        return String.fromCharCode(character.charCodeAt(0) + number);
     }
 }

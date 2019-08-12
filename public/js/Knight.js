@@ -17,8 +17,8 @@ export class Knight extends Piece
         let cords = this.square.cords;
         let newCords = newSquare.cords;
 
-        if(cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) + 1)
-          || cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) - 1))
+        if(cords.cordX === this.shiftChar(newCords.cordX, 1)
+          || cords.cordX === this.shiftChar(newCords.cordX, -1))
         {
             if(cords.cordY === newCords.cordY - 2 || cords.cordY === newCords.cordY + 2)
             {
@@ -27,8 +27,8 @@ export class Knight extends Piece
             return false;
         }
 
-        else if(cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) + 2)
-          || cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) -2))
+        else if(cords.cordX === this.shiftChar(newCords.cordX, 2)
+          || cords.cordX === this.shiftChar(newCords.cordX, -2))
         {
             if(cords.cordY === newCords.cordY - 1 || cords.cordY === newCords.cordY + 1)
                 return true;

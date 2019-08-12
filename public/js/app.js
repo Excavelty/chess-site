@@ -52676,6 +52676,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -52704,6 +52708,15 @@ function (_Piece) {
 
     return _this;
   }
+
+  _createClass(Bishop, [{
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) {
+      var cords = this.square.cords;
+      var newCords = newSquare.cords;
+      return true;
+    }
+  }]);
 
   return Bishop;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
@@ -52889,6 +52902,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -52915,9 +52932,44 @@ function (_Piece) {
 
     _this.updateDrawings(_this.square);
 
-    _this.allowCastle = false;
+    _this.allowCastle = true;
     return _this;
   }
+
+  _createClass(King, [{
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) {
+      var cords = this.square.cords;
+      var newCords = newSquare.cords;
+      console.log(cords);
+      console.log(newCords);
+
+      if (this.allowCastle) {
+        if (this.color === 'white') {
+          console.log('okokk');
+
+          if (newCords.cordX === 'g' && newCords.cordY === 1 || newCords.cordX === 'c' && newCords.cordY === 1) {
+            this.allowCastle = false;
+            return true;
+          }
+        }
+
+        if (this.color === 'black') {
+          if (newCords.cordX === 'g' && newCords.cordY === 8 || newCords.cordX === 'c' && newCords.cordY === 8) {
+            this.allowCastle = false;
+            return true;
+          }
+        }
+      }
+
+      if (cords.cordY === newCords.cordY) {
+        if (cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === this.shiftChar(newCords.cordX, 1)) return true;
+        return false;
+      } else if (cords.cordY === newCords.cordY + 1 || cords.cordY === newCords.cordY - 1) {
+        if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === newCords.cordX) return true;
+      } else return false;
+    }
+  }]);
 
   return King;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
@@ -52978,13 +53030,13 @@ function (_Piece) {
       var cords = this.square.cords;
       var newCords = newSquare.cords;
 
-      if (cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) + 1) || cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) - 1)) {
+      if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1)) {
         if (cords.cordY === newCords.cordY - 2 || cords.cordY === newCords.cordY + 2) {
           return true;
         }
 
         return false;
-      } else if (cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) + 2) || cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) - 2)) {
+      } else if (cords.cordX === this.shiftChar(newCords.cordX, 2) || cords.cordX === this.shiftChar(newCords.cordX, -2)) {
         if (cords.cordY === newCords.cordY - 1 || cords.cordY === newCords.cordY + 1) return true;
         return false;
       } else return false;
@@ -53078,6 +53130,8 @@ function () {
     key: "move",
     value: function move(newSquare) {
       if (this.checkIfCouldMove(newSquare)) {
+        //if(this instanceof King)
+        //this.allowCastle = false;
         this.square = newSquare;
         return true;
       }
@@ -53101,6 +53155,11 @@ function () {
     key: "checkIfCouldMove",
     value: function checkIfCouldMove(newSquare) {
       return true; //override
+    }
+  }, {
+    key: "shiftChar",
+    value: function shiftChar(character, number) {
+      return String.fromCharCode(character.charCodeAt(0) + number);
     }
   }]);
 
@@ -53445,7 +53504,7 @@ function () {
         }
       } else {
         if (ownedPiece !== null) {
-          if (this.pieces[ownedPiece] instanceof _King_js__WEBPACK_IMPORTED_MODULE_1__["King"]) {
+          if (this.pieces[ownedPiece] instanceof _King_js__WEBPACK_IMPORTED_MODULE_1__["King"] && this.pieces[ownedPiece].allowCastle) {
             var kingSquare = this.pieces[ownedPiece].square;
             var kingSqrCordXChrCode = kingSquare.cords.cordX.charCodeAt(0);
             var kingSqrCordYIndex = kingSquare.cords.cordY - 1;
@@ -53457,13 +53516,18 @@ function () {
             if (this.square === firstCompSquare) {
               var newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
               var rook = this.getPieceBySquare(firstRookSquare);
-              if (rook) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(rook, newSquare);
+
+              if (rook) {
+                _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(rook, newSquare);
+              }
             } else if (this.square === secondCompSquare) {
               var _newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
 
               var _rook = this.getPieceBySquare(secondRookSquare);
 
-              if (_rook) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(_rook, _newSquare);
+              if (_rook) {
+                _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(_rook, _newSquare);
+              }
             }
           }
 
@@ -53503,7 +53567,7 @@ function () {
     key: "ownPiece",
     value: function ownPiece(pieceIndex) {
       if (this.pieces[pieceIndex].color === this.playersColor) {
-        this.pieces[pieceIndex].square.changeColor('green');
+        this.pieces[pieceIndex].square.changeColor('#6B9362');
         this.pieces[pieceIndex].isOwned = true;
       }
     }

@@ -11,4 +11,11 @@ export class Bishop extends Piece
             this.pieceIcon = '♝';
         this.updateDrawings(this.square);
     }
+
+    checkIfCouldMove(newSquare)
+    {
+        let cords = this.square.cords;
+        let newCords = newSquare.cords;
+        return true;
+    }
 }
