@@ -16,10 +16,12 @@ export class Game
           this.playersColor = playersColor;
           this.squaresNum = 8;
           this.squares = [];
+
           for(let i = 0; i < this.squaresNum; ++i)
           {
               this.squares[i] = [];
           }
+
           this.boardContainer = boardContainer;
           const boardContent = this.initializeBoard(this.playersColor);
           this.boardContainer.innerHTML = boardContent;

@@ -52939,6 +52939,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -52967,6 +52971,25 @@ function (_Piece) {
 
     return _this;
   }
+
+  _createClass(Knight, [{
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) {
+      var cords = this.square.cords;
+      var newCords = newSquare.cords;
+
+      if (cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) + 1) || cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) - 1)) {
+        if (cords.cordY === newCords.cordY - 2 || cords.cordY === newCords.cordY + 2) {
+          return true;
+        }
+
+        return false;
+      } else if (cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) + 2) || cords.cordX === String.fromCharCode(newCords.cordX.charCodeAt(0) - 2)) {
+        if (cords.cordY === newCords.cordY - 1 || cords.cordY === newCords.cordY + 1) return true;
+        return false;
+      } else return false;
+    }
+  }]);
 
   return Knight;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
@@ -53054,8 +53077,12 @@ function () {
   _createClass(Piece, [{
     key: "move",
     value: function move(newSquare) {
-      this.square = newSquare;
-      return true;
+      if (this.checkIfCouldMove(newSquare)) {
+        this.square = newSquare;
+        return true;
+      }
+
+      return false;
     }
   }, {
     key: "updateDrawings",
@@ -53069,6 +53096,11 @@ function () {
     key: "cleanIconFromPreviousSquare",
     value: function cleanIconFromPreviousSquare(oldSquareHTMLHandle) {
       oldSquareHTMLHandle.textContent = '';
+    }
+  }, {
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) {
+      return true; //override
     }
   }]);
 
@@ -53490,8 +53522,7 @@ function () {
     key: "putPiece",
     value: function putPiece(pieceIndex) {
       var oldSquare = this.pieces[pieceIndex].square;
-      this.pieces[pieceIndex].move(this.square);
-      this.pieces[pieceIndex].updateDrawings(oldSquare);
+      if (this.pieces[pieceIndex].move(this.square)) this.pieces[pieceIndex].updateDrawings(oldSquare);else this.ownPiece(pieceIndex);
     }
   }, {
     key: "takePiece",

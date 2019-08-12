@@ -146,8 +146,10 @@ export class SquareInput
     putPiece(pieceIndex)
     {
         const oldSquare = this.pieces[pieceIndex].square;
-        this.pieces[pieceIndex].move(this.square);
-        this.pieces[pieceIndex].updateDrawings(oldSquare);
+        if(this.pieces[pieceIndex].move(this.square))
+            this.pieces[pieceIndex].updateDrawings(oldSquare);
+        else
+            this.ownPiece(pieceIndex);
     }
 
     takePiece(pieceIndex)

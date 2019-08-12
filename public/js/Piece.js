@@ -10,8 +10,13 @@ export class Piece
 
     move(newSquare)
     {
-        this.square = newSquare;
-        return true;
+        if(this.checkIfCouldMove(newSquare))
+        {
+            this.square = newSquare;
+            return true;
+        }
+
+        return false;
     }
 
     updateDrawings(oldSquare)
@@ -25,5 +30,11 @@ export class Piece
     cleanIconFromPreviousSquare(oldSquareHTMLHandle)
     {
         oldSquareHTMLHandle.textContent = '';
+    }
+
+    checkIfCouldMove(newSquare)
+    {
+        return true;
+        //override
     }
 }
