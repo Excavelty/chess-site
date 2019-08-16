@@ -1711,7 +1711,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    console.log(this.$route.params.color);
     var boardContainer = document.querySelector('.boardContainer');
     var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer, this.color);
     game.initializePieces();
@@ -52857,7 +52856,6 @@ function () {
         pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_7__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
       }
 
-      console.log(pawns);
       return pawns;
     }
   }, {
@@ -52953,13 +52951,9 @@ function (_Piece) {
     value: function checkIfCouldMove(newSquare) {
       var cords = this.square.cords;
       var newCords = newSquare.cords;
-      console.log(cords);
-      console.log(newCords);
 
       if (this.allowCastle) {
         if (this.color === 'white') {
-          console.log('okokk');
-
           if (newCords.cordX === 'g' && newCords.cordY === 1 || newCords.cordX === 'c' && newCords.cordY === 1) {
             this.allowCastle = false;
             return true;
@@ -53312,8 +53306,6 @@ function () {
     key: "move",
     value: function move(newSquare) {
       if (this.checkIfCouldMove(newSquare)) {
-        //if(this instanceof King)
-        //this.allowCastle = false;
         this.square = newSquare;
         return true;
       }
@@ -53421,7 +53413,6 @@ function (_Piece) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rook", function() { return Rook; });
 /* harmony import */ var _Piece_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Piece.js */ "./public/js/Piece.js");
-/* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53439,7 +53430,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
 
 
 var Rook =
@@ -53464,8 +53454,6 @@ function (_Piece) {
   _createClass(Rook, [{
     key: "checkIfCouldMove",
     value: function checkIfCouldMove(newSquare) {
-      console.log(newSquare); //return true;
-
       return this.validator.validateStraight(this.square, newSquare);
     }
   }]);

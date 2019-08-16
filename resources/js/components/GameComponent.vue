@@ -13,7 +13,6 @@
         },
 
         mounted() {
-            console.log(this.$route.params.color);
             let boardContainer = document.querySelector('.boardContainer');
             let game = new Game(boardContainer, this.color);
             game.initializePieces();

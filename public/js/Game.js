@@ -120,8 +120,6 @@ export class Game
             pawns[i + this.squaresNum] = new Pawn(this.squares[i][6], 'black');//for seventh line in fact
         }
 
-
-        console.log(pawns);
         return pawns;
     }
 

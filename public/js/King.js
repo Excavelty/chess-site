@@ -18,14 +18,10 @@ export class King extends Piece
         let cords = this.square.cords;
         let newCords = newSquare.cords;
 
-        console.log(cords);
-        console.log(newCords);
-
         if(this.allowCastle)
         {
           if(this.color === 'white')
           {
-              console.log('okokk');
               if(newCords.cordX === 'g' && newCords.cordY === 1
                 || newCords.cordX === 'c' && newCords.cordY === 1)
               {

@@ -17,8 +17,6 @@ export class Piece
     {
         if(this.checkIfCouldMove(newSquare))
         {
-            //if(this instanceof King)
-                //this.allowCastle = false;
             this.square = newSquare;
             return true;
         }
