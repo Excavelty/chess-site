@@ -65,6 +65,7 @@ export class SquareInput
 
         else
         {
+            let potentialPiece = null;
             if(ownedPiece !== null)
             {
                 if(this.pieces[ownedPiece] instanceof King
@@ -83,9 +84,11 @@ export class SquareInput
                     if(this.square === firstCompSquare)
                     {
                         let newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
+                        potentialPiece = this.getPieceBySquare(newSquare);
                         let rook = this.getPieceBySquare(firstRookSquare);
                         if(rook)
                         {
+                            if(potentialPiece === null)
                             SpecialMoves.castle(rook, newSquare);
                         }
                     }
@@ -93,16 +96,26 @@ export class SquareInput
                     else if(this.square === secondCompSquare)
                     {
                         let newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
+                        potentialPiece = this.getPieceBySquare(newSquare);
+                        let potentialPiece2 = this.getPieceBySquare(this.squares[kingSqrCordXChrCode - 97 - 3][kingSqrCordYIndex]);
+
+                        if(potentialPiece === null)
+                            potentialPiece = potentialPiece2;
+
                         let rook = this.getPieceBySquare(secondRookSquare);
                         if(rook)
                         {
-                            SpecialMoves.castle(rook, newSquare);
+                            if(potentialPiece === null)
+                              SpecialMoves.castle(rook, newSquare);
                         }
                     }
                 }
 
-                this.unOwnPiece(ownedPiece);
-                this.putPiece(ownedPiece);
+                if(potentialPiece === null)
+                {
+                    this.unOwnPiece(ownedPiece);
+                    this.putPiece(ownedPiece);
+                }
             }
         }
     }

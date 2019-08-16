@@ -53230,7 +53230,7 @@ function (_Piece) {
 
         if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1)) {
           if (this.color === 'white' && cords.cordY === newCords.cordY - 1) return true;else if (this.color === 'black' && cords.cordY === newCords.cordY + 1) return true;else return false;
-        }
+        } else return false;
       }
 
       if (this.allowDoubleMove) {
@@ -53691,6 +53691,8 @@ function () {
           this.ownPiece(containedPiece);
         }
       } else {
+        var potentialPiece = null;
+
         if (ownedPiece !== null) {
           if (this.pieces[ownedPiece] instanceof _King_js__WEBPACK_IMPORTED_MODULE_1__["King"] && this.pieces[ownedPiece].allowCastle) {
             var kingSquare = this.pieces[ownedPiece].square;
@@ -53703,24 +53705,30 @@ function () {
 
             if (this.square === firstCompSquare) {
               var newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
+              potentialPiece = this.getPieceBySquare(newSquare);
               var rook = this.getPieceBySquare(firstRookSquare);
 
               if (rook) {
-                _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(rook, newSquare);
+                if (potentialPiece === null) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(rook, newSquare);
               }
             } else if (this.square === secondCompSquare) {
               var _newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
+              potentialPiece = this.getPieceBySquare(_newSquare);
+              var potentialPiece2 = this.getPieceBySquare(this.squares[kingSqrCordXChrCode - 97 - 3][kingSqrCordYIndex]);
+              if (potentialPiece === null) potentialPiece = potentialPiece2;
 
               var _rook = this.getPieceBySquare(secondRookSquare);
 
               if (_rook) {
-                _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(_rook, _newSquare);
+                if (potentialPiece === null) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(_rook, _newSquare);
               }
             }
           }
 
-          this.unOwnPiece(ownedPiece);
-          this.putPiece(ownedPiece);
+          if (potentialPiece === null) {
+            this.unOwnPiece(ownedPiece);
+            this.putPiece(ownedPiece);
+          }
         }
       }
     }

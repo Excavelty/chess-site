@@ -32,6 +32,8 @@ export class Pawn extends Piece
                     else
                       return false;
                 }
+              else
+                return false;
         }
 
         if(this.allowDoubleMove)
