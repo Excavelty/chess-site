@@ -53119,15 +53119,15 @@ function () {
 
       if (newCords.cordX < cords.cordX) {
         if (newCords.cordY < cords.cordY) {
-          return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, -1, newSquare);
+          return this.validationLoop(cordXIndex, cordYIndex, -1, -1, newSquare);
         } else if (newCords.cordY > cords.cordY) {
-          return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, 1, newSquare);
+          return this.validationLoop(cordXIndex, cordYIndex, -1, 1, newSquare);
         } else return false;
       } else if (newCords.cordX > cords.cordX) {
         if (newCords.cordY < cords.cordY) {
-          return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, -1, newSquare);
+          return this.validationLoop(cordXIndex, cordYIndex, 1, -1, newSquare);
         } else if (newCords.cordY > cords.cordY) {
-          return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
+          return this.validationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
         }
       } else return false;
     }
@@ -53140,16 +53140,16 @@ function () {
       var cordYIndex = cords.cordY - 1;
 
       if (cords.cordX === newCords.cordX) {
-        if (newCords.cordY > cords.cordY) return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, 1, newSquare);else if (newCords.cordY < cords.cordY) return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, -1, newSquare);else return false;
+        if (newCords.cordY > cords.cordY) return this.validationLoop(cordXIndex, cordYIndex, 0, 1, newSquare);else if (newCords.cordY < cords.cordY) return this.validationLoop(cordXIndex, cordYIndex, 0, -1, newSquare);else return false;
       } else if (cords.cordY === newCords.cordY) {
         var oldXCharCode = cordXIndex + 97;
         var newXCharCode = newCords.cordX.charCodeAt(0);
-        if (newXCharCode > oldXCharCode) return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, 0, newSquare);else if (newXCharCode < oldXCharCode) return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, 0, newSquare);else return false;
+        if (newXCharCode > oldXCharCode) return this.validationLoop(cordXIndex, cordYIndex, 1, 0, newSquare);else if (newXCharCode < oldXCharCode) return this.validationLoop(cordXIndex, cordYIndex, -1, 0, newSquare);else return false;
       } else return false;
     }
   }, {
-    key: "diagonalValidationLoop",
-    value: function diagonalValidationLoop(firstIter, secondIter, firstChange, secondChange, newSquare) {
+    key: "validationLoop",
+    value: function validationLoop(firstIter, secondIter, firstChange, secondChange, newSquare) {
       firstIter += firstChange;
       secondIter += secondChange;
 
@@ -53161,7 +53161,6 @@ function () {
         }
 
         var pieceIndex = this.getPieceIndexBySqr(currentSquare);
-        console.log(pieceIndex);
         if (pieceIndex !== null) return false;
         firstIter += firstChange;
         secondIter += secondChange;
@@ -53366,6 +53365,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -53394,6 +53397,13 @@ function (_Piece) {
 
     return _this;
   }
+
+  _createClass(Queen, [{
+    key: "checkIfCouldMove",
+    value: function checkIfCouldMove(newSquare) {
+      return this.validator.validateDiagonally(this.square, newSquare) || this.validator.validateStraight(this.square, newSquare);
+    }
+  }]);
 
   return Queen;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);

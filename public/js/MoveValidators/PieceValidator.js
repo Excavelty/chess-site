@@ -36,12 +36,12 @@ export class PieceValidator
         {
             if(newCords.cordY < cords.cordY)
             {
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, -1, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, -1, -1, newSquare);
             }
 
             else if(newCords.cordY > cords.cordY)
             {
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, 1, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, -1, 1, newSquare);
             }
 
             else return false;
@@ -51,12 +51,12 @@ export class PieceValidator
         {
             if(newCords.cordY < cords.cordY)
             {
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, -1, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, 1, -1, newSquare);
             }
 
             else if(newCords.cordY > cords.cordY)
             {
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
             }
         }
 
@@ -74,9 +74,9 @@ export class PieceValidator
         if(cords.cordX === newCords.cordX)
         {
             if(newCords.cordY > cords.cordY)
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, 1, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, 0, 1, newSquare);
             else if(newCords.cordY < cords.cordY)
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, -1, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, 0, -1, newSquare);
             else
                 return false;
         }
@@ -86,9 +86,9 @@ export class PieceValidator
             const oldXCharCode = cordXIndex + 97;
             const newXCharCode = newCords.cordX.charCodeAt(0);
             if(newXCharCode > oldXCharCode)
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, 0, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, 1, 0, newSquare);
             else if(newXCharCode < oldXCharCode)
-                return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, 0, newSquare);
+                return this.validationLoop(cordXIndex, cordYIndex, -1, 0, newSquare);
             else
                 return false;
         }
@@ -97,7 +97,7 @@ export class PieceValidator
             return false;
     }
 
-    diagonalValidationLoop(firstIter, secondIter, firstChange, secondChange, newSquare)
+    validationLoop(firstIter, secondIter, firstChange, secondChange, newSquare)
     {
        firstIter += firstChange;
        secondIter += secondChange;
@@ -112,7 +112,6 @@ export class PieceValidator
             }
 
             const pieceIndex = this.getPieceIndexBySqr(currentSquare);
-            console.log(pieceIndex);
             if(pieceIndex !== null)
               return false;
 

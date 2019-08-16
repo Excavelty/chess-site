@@ -11,4 +11,9 @@ export class Queen extends Piece
             this.pieceIcon = '♛';
         this.updateDrawings(this.square);
     }
+
+    checkIfCouldMove(newSquare)
+    {
+        return this.validator.validateDiagonally(this.square, newSquare) || this.validator.validateStraight(this.square, newSquare);
+    }
 }
