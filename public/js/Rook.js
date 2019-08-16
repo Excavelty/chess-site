@@ -1,4 +1,5 @@
 import {Piece} from './Piece.js';
+import {PieceValidator} from './MoveValidators/PieceValidator.js';
 
 export class Rook extends Piece
 {
@@ -13,13 +14,10 @@ export class Rook extends Piece
         this.allowCastle = false;
     }
 
-    checkIfCouldMove(newSquare)//think of it low-priority
+    checkIfCouldMove(newSquare)
     {
-        let cords = this.square.cords;
-        let newCords = newSquare.cords;
-
-        if(cords.cordX === newCords.cordX || cords.cordY === newCords.cordY)
-            return true;
-        return false;
+        console.log(newSquare);
+        //return true;
+        return this.validator.validateStraight(this.square, newSquare);
     }
 }

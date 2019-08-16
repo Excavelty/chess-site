@@ -63,14 +63,42 @@ export class PieceValidator
         else return false;
     }
 
+    validateStraight(square, newSquare)
+    {
+        const cords = square.cords;
+        const newCords = newSquare.cords;
+
+        const cordXIndex = cords.cordX.charCodeAt(0) - 97;
+        const cordYIndex = cords.cordY - 1;
+
+        if(cords.cordX === newCords.cordX)
+        {
+            if(newCords.cordY > cords.cordY)
+                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, 1, newSquare);
+            else if(newCords.cordY < cords.cordY)
+                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, -1, newSquare);
+            else
+                return false;
+        }
+
+        else if(cords.cordY === newCords.cordY)
+        {
+            const oldXCharCode = cordXIndex + 97;
+            const newXCharCode = newCords.cordX.charCodeAt(0);
+            if(newXCharCode > oldXCharCode)
+                return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, 0, newSquare);
+            else if(newXCharCode < oldXCharCode)
+                return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, 0, newSquare);
+            else
+                return false;
+        }
+
+        else
+            return false;
+    }
+
     diagonalValidationLoop(firstIter, secondIter, firstChange, secondChange, newSquare)
     {
-       console.log(firstIter);
-       console.log(secondIter);
-       console.log(firstChange);
-       console.log(secondChange);
-       console.log(newSquare);
-
        firstIter += firstChange;
        secondIter += secondChange;
 
@@ -84,6 +112,7 @@ export class PieceValidator
             }
 
             const pieceIndex = this.getPieceIndexBySqr(currentSquare);
+            console.log(pieceIndex);
             if(pieceIndex !== null)
               return false;
 

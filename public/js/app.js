@@ -53132,13 +53132,24 @@ function () {
       } else return false;
     }
   }, {
+    key: "validateStraight",
+    value: function validateStraight(square, newSquare) {
+      var cords = square.cords;
+      var newCords = newSquare.cords;
+      var cordXIndex = cords.cordX.charCodeAt(0) - 97;
+      var cordYIndex = cords.cordY - 1;
+
+      if (cords.cordX === newCords.cordX) {
+        if (newCords.cordY > cords.cordY) return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, 1, newSquare);else if (newCords.cordY < cords.cordY) return this.diagonalValidationLoop(cordXIndex, cordYIndex, 0, -1, newSquare);else return false;
+      } else if (cords.cordY === newCords.cordY) {
+        var oldXCharCode = cordXIndex + 97;
+        var newXCharCode = newCords.cordX.charCodeAt(0);
+        if (newXCharCode > oldXCharCode) return this.diagonalValidationLoop(cordXIndex, cordYIndex, 1, 0, newSquare);else if (newXCharCode < oldXCharCode) return this.diagonalValidationLoop(cordXIndex, cordYIndex, -1, 0, newSquare);else return false;
+      } else return false;
+    }
+  }, {
     key: "diagonalValidationLoop",
     value: function diagonalValidationLoop(firstIter, secondIter, firstChange, secondChange, newSquare) {
-      console.log(firstIter);
-      console.log(secondIter);
-      console.log(firstChange);
-      console.log(secondChange);
-      console.log(newSquare);
       firstIter += firstChange;
       secondIter += secondChange;
 
@@ -53150,6 +53161,7 @@ function () {
         }
 
         var pieceIndex = this.getPieceIndexBySqr(currentSquare);
+        console.log(pieceIndex);
         if (pieceIndex !== null) return false;
         firstIter += firstChange;
         secondIter += secondChange;
@@ -53399,6 +53411,7 @@ function (_Piece) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rook", function() { return Rook; });
 /* harmony import */ var _Piece_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Piece.js */ "./public/js/Piece.js");
+/* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53416,6 +53429,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 var Rook =
@@ -53439,12 +53453,10 @@ function (_Piece) {
 
   _createClass(Rook, [{
     key: "checkIfCouldMove",
-    value: function checkIfCouldMove(newSquare) //think of it low-priority
-    {
-      var cords = this.square.cords;
-      var newCords = newSquare.cords;
-      if (cords.cordX === newCords.cordX || cords.cordY === newCords.cordY) return true;
-      return false;
+    value: function checkIfCouldMove(newSquare) {
+      console.log(newSquare); //return true;
+
+      return this.validator.validateStraight(this.square, newSquare);
     }
   }]);
 
