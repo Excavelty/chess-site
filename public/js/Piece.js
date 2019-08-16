@@ -8,6 +8,11 @@ export class Piece
         this.isOwned = false;
     }
 
+    setValidator(validator)
+    {
+        this.validator = validator;
+    }
+
     move(newSquare)
     {
         if(this.checkIfCouldMove(newSquare))

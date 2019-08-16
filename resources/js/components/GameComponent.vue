@@ -18,6 +18,7 @@
             let game = new Game(boardContainer, this.color);
             game.initializePieces();
             game.initializeSquareInput();
+            game.initializeValidatorAndInject();
         }
     }
 </script>

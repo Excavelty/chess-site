@@ -3,17 +3,6 @@ export class Square
     constructor(cords)
     {
         this.cords = cords;
-        switch(this.cords.cordY)
-        {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            {
-                this.containingPiece = true;
-            } break;
-            default: this.containingPiece = false;
-        }
         this.squareRep = document.createElement('div');
         this.squareRep.id = 'square' + this.cords.cordX + this.cords.cordY;
         this.colorDefault = this.chooseSquareColor();

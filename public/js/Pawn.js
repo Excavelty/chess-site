@@ -27,7 +27,7 @@ export class Pawn extends Piece
                 {
                     if(this.color === 'white' && cords.cordY === newCords.cordY - 1)
                       return true;
-                    else if(this.color === 'black' && cord.cordY === newCords.cordY + 1)
+                    else if(this.color === 'black' && cords.cordY === newCords.cordY + 1)
                       return true;
                     else
                       return false;

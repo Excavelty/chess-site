@@ -2,6 +2,7 @@
 //author of flat array snippet: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
 import {Square} from './Square.js';
 import {SquareInput} from './SquareInput.js';
+import {PieceValidator} from './MoveValidators/PieceValidator.js';
 import {King} from './King.js';
 import {Queen} from './Queen.js';
 import {Bishop} from './Bishop.js';
@@ -25,7 +26,6 @@ export class Game
           this.boardContainer = boardContainer;
           const boardContent = this.initializeBoard(this.playersColor);
           this.boardContainer.innerHTML = boardContent;
-          //this.boardContainer.style.transform = 'rotate(180deg)';
           for(let i = 0; i < this.squaresNum; ++i)
             for(let j = 0; j < this.squaresNum; ++j)
                 this.squares[i][j].attachCursorEvent();
@@ -68,6 +68,18 @@ export class Game
         this.squares[i][j] = new Square(cords);
         htmlContent += this.squares[i][j].getHTMLRepresentation().outerHTML;
         return htmlContent;
+    }
+
+    initializeValidatorAndInject()
+    {
+        let validator = new PieceValidator(this.pieces, this.squares);
+        for(let i = 0; i < this.pieces.length; ++i)
+        {
+            if(this.pieces[i].color === this.playersColor)
+            {
+                this.pieces[i].setValidator(validator);
+            }
+        }
     }
 
     initializePieces()

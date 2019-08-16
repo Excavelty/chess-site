@@ -14,8 +14,6 @@ export class Bishop extends Piece
 
     checkIfCouldMove(newSquare)
     {
-        let cords = this.square.cords;
-        let newCords = newSquare.cords;
-        return true;
+        return this.validator.validateDiagonally(this.square, newSquare);
     }
 }
