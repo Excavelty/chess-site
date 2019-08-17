@@ -1,7 +1,9 @@
 import {SpecialMoves} from './SpecialMoves.js';
 import {King} from './King.js';
 import {Pawn} from './Pawn.js';
+import {Queen} from './Queen.js';//maybe delete later
 import {Square} from './Square.js';
+import {PromotionSelector} from './PromotionSelector';
 
 export class SquareInput
 {
@@ -176,6 +178,18 @@ export class SquareInput
         if(this.pieces[pieceIndex].move(this.square))
         {
             this.pieces[pieceIndex].updateDrawings(oldSquare);
+            if(this.pieces[pieceIndex] instanceof Pawn)
+            {
+                if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black')
+                {
+                    PromotionSelector.triggerModal(this.pieces, pieceIndex);
+                }
+
+                else if(this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
+                {
+                    PromotionSelector.triggerModal(this.pieces, pieceIndex);
+                }
+            }
             return true;
         }
         else
