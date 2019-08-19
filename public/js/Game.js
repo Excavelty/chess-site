@@ -3,6 +3,7 @@
 import {Square} from './Square.js';
 import {SquareInput} from './SquareInput.js';
 import {PieceValidator} from './MoveValidators/PieceValidator.js';
+import {MoveControl} from './MoveControl.js';
 import {King} from './King.js';
 import {Queen} from './Queen.js';
 import {Bishop} from './Bishop.js';
@@ -75,10 +76,7 @@ export class Game
         let validator = new PieceValidator(this.pieces, this.squares);
         for(let i = 0; i < this.pieces.length; ++i)
         {
-            if(this.pieces[i].color === this.playersColor)
-            {
-                this.pieces[i].setValidator(validator);
-            }
+              this.pieces[i].setValidator(validator);
         }
     }
 
@@ -97,11 +95,12 @@ export class Game
     initializeSquareInput()
     {
         this.squareInputs = [];
+        let moveControl = new MoveControl();
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)
             {
-                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor));
+                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl));
             }
         }
     }

@@ -3,16 +3,19 @@ import {King} from './King.js';
 import {Pawn} from './Pawn.js';
 import {Queen} from './Queen.js';//maybe delete later
 import {Square} from './Square.js';
+import {CompPlayer} from './CompPlayer.js';
 import {PromotionSelector} from './PromotionSelector';
 
 export class SquareInput
 {
-    constructor(square, pieces, squares, playersColor)
+    constructor(square, pieces, squares, playersColor, moveControl)
     {
         this.playersColor = playersColor;
         this.square = square;
         this.squares = squares;
         this.pieces = pieces;
+        this.moveControl = moveControl;
+        this.compPlayer = new CompPlayer('black');
         this.prepareSquareClick();
     }
 
@@ -117,6 +120,14 @@ export class SquareInput
                 {
                     this.unOwnPiece(ownedPiece);
                     this.putPiece(ownedPiece);
+
+                    /*let pieceIndexes = this.compPlayer.getPieceIndexes();
+                    let index = this.getIndexBySqr(this.squares[pieceIndexes.first][pieceIndexes.second]);
+                    let newCords = this.compPlayer.getSquareIndexes();
+                    this.ownPiece(index);
+                    const oldSquare = this.pieces[index].square;
+                    this.pieces[index].move(this.squares[newCords.first][newCords.second]);
+                    this.pieces[index].updateDrawings(oldSquare);*/
                 }
             }
         }
@@ -128,6 +139,16 @@ export class SquareInput
         {
             if(this.pieces[i].square === sqr)
                 return this.pieces[i];
+        }
+        return null;
+    }
+
+    getIndexBySqr(sqr)
+    {
+        for(let i = 0; i < this.pieces.length; ++i)
+        {
+            if(this.pieces[i].square === sqr)
+                return i;
         }
         return null;
     }
@@ -154,7 +175,7 @@ export class SquareInput
 
     ownPiece(pieceIndex)
     {
-        if(this.pieces[pieceIndex].color === this.playersColor)
+        if(this.pieces[pieceIndex].color === this.moveControl.moveOf)//this.pieces[pieceIndex].color === this.playersColor)
         {
             this.pieces[pieceIndex].square.changeColor('#26C281');
             this.pieces[pieceIndex].isOwned = true;
@@ -174,6 +195,7 @@ export class SquareInput
 
     putPiece(pieceIndex)
     {
+        this.moveControl.changePlayer();
         const oldSquare = this.pieces[pieceIndex].square;
         if(this.pieces[pieceIndex].move(this.square))
         {

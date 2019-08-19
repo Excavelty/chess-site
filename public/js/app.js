@@ -52733,6 +52733,54 @@ function (_Piece) {
 
 /***/ }),
 
+/***/ "./public/js/CompPlayer.js":
+/*!*********************************!*\
+  !*** ./public/js/CompPlayer.js ***!
+  \*********************************/
+/*! exports provided: CompPlayer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CompPlayer", function() { return CompPlayer; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var CompPlayer =
+/*#__PURE__*/
+function () {
+  function CompPlayer(color) {
+    _classCallCheck(this, CompPlayer);
+
+    this.color = color;
+  }
+
+  _createClass(CompPlayer, [{
+    key: "getPieceIndexes",
+    value: function getPieceIndexes() {
+      return {
+        first: 4,
+        second: 6
+      };
+    }
+  }, {
+    key: "getSquareIndexes",
+    value: function getSquareIndexes() {
+      return {
+        first: 4,
+        second: 4
+      };
+    }
+  }]);
+
+  return CompPlayer;
+}();
+
+/***/ }),
+
 /***/ "./public/js/Game.js":
 /*!***************************!*\
   !*** ./public/js/Game.js ***!
@@ -52746,12 +52794,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
 /* harmony import */ var _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SquareInput.js */ "./public/js/SquareInput.js");
 /* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
-/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
-/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
-/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
-/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
-/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
-/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
+/* harmony import */ var _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MoveControl.js */ "./public/js/MoveControl.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -52760,6 +52809,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 //thanks to: https://developer.mozilla.org/pl/profiles/raszta
 //author of flat array snippet: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+
 
 
 
@@ -52827,9 +52877,7 @@ function () {
       var validator = new _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_2__["PieceValidator"](this.pieces, this.squares);
 
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i].color === this.playersColor) {
-          this.pieces[i].setValidator(validator);
-        }
+        this.pieces[i].setValidator(validator);
       }
     }
   }, {
@@ -52848,10 +52896,11 @@ function () {
     key: "initializeSquareInput",
     value: function initializeSquareInput() {
       this.squareInputs = [];
+      var moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"]();
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
-          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor));
+          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl));
         }
       }
     }
@@ -52861,11 +52910,11 @@ function () {
       var pawns = [];
 
       for (var i = 0; i < this.squaresNum; ++i) {
-        pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_7__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
+        pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_8__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
       }
 
       for (var _i3 = 0; _i3 < this.squaresNum; ++_i3) {
-        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_7__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
+        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_8__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
       }
 
       return pawns;
@@ -52880,27 +52929,27 @@ function () {
   }, {
     key: "prepareRooks",
     value: function prepareRooks() {
-      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_8__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_8__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_8__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_8__["Rook"](this.squares[7][7], 'black')];
+      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[7][7], 'black')];
     }
   }, {
     key: "prepareKnights",
     value: function prepareKnights() {
-      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_6__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_6__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_6__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_6__["Knight"](this.squares[6][7], 'black')];
+      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[6][7], 'black')];
     }
   }, {
     key: "prepareBishops",
     value: function prepareBishops() {
-      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_5__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_5__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_5__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_5__["Bishop"](this.squares[5][7], 'black')];
+      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[5][7], 'black')];
     }
   }, {
     key: "prepareKings",
     value: function prepareKings() {
-      return [new _King_js__WEBPACK_IMPORTED_MODULE_3__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_3__["King"](this.squares[4][7], 'black')];
+      return [new _King_js__WEBPACK_IMPORTED_MODULE_4__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_4__["King"](this.squares[4][7], 'black')];
     }
   }, {
     key: "prepareQueens",
     value: function prepareQueens() {
-      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_4__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_4__["Queen"](this.squares[3][7], 'black')];
+      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_5__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_5__["Queen"](this.squares[3][7], 'black')];
     }
   }]);
 
@@ -53070,6 +53119,44 @@ function (_Piece) {
 
   return Knight;
 }(_Piece_js__WEBPACK_IMPORTED_MODULE_0__["Piece"]);
+
+/***/ }),
+
+/***/ "./public/js/MoveControl.js":
+/*!**********************************!*\
+  !*** ./public/js/MoveControl.js ***!
+  \**********************************/
+/*! exports provided: MoveControl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MoveControl", function() { return MoveControl; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var MoveControl =
+/*#__PURE__*/
+function () {
+  function MoveControl() {
+    _classCallCheck(this, MoveControl);
+
+    this.moveOf = 'white';
+  }
+
+  _createClass(MoveControl, [{
+    key: "changePlayer",
+    value: function changePlayer() {
+      this.moveOf = this.moveOf === 'white' ? 'black' : 'white';
+      console.log(this.moveOf);
+    }
+  }]);
+
+  return MoveControl;
+}();
 
 /***/ }),
 
@@ -53735,7 +53822,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
 /* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
-/* harmony import */ var _PromotionSelector__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PromotionSelector */ "./public/js/PromotionSelector.js");
+/* harmony import */ var _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CompPlayer.js */ "./public/js/CompPlayer.js");
+/* harmony import */ var _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PromotionSelector */ "./public/js/PromotionSelector.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -53749,16 +53837,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var SquareInput =
 /*#__PURE__*/
 function () {
-  function SquareInput(square, pieces, squares, playersColor) {
+  function SquareInput(square, pieces, squares, playersColor, moveControl) {
     _classCallCheck(this, SquareInput);
 
     this.playersColor = playersColor;
     this.square = square;
     this.squares = squares;
     this.pieces = pieces;
+    this.moveControl = moveControl;
+    this.compPlayer = new _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__["CompPlayer"]('black');
     this.prepareSquareClick();
   }
 
@@ -53839,6 +53930,13 @@ function () {
           if (potentialPiece === null) {
             this.unOwnPiece(ownedPiece);
             this.putPiece(ownedPiece);
+            /*let pieceIndexes = this.compPlayer.getPieceIndexes();
+            let index = this.getIndexBySqr(this.squares[pieceIndexes.first][pieceIndexes.second]);
+            let newCords = this.compPlayer.getSquareIndexes();
+            this.ownPiece(index);
+            const oldSquare = this.pieces[index].square;
+            this.pieces[index].move(this.squares[newCords.first][newCords.second]);
+            this.pieces[index].updateDrawings(oldSquare);*/
           }
         }
       }
@@ -53848,6 +53946,15 @@ function () {
     value: function getPieceBySquare(sqr) {
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].square === sqr) return this.pieces[i];
+      }
+
+      return null;
+    }
+  }, {
+    key: "getIndexBySqr",
+    value: function getIndexBySqr(sqr) {
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i].square === sqr) return i;
       }
 
       return null;
@@ -53873,10 +53980,11 @@ function () {
   }, {
     key: "ownPiece",
     value: function ownPiece(pieceIndex) {
-      if (this.pieces[pieceIndex].color === this.playersColor) {
-        this.pieces[pieceIndex].square.changeColor('#26C281');
-        this.pieces[pieceIndex].isOwned = true;
-      }
+      if (this.pieces[pieceIndex].color === this.moveControl.moveOf) //this.pieces[pieceIndex].color === this.playersColor)
+        {
+          this.pieces[pieceIndex].square.changeColor('#26C281');
+          this.pieces[pieceIndex].isOwned = true;
+        }
     }
   }, {
     key: "unOwnPiece",
@@ -53892,6 +54000,7 @@ function () {
   }, {
     key: "putPiece",
     value: function putPiece(pieceIndex) {
+      this.moveControl.changePlayer();
       var oldSquare = this.pieces[pieceIndex].square;
 
       if (this.pieces[pieceIndex].move(this.square)) {
@@ -53899,9 +54008,9 @@ function () {
 
         if (this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
           if (this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black') {
-            _PromotionSelector__WEBPACK_IMPORTED_MODULE_5__["PromotionSelector"].triggerModal(this.pieces, pieceIndex);
+            _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex);
           } else if (this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white') {
-            _PromotionSelector__WEBPACK_IMPORTED_MODULE_5__["PromotionSelector"].triggerModal(this.pieces, pieceIndex);
+            _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex);
           }
         }
 
