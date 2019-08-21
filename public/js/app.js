@@ -52896,7 +52896,7 @@ function () {
     key: "initializeSquareInput",
     value: function initializeSquareInput() {
       this.squareInputs = [];
-      var moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"]();
+      var moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"](this.pieces, this.squares);
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
@@ -53141,17 +53141,34 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var MoveControl =
 /*#__PURE__*/
 function () {
-  function MoveControl() {
+  function MoveControl(pieces, squares) {
     _classCallCheck(this, MoveControl);
 
     this.moveOf = 'white';
+    this.pieces = pieces;
+    this.squares = squares;
+    this.boardContainer = document.querySelector('.boardContainer');
   }
 
   _createClass(MoveControl, [{
     key: "changePlayer",
     value: function changePlayer() {
+      if (this.moveOf === 'white') {
+        this.boardContainer.style.transform = 'rotate(180deg)';
+        this.rotatePieces('rotate(180deg)');
+      } else {
+        this.boardContainer.style.transform = 'rotate(0deg)';
+        this.rotatePieces('rotate(0deg)');
+      }
+
       this.moveOf = this.moveOf === 'white' ? 'black' : 'white';
-      console.log(this.moveOf);
+    }
+  }, {
+    key: "rotatePieces",
+    value: function rotatePieces(rotation) {
+      for (var i = 0; i < this.pieces.length; ++i) {
+        this.pieces[i].rotate(rotation);
+      }
     }
   }]);
 
@@ -53417,12 +53434,26 @@ function () {
       var oldSquareHTMLHandle = oldSquare.getSquareHandle();
       this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
       var currentSquareHTMLHandle = this.square.getSquareHandle();
-      currentSquareHTMLHandle.textContent = this.pieceIcon;
+      var pieceIcon = document.createElement('div');
+      pieceIcon.classList += 'pieceIcon';
+      pieceIcon.textContent = this.pieceIcon;
+      currentSquareHTMLHandle.append(pieceIcon); //currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
   }, {
     key: "cleanIconFromPreviousSquare",
     value: function cleanIconFromPreviousSquare(oldSquareHTMLHandle) {
-      oldSquareHTMLHandle.textContent = '';
+      var pieceIconHandle = oldSquareHTMLHandle.querySelector('.pieceIcon');
+
+      if (pieceIconHandle) {
+        pieceIconHandle.remove();
+      }
+    }
+  }, {
+    key: "rotate",
+    value: function rotate(rotation) {
+      var pieceIconHandle = this.square.getSquareHandle().querySelector('.pieceIcon');
+      pieceIconHandle.style.transform = rotation;
+      if (rotation === 'rotate(180deg)') pieceIconHandle.style.transform = rotation + ' translateY(25%)';
     }
   }, {
     key: "checkIfCouldMove",
@@ -53990,6 +54021,7 @@ function () {
     key: "unOwnPiece",
     value: function unOwnPiece(pieceIndex) {
       this.pieces[pieceIndex].square.changeColor();
+      this.prepareSquareClick();
       this.pieces[pieceIndex].isOwned = false;
     }
   }, {
@@ -54000,7 +54032,6 @@ function () {
   }, {
     key: "putPiece",
     value: function putPiece(pieceIndex) {
-      this.moveControl.changePlayer();
       var oldSquare = this.pieces[pieceIndex].square;
 
       if (this.pieces[pieceIndex].move(this.square)) {
@@ -54014,6 +54045,7 @@ function () {
           }
         }
 
+        this.moveControl.changePlayer();
         return true;
       } else {
         this.ownPiece(pieceIndex);

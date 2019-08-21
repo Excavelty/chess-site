@@ -185,6 +185,7 @@ export class SquareInput
     unOwnPiece(pieceIndex)
     {
         this.pieces[pieceIndex].square.changeColor();
+        this.prepareSquareClick();
         this.pieces[pieceIndex].isOwned = false;
     }
 
@@ -195,7 +196,6 @@ export class SquareInput
 
     putPiece(pieceIndex)
     {
-        this.moveControl.changePlayer();
         const oldSquare = this.pieces[pieceIndex].square;
         if(this.pieces[pieceIndex].move(this.square))
         {
@@ -212,6 +212,8 @@ export class SquareInput
                     PromotionSelector.triggerModal(this.pieces, pieceIndex);
                 }
             }
+
+            this.moveControl.changePlayer();
             return true;
         }
         else

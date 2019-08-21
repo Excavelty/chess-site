@@ -95,7 +95,7 @@ export class Game
     initializeSquareInput()
     {
         this.squareInputs = [];
-        let moveControl = new MoveControl();
+        let moveControl = new MoveControl(this.pieces, this.squares);
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)

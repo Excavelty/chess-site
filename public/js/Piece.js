@@ -29,12 +29,28 @@ export class Piece
           const oldSquareHTMLHandle = oldSquare.getSquareHandle();
           this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
           const currentSquareHTMLHandle = this.square.getSquareHandle();
-          currentSquareHTMLHandle.textContent = this.pieceIcon;
+          let pieceIcon = document.createElement('div');
+          pieceIcon.classList += 'pieceIcon';
+          pieceIcon.textContent = this.pieceIcon;
+          currentSquareHTMLHandle.append(pieceIcon);
+          //currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
 
     cleanIconFromPreviousSquare(oldSquareHTMLHandle)
     {
-        oldSquareHTMLHandle.textContent = '';
+        const pieceIconHandle = oldSquareHTMLHandle.querySelector('.pieceIcon');
+        if(pieceIconHandle)
+        {
+            pieceIconHandle.remove();
+        }
+    }
+
+    rotate(rotation)
+    {
+        let pieceIconHandle = this.square.getSquareHandle().querySelector('.pieceIcon');
+        pieceIconHandle.style.transform = rotation;
+        if(rotation === 'rotate(180deg)')
+            pieceIconHandle.style.transform = rotation + ' translateY(25%)'
     }
 
     checkIfCouldMove(newSquare)
