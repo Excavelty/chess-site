@@ -1,5 +1,8 @@
 <template>
-    <div class="boardContainer mx-auto">
+    <div class="container">
+        <input type="button" class="btn btn-primary mx-auto boardRotate" value="Obróć szachownicę">
+        <div class="boardContainer mx-auto">
+        </div>
     </div>
 </template>
 
@@ -33,5 +36,10 @@
 
 .square:hover {
     cursour: pointer;
+}
+
+.boardRotate {
+    display: block;
+    margin: 2vh;
 }
 </style>

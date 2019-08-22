@@ -213,7 +213,9 @@ export class SquareInput
                 }
             }
 
+            this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
             this.moveControl.changePlayer();
+            //this.moveControl.rotateBoard();
             return true;
         }
         else

@@ -6,21 +6,20 @@ export class MoveControl
         this.pieces = pieces;
         this.squares = squares;
         this.boardContainer = document.querySelector('.boardContainer');
+        const boardRotateHandle = document.querySelector('.boardRotate');
+        boardRotateHandle.addEventListener('click', () => this.rotateBoard());
     }
 
     changePlayer()
     {
-        if(this.moveOf === 'white')
-        {
-            this.boardContainer.style.transform = 'rotate(180deg)';
-            this.rotatePieces('rotate(180deg)');
-        }
-        else
-        {
-            this.boardContainer.style.transform = 'rotate(0deg)';
-            this.rotatePieces('rotate(0deg)')
-        }
         this.moveOf = (this.moveOf === 'white')? 'black' : 'white';
+    }
+
+    rotateBoard()
+    {
+        const rotation = this.boardContainer.style.transform === 'rotate(180deg)'? 'rotate(0deg)' : 'rotate(180deg)';
+        this.boardContainer.style.transform = rotation;
+        this.rotatePieces(rotation);
     }
 
     rotatePieces(rotation)
@@ -29,5 +28,11 @@ export class MoveControl
         {
             this.pieces[i].rotate(rotation)
         }
+    }
+
+    rotatePieceAfterMoveIfNecessary(index)
+    {
+        if(this.boardContainer.style.transform === 'rotate(180deg)')
+            this.pieces[index].rotate('rotate(180deg)');
     }
 }

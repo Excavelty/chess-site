@@ -4,6 +4,7 @@ import {Square} from './Square.js';
 import {SquareInput} from './SquareInput.js';
 import {PieceValidator} from './MoveValidators/PieceValidator.js';
 import {MoveControl} from './MoveControl.js';
+import {CheckmateControl} from './CheckmateControl.js';
 import {King} from './King.js';
 import {Queen} from './Queen.js';
 import {Bishop} from './Bishop.js';

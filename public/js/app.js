@@ -1703,6 +1703,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -6178,7 +6181,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.boardContainer[data-v-5cec6160] {\r\n    width: 72vh;\r\n    height: 72vh;\n}\n.square[data-v-5cec6160] {\r\n    border: 1px solid #ddd;\n}\n.square[data-v-5cec6160]:hover {\r\n    cursour: pointer;\n}\r\n", ""]);
+exports.push([module.i, "\n.boardContainer[data-v-5cec6160] {\r\n    width: 72vh;\r\n    height: 72vh;\n}\n.square[data-v-5cec6160] {\r\n    border: 1px solid #ddd;\n}\n.square[data-v-5cec6160]:hover {\r\n    cursour: pointer;\n}\n.boardRotate[data-v-5cec6160] {\r\n    display: block;\r\n    margin: 2vh;\n}\r\n", ""]);
 
 // exports
 
@@ -37672,9 +37675,23 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "boardContainer mx-auto" })
+  return _vm._m(0)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "container" }, [
+      _c("input", {
+        staticClass: "btn btn-primary mx-auto boardRotate",
+        attrs: { type: "button", value: "Obróć szachownicę" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "boardContainer mx-auto" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -52733,6 +52750,52 @@ function (_Piece) {
 
 /***/ }),
 
+/***/ "./public/js/CheckmateControl.js":
+/*!***************************************!*\
+  !*** ./public/js/CheckmateControl.js ***!
+  \***************************************/
+/*! exports provided: CheckmateControl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CheckmateControl", function() { return CheckmateControl; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var CheckmateControl =
+/*#__PURE__*/
+function () {
+  function CheckmateControl(pieces) {
+    _classCallCheck(this, CheckmateControl);
+
+    this.pieces = pieces;
+  }
+
+  _createClass(CheckmateControl, [{
+    key: "seeIfCheck",
+    value: function seeIfCheck(piece, kingSquare) {
+      var compareColor = 'white';
+      if (piece.color === 'white') compareColor = 'black';
+
+      for (var i = 0; i < this.pieces.size; ++i) {
+        if (this.pieces.color === compareColor) {
+          if (this.pieces[i].checkIfCouldMove(kingSquare)) return true;
+        }
+      }
+
+      return false;
+    }
+  }]);
+
+  return CheckmateControl;
+}();
+
+/***/ }),
+
 /***/ "./public/js/CompPlayer.js":
 /*!*********************************!*\
   !*** ./public/js/CompPlayer.js ***!
@@ -52795,12 +52858,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SquareInput.js */ "./public/js/SquareInput.js");
 /* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
 /* harmony import */ var _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MoveControl.js */ "./public/js/MoveControl.js");
-/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
-/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
-/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
-/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
-/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
-/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
+/* harmony import */ var _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CheckmateControl.js */ "./public/js/CheckmateControl.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -52809,6 +52873,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 //thanks to: https://developer.mozilla.org/pl/profiles/raszta
 //author of flat array snippet: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+
 
 
 
@@ -52910,11 +52975,11 @@ function () {
       var pawns = [];
 
       for (var i = 0; i < this.squaresNum; ++i) {
-        pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_8__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
+        pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_9__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
       }
 
       for (var _i3 = 0; _i3 < this.squaresNum; ++_i3) {
-        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_8__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
+        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_9__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
       }
 
       return pawns;
@@ -52929,27 +52994,27 @@ function () {
   }, {
     key: "prepareRooks",
     value: function prepareRooks() {
-      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_9__["Rook"](this.squares[7][7], 'black')];
+      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[7][7], 'black')];
     }
   }, {
     key: "prepareKnights",
     value: function prepareKnights() {
-      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_7__["Knight"](this.squares[6][7], 'black')];
+      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[6][7], 'black')];
     }
   }, {
     key: "prepareBishops",
     value: function prepareBishops() {
-      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_6__["Bishop"](this.squares[5][7], 'black')];
+      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[5][7], 'black')];
     }
   }, {
     key: "prepareKings",
     value: function prepareKings() {
-      return [new _King_js__WEBPACK_IMPORTED_MODULE_4__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_4__["King"](this.squares[4][7], 'black')];
+      return [new _King_js__WEBPACK_IMPORTED_MODULE_5__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_5__["King"](this.squares[4][7], 'black')];
     }
   }, {
     key: "prepareQueens",
     value: function prepareQueens() {
-      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_5__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_5__["Queen"](this.squares[3][7], 'black')];
+      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_6__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_6__["Queen"](this.squares[3][7], 'black')];
     }
   }]);
 
@@ -53142,26 +53207,31 @@ var MoveControl =
 /*#__PURE__*/
 function () {
   function MoveControl(pieces, squares) {
+    var _this = this;
+
     _classCallCheck(this, MoveControl);
 
     this.moveOf = 'white';
     this.pieces = pieces;
     this.squares = squares;
     this.boardContainer = document.querySelector('.boardContainer');
+    var boardRotateHandle = document.querySelector('.boardRotate');
+    boardRotateHandle.addEventListener('click', function () {
+      return _this.rotateBoard();
+    });
   }
 
   _createClass(MoveControl, [{
     key: "changePlayer",
     value: function changePlayer() {
-      if (this.moveOf === 'white') {
-        this.boardContainer.style.transform = 'rotate(180deg)';
-        this.rotatePieces('rotate(180deg)');
-      } else {
-        this.boardContainer.style.transform = 'rotate(0deg)';
-        this.rotatePieces('rotate(0deg)');
-      }
-
       this.moveOf = this.moveOf === 'white' ? 'black' : 'white';
+    }
+  }, {
+    key: "rotateBoard",
+    value: function rotateBoard() {
+      var rotation = this.boardContainer.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+      this.boardContainer.style.transform = rotation;
+      this.rotatePieces(rotation);
     }
   }, {
     key: "rotatePieces",
@@ -53169,6 +53239,11 @@ function () {
       for (var i = 0; i < this.pieces.length; ++i) {
         this.pieces[i].rotate(rotation);
       }
+    }
+  }, {
+    key: "rotatePieceAfterMoveIfNecessary",
+    value: function rotatePieceAfterMoveIfNecessary(index) {
+      if (this.boardContainer.style.transform === 'rotate(180deg)') this.pieces[index].rotate('rotate(180deg)');
     }
   }]);
 
@@ -53437,6 +53512,7 @@ function () {
       var pieceIcon = document.createElement('div');
       pieceIcon.classList += 'pieceIcon';
       pieceIcon.textContent = this.pieceIcon;
+      currentSquareHTMLHandle.innerHTML = '';
       currentSquareHTMLHandle.append(pieceIcon); //currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
   }, {
@@ -53454,6 +53530,11 @@ function () {
       var pieceIconHandle = this.square.getSquareHandle().querySelector('.pieceIcon');
       pieceIconHandle.style.transform = rotation;
       if (rotation === 'rotate(180deg)') pieceIconHandle.style.transform = rotation + ' translateY(25%)';
+    }
+  }, {
+    key: "getRotation",
+    value: function getRotation() {
+      return this.square.getSquareHandle().querySelector('.pieceIcon').style.transform;
     }
   }, {
     key: "checkIfCouldMove",
@@ -54045,7 +54126,9 @@ function () {
           }
         }
 
-        this.moveControl.changePlayer();
+        this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
+        this.moveControl.changePlayer(); //this.moveControl.rotateBoard();
+
         return true;
       } else {
         this.ownPiece(pieceIndex);

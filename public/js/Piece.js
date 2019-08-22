@@ -32,13 +32,14 @@ export class Piece
           let pieceIcon = document.createElement('div');
           pieceIcon.classList += 'pieceIcon';
           pieceIcon.textContent = this.pieceIcon;
+          currentSquareHTMLHandle.innerHTML = '';
           currentSquareHTMLHandle.append(pieceIcon);
           //currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
 
     cleanIconFromPreviousSquare(oldSquareHTMLHandle)
     {
-        const pieceIconHandle = oldSquareHTMLHandle.querySelector('.pieceIcon');
+        let pieceIconHandle = oldSquareHTMLHandle.querySelector('.pieceIcon');
         if(pieceIconHandle)
         {
             pieceIconHandle.remove();
@@ -51,6 +52,11 @@ export class Piece
         pieceIconHandle.style.transform = rotation;
         if(rotation === 'rotate(180deg)')
             pieceIconHandle.style.transform = rotation + ' translateY(25%)'
+    }
+
+    getRotation()
+    {
+        return this.square.getSquareHandle().querySelector('.pieceIcon').style.transform;
     }
 
     checkIfCouldMove(newSquare)
