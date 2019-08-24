@@ -5,10 +5,10 @@ export class CheckmateControl
         this.pieces = pieces;
     }
 
-    seeIfCheck(piece, kingSquare)
+    static seeIfCheck(color, kingSquare)
     {
         let compareColor = 'white';
-        if(piece.color === 'white')
+        if(color === 'white')
           compareColor = 'black';
 
         for(let i = 0; i < this.pieces.size; ++i)

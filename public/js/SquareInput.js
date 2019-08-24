@@ -4,6 +4,7 @@ import {Pawn} from './Pawn.js';
 import {Queen} from './Queen.js';//maybe delete later
 import {Square} from './Square.js';
 import {CompPlayer} from './CompPlayer.js';
+import {CheckmateControl} from './CheckmateControl.js';
 import {PromotionSelector} from './PromotionSelector';
 
 export class SquareInput
@@ -202,20 +203,15 @@ export class SquareInput
             this.pieces[pieceIndex].updateDrawings(oldSquare);
             if(this.pieces[pieceIndex] instanceof Pawn)
             {
-                if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black')
+                if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black'
+                  || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
                 {
-                    PromotionSelector.triggerModal(this.pieces, pieceIndex);
-                }
-
-                else if(this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
-                {
-                    PromotionSelector.triggerModal(this.pieces, pieceIndex);
+                    PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl);
                 }
             }
 
             this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
             this.moveControl.changePlayer();
-            //this.moveControl.rotateBoard();
             return true;
         }
         else

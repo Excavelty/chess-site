@@ -52775,11 +52775,11 @@ function () {
     this.pieces = pieces;
   }
 
-  _createClass(CheckmateControl, [{
+  _createClass(CheckmateControl, null, [{
     key: "seeIfCheck",
-    value: function seeIfCheck(piece, kingSquare) {
+    value: function seeIfCheck(color, kingSquare) {
       var compareColor = 'white';
-      if (piece.color === 'white') compareColor = 'black';
+      if (color === 'white') compareColor = 'black';
 
       for (var i = 0; i < this.pieces.size; ++i) {
         if (this.pieces.color === compareColor) {
@@ -53589,7 +53589,7 @@ function () {
 
   _createClass(PromotionSelector, null, [{
     key: "triggerModal",
-    value: function triggerModal(pieces, index) {
+    value: function triggerModal(pieces, index, moveControl) {
       sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
         buttons: {
           queen: {
@@ -53610,12 +53610,12 @@ function () {
           }
         }
       }).then(function (value) {
-        PromotionSelector.preparePiece(value, pieces, index);
+        PromotionSelector.preparePiece(value, pieces, index, moveControl);
       });
     }
   }, {
     key: "preparePiece",
-    value: function preparePiece(value, pieces, index) {
+    value: function preparePiece(value, pieces, index, moveControl) {
       var validator = pieces[index].validator;
       var piece = pieces[index];
       var newPiece = undefined;
@@ -53639,6 +53639,7 @@ function () {
 
       newPiece.setValidator(validator);
       pieces[index] = newPiece;
+      moveControl.rotatePieceAfterMoveIfNecessary(index);
     }
   }]);
 
@@ -53797,8 +53798,14 @@ function () {
     key: "castle",
     value: function castle(rook, newSquare) {
       var oldSquare = rook.square;
+      var boardContainer = document.querySelector('.boardContainer');
       rook.move(newSquare);
       rook.updateDrawings(oldSquare);
+      var boardRotation = boardContainer.style.transform;
+
+      if (boardRotation !== rook.getRotation()) {
+        if (boardRotation === 'rotate(180deg)') rook.rotate('rotate(180deg)');else rook.rotate('rotate(0deg)');
+      }
     }
   }]);
 
@@ -53935,7 +53942,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
 /* harmony import */ var _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CompPlayer.js */ "./public/js/CompPlayer.js");
-/* harmony import */ var _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PromotionSelector */ "./public/js/PromotionSelector.js");
+/* harmony import */ var _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CheckmateControl.js */ "./public/js/CheckmateControl.js");
+/* harmony import */ var _PromotionSelector__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./PromotionSelector */ "./public/js/PromotionSelector.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -53946,6 +53954,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
  //maybe delete later
+
 
 
 
@@ -54119,16 +54128,13 @@ function () {
         this.pieces[pieceIndex].updateDrawings(oldSquare);
 
         if (this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
-          if (this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black') {
-            _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex);
-          } else if (this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white') {
-            _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex);
+          if (this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black' || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white') {
+            _PromotionSelector__WEBPACK_IMPORTED_MODULE_7__["PromotionSelector"].triggerModal(this.pieces, pieceIndex, this.moveControl);
           }
         }
 
         this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
-        this.moveControl.changePlayer(); //this.moveControl.rotateBoard();
-
+        this.moveControl.changePlayer();
         return true;
       } else {
         this.ownPiece(pieceIndex);
