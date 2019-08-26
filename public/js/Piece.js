@@ -4,7 +4,7 @@ export class Piece
     {
         this.square = square;
         this.color = color;
-        this.cords = this.square.cords;
+        //this.cords = this.square.cords;
         this.isOwned = false;
     }
 
@@ -20,7 +20,7 @@ export class Piece
             this.square = newSquare;
             return true;
         }
-
+        
         return false;
     }
 

@@ -4,12 +4,11 @@ import {Pawn} from './Pawn.js';
 import {Queen} from './Queen.js';//maybe delete later
 import {Square} from './Square.js';
 import {CompPlayer} from './CompPlayer.js';
-import {CheckmateControl} from './CheckmateControl.js';
 import {PromotionSelector} from './PromotionSelector';
 
 export class SquareInput
 {
-    constructor(square, pieces, squares, playersColor, moveControl)
+    constructor(square, pieces, squares, playersColor, moveControl, checkmateControl)
     {
         this.playersColor = playersColor;
         this.square = square;
@@ -17,6 +16,7 @@ export class SquareInput
         this.pieces = pieces;
         this.moveControl = moveControl;
         this.compPlayer = new CompPlayer('black');
+        this.checkmateControl = checkmateControl;
         this.prepareSquareClick();
     }
 
@@ -195,24 +195,43 @@ export class SquareInput
         return (this.pieces[ownedPiece].color === this.pieces[containedPiece].color);
     }
 
+    getKingIndex(color)
+    {
+        for(let i = 0; i < this.pieces.length; ++i)
+            if(this.pieces[i] instanceof King && this.pieces[i].color === color)
+                return i;
+    }
+
     putPiece(pieceIndex)
     {
         const oldSquare = this.pieces[pieceIndex].square;
-        if(this.pieces[pieceIndex].move(this.square))
-        {
-            this.pieces[pieceIndex].updateDrawings(oldSquare);
-            if(this.pieces[pieceIndex] instanceof Pawn)
-            {
-                if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black'
-                  || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
-                {
-                    PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl);
-                }
-            }
+        const kingColor = this.pieces[pieceIndex].color;
+        let kingIndex = this.getKingIndex(kingColor);
 
-            this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
-            this.moveControl.changePlayer();
-            return true;
+        if(this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square) === false)
+        {
+            if(this.pieces[pieceIndex].move(this.square))
+            {
+                console.log('haloHalo');
+                this.pieces[pieceIndex].updateDrawings(oldSquare);
+                if(this.pieces[pieceIndex] instanceof Pawn)
+                {
+                    if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black'
+                      || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
+                    {
+                        PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl);
+                    }
+                }
+
+                this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
+                this.moveControl.changePlayer();
+
+                const pieceColor = this.pieces[pieceIndex].color;
+                const color = pieceColor === 'white'? 'black' : 'white';
+                let index = this.getKingIndex(color);
+                this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+                return true;
+            }
         }
         else
         {

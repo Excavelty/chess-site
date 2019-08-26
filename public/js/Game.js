@@ -97,11 +97,12 @@ export class Game
     {
         this.squareInputs = [];
         let moveControl = new MoveControl(this.pieces, this.squares);
+        let checkmateControl = new CheckmateControl(this.pieces, this.squares);
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)
             {
-                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl));
+                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl));
             }
         }
     }
