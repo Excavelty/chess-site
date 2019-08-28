@@ -72,6 +72,8 @@ export class SquareInput
         else
         {
             let potentialPiece = null;
+            let couldMove = true;
+
             if(ownedPiece !== null)
             {
                 if(this.pieces[ownedPiece] instanceof King
@@ -94,8 +96,10 @@ export class SquareInput
                         let rook = this.getPieceBySquare(firstRookSquare);
                         if(rook)
                         {
-                            if(potentialPiece === null)
-                            SpecialMoves.castle(rook, newSquare);
+                            if(potentialPiece === null && rook.allowCastle)
+                                SpecialMoves.castle(rook, newSquare);
+                            else
+                                couldMove = false;
                         }
                     }
 
@@ -111,24 +115,18 @@ export class SquareInput
                         let rook = this.getPieceBySquare(secondRookSquare);
                         if(rook)
                         {
-                            if(potentialPiece === null)
-                              SpecialMoves.castle(rook, newSquare);
+                            if(potentialPiece === null && rook.allowCastle)
+                                SpecialMoves.castle(rook, newSquare);
+                            else
+                                couldMove = false;
                         }
                     }
                 }
 
-                if(potentialPiece === null)
+                if(couldMove)
                 {
                     this.unOwnPiece(ownedPiece);
                     this.putPiece(ownedPiece);
-
-                    /*let pieceIndexes = this.compPlayer.getPieceIndexes();
-                    let index = this.getIndexBySqr(this.squares[pieceIndexes.first][pieceIndexes.second]);
-                    let newCords = this.compPlayer.getSquareIndexes();
-                    this.ownPiece(index);
-                    const oldSquare = this.pieces[index].square;
-                    this.pieces[index].move(this.squares[newCords.first][newCords.second]);
-                    this.pieces[index].updateDrawings(oldSquare);*/
                 }
             }
         }
@@ -208,6 +206,10 @@ export class SquareInput
         const kingColor = this.pieces[pieceIndex].color;
         let kingIndex = this.getKingIndex(kingColor);
 
+        const pieceColor = this.pieces[pieceIndex].color;
+        const color = pieceColor === 'white'? 'black' : 'white';
+        let index = this.getKingIndex(color);
+
         if(this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square) === false)
         {
             if(this.pieces[pieceIndex].move(this.square))
@@ -218,16 +220,13 @@ export class SquareInput
                     if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black'
                       || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
                     {
-                        PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl);
+                        PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square);
                     }
                 }
 
                 this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
                 this.moveControl.changePlayer();
 
-                const pieceColor = this.pieces[pieceIndex].color;
-                const color = pieceColor === 'white'? 'black' : 'white';
-                let index = this.getKingIndex(color);
                 this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
                 return true;
             }

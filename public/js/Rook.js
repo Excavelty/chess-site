@@ -10,11 +10,17 @@ export class Rook extends Piece
         else
             this.pieceIcon = '♜';
         this.updateDrawings(this.square);
-        this.allowCastle = false;
+        this.allowCastle = true;
     }
 
     checkIfCouldMove(newSquare)
     {
         return this.validator.validateStraight(this.square, newSquare);
+    }
+
+    move(newSquare)
+    {
+        this.allowCastle = false;
+        return super.move(newSquare);
     }
 }
