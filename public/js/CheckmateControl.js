@@ -1,5 +1,11 @@
 import {cloneDeep} from 'lodash/cloneDeep';
 import {PieceValidator} from './MoveValidators/PieceValidator.js';
+import {King} from './King.js';
+import {Queen} from './Queen.js';
+import {Bishop} from './Bishop.js';
+import {Knight} from './Knight.js';
+import {Pawn} from './Pawn.js';
+import {Rook} from './Rook.js';
 
 export class CheckmateControl
 {
@@ -32,25 +38,36 @@ export class CheckmateControl
 
     seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, newSquare)//work on that
     {
-        const localPieces = _.cloneDeep(this.pieces);//to do: work on checkmates
-        localPieces[pieceIndex].square = newSquare;
-        let localValidator = new PieceValidator(localPieces, this.squares)
-        for(let i = 0; i < localPieces.length; ++i)
+        let oldSquare = this.pieces[pieceIndex].square;
+        this.pieces[pieceIndex].square = newSquare;
+        let potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
+        for(let i = 0; i < this.pieces.length; ++i)
         {
-            localPieces[i].setValidator(localValidator);
-            if(localPieces[i].color !== kingColor)
+            if(this.pieces[i].color !== kingColor)
             {
-                if(localPieces[i].checkIfCouldMove(localPieces[kingIndex].square))
+                if(this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square) && potentialPieceIndex !== i)
                 {
-                    console.log(localPieces[pieceIndex].square);
-                    console.log(localPieces[kingIndex].square);
+                    this.pieces[pieceIndex].square = oldSquare;
+                    this.pieces[kingIndex].square.changeColor('yellow');
                     return true;
                 }
             }
         }
 
+        this.pieces[pieceIndex].square = oldSquare;
         this.pieces[kingIndex].square.changeColor();
         return false;
+    }
+
+    getPieceIndexBySqr(square)
+    {
+        for(let i = 0; i < this.pieces.length; ++i)
+        {
+            if(this.pieces[i].square === square)
+                return i;
+        }
+
+        return null;
     }
 
     addCheckColor(square)

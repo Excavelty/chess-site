@@ -26,9 +26,15 @@ export class Pawn extends Piece
                 || cords.cordX === this.shiftChar(newCords.cordX, -1))
                 {
                     if(this.color === 'white' && cords.cordY === newCords.cordY - 1)
-                      return true;
+                    {
+                        this.allowDoubleMove = false;
+                        return true;
+                    }
                     else if(this.color === 'black' && cords.cordY === newCords.cordY + 1)
-                      return true;
+                    {
+                        this.allowDoubleMove = false;
+                        return true;
+                    }
                     else
                       return false;
                 }

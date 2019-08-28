@@ -56587,11 +56587,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_cloneDeep__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/cloneDeep */ "./node_modules/lodash/cloneDeep.js");
 /* harmony import */ var lodash_cloneDeep__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_cloneDeep__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+
+
 
 
 
@@ -56626,26 +56638,32 @@ function () {
     key: "seeIfWouldCauseCheck",
     value: function seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, newSquare) //work on that
     {
-      var localPieces = _.cloneDeep(this.pieces); //to do: work on checkmates
+      var oldSquare = this.pieces[pieceIndex].square;
+      this.pieces[pieceIndex].square = newSquare;
+      var potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
 
-
-      localPieces[pieceIndex].square = newSquare;
-      var localValidator = new _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_1__["PieceValidator"](localPieces, this.squares);
-
-      for (var i = 0; i < localPieces.length; ++i) {
-        localPieces[i].setValidator(localValidator);
-
-        if (localPieces[i].color !== kingColor) {
-          if (localPieces[i].checkIfCouldMove(localPieces[kingIndex].square)) {
-            console.log(localPieces[pieceIndex].square);
-            console.log(localPieces[kingIndex].square);
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i].color !== kingColor) {
+          if (this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square) && potentialPieceIndex !== i) {
+            this.pieces[pieceIndex].square = oldSquare;
+            this.pieces[kingIndex].square.changeColor('yellow');
             return true;
           }
         }
       }
 
+      this.pieces[pieceIndex].square = oldSquare;
       this.pieces[kingIndex].square.changeColor();
       return false;
+    }
+  }, {
+    key: "getPieceIndexBySqr",
+    value: function getPieceIndexBySqr(square) {
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i].square === square) return i;
+      }
+
+      return null;
     }
   }, {
     key: "addCheckColor",
@@ -57186,6 +57204,7 @@ function () {
         if (newCords.cordY < cords.cordY) {
           return this.validationLoop(cordXIndex, cordYIndex, 1, -1, newSquare);
         } else if (newCords.cordY > cords.cordY) {
+          //console.log('yesyes');
           return this.validationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
         }
       } else return false;
@@ -57294,7 +57313,13 @@ function (_Piece) {
         this.allowTake = false;
 
         if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1)) {
-          if (this.color === 'white' && cords.cordY === newCords.cordY - 1) return true;else if (this.color === 'black' && cords.cordY === newCords.cordY + 1) return true;else return false;
+          if (this.color === 'white' && cords.cordY === newCords.cordY - 1) {
+            this.allowDoubleMove = false;
+            return true;
+          } else if (this.color === 'black' && cords.cordY === newCords.cordY + 1) {
+            this.allowDoubleMove = false;
+            return true;
+          } else return false;
         } else return false;
       }
 
@@ -58008,7 +58033,6 @@ function () {
 
       if (this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square) === false) {
         if (this.pieces[pieceIndex].move(this.square)) {
-          console.log('haloHalo');
           this.pieces[pieceIndex].updateDrawings(oldSquare);
 
           if (this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {

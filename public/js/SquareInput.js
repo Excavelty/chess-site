@@ -212,7 +212,6 @@ export class SquareInput
         {
             if(this.pieces[pieceIndex].move(this.square))
             {
-                console.log('haloHalo');
                 this.pieces[pieceIndex].updateDrawings(oldSquare);
                 if(this.pieces[pieceIndex] instanceof Pawn)
                 {

@@ -56,6 +56,7 @@ export class PieceValidator
 
             else if(newCords.cordY > cords.cordY)
             {
+                //console.log('yesyes');
                 return this.validationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
             }
         }
