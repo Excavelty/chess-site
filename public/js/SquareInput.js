@@ -1,7 +1,7 @@
 import {SpecialMoves} from './SpecialMoves.js';
 import {King} from './King.js';
 import {Pawn} from './Pawn.js';
-import {Queen} from './Queen.js';//maybe delete later
+import {Rook} from './Rook.js';//maybe delete later
 import {Square} from './Square.js';
 import {CompPlayer} from './CompPlayer.js';
 import {PromotionSelector} from './PromotionSelector';
@@ -93,11 +93,13 @@ export class SquareInput
                     {
                         let newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
                         potentialPiece = this.getPieceBySquare(newSquare);
-                        let rook = this.getPieceBySquare(firstRookSquare);
-                        if(rook)
+                        let rookIndex = this.getIndexBySqr(firstRookSquare);
+                        if(rookIndex !== null)
                         {
-                            if(potentialPiece === null && rook.allowCastle)
-                                SpecialMoves.castle(rook, newSquare);
+                            if(potentialPiece === null && this.pieces[rookIndex].allowCastle
+                              && this.checkIfWouldCauseCheck(ownedPiece) === false
+                              && this.checkmateControl.seeIfWouldCauseCheck(ownedPiece, ownedPiece, this.pieces[ownedPiece].color, newSquare) === false)
+                                SpecialMoves.castle(this.pieces[rookIndex], newSquare);
                             else
                                 couldMove = false;
                         }
@@ -112,11 +114,13 @@ export class SquareInput
                         if(potentialPiece === null)
                             potentialPiece = potentialPiece2;
 
-                        let rook = this.getPieceBySquare(secondRookSquare);
-                        if(rook)
+                        let rookIndex = this.getIndexBySqr(secondRookSquare);
+                        if(rookIndex !== null)
                         {
-                            if(potentialPiece === null && rook.allowCastle)
-                                SpecialMoves.castle(rook, newSquare);
+                            if(potentialPiece === null && this.pieces[rookIndex].allowCastle
+                              && this.checkIfWouldCauseCheck(ownedPiece) === false
+                              && this.checkmateControl.seeIfWouldCauseCheck(ownedPiece, ownedPiece, this.pieces[ownedPiece].color, newSquare) === false)
+                                SpecialMoves.castle(this.pieces[rookIndex], newSquare);
                             else
                                 couldMove = false;
                         }
@@ -203,14 +207,12 @@ export class SquareInput
     putPiece(pieceIndex)
     {
         const oldSquare = this.pieces[pieceIndex].square;
-        const kingColor = this.pieces[pieceIndex].color;
-        let kingIndex = this.getKingIndex(kingColor);
 
         const pieceColor = this.pieces[pieceIndex].color;
         const color = pieceColor === 'white'? 'black' : 'white';
         let index = this.getKingIndex(color);
 
-        if(this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square) === false)
+        if(this.checkIfWouldCauseCheck(pieceIndex) === false)
         {
             if(this.pieces[pieceIndex].move(this.square))
             {
@@ -228,6 +230,24 @@ export class SquareInput
                 this.moveControl.changePlayer();
 
                 this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+                let kingIndex = this.getKingIndex(pieceColor);
+                if(this.pieces[pieceIndex] instanceof Rook)
+                {
+                    if(oldSquare.cords.cordX === 'a' && (oldSquare.cords.cordY === 1
+                      || oldSquare.cords.cordY === 8))
+                      this.pieces[kingIndex].disallowQueensideCastle = true;
+                    else if(oldSquare.cords.cordX === 'h' && (oldSquare.cords.cordY === 1
+                      || oldSquare.cords.cordY === 8))
+                      this.pieces[kingIndex].disallowKingsideCastle = true
+
+                    if(this.pieces[kingIndex].disallowKingsideCastle && this.pieces[kingIndex].disallowQueensideCastle)
+                    {
+                        this.pieces[kingIndex].allowCastle = false;
+                        this.pieces[kingIndex].disallowCastleCompletly = true;
+                    }
+                }
+                if(this.pieces[kingIndex].disallowCastleCompletly === false)
+                    this.pieces[kingIndex].allowCastle = true;
                 return true;
             }
         }
@@ -236,6 +256,13 @@ export class SquareInput
             this.ownPiece(pieceIndex);
             return false;
         }
+    }
+
+    checkIfWouldCauseCheck(pieceIndex)
+    {
+        const kingColor = this.pieces[pieceIndex].color;
+        let kingIndex = this.getKingIndex(kingColor);
+        return this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square);
     }
 
     takePiece(pieceIndex)

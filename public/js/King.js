@@ -11,6 +11,9 @@ export class King extends Piece
             this.pieceIcon = '♚';
         this.updateDrawings(this.square);
         this.allowCastle = true;
+        this.disallowCastleCompletly = false;
+        this.disallowKingsideCastle = false;
+        this.disallowQueensideCastle = false;
     }
 
     checkIfCouldMove(newSquare)
@@ -22,20 +25,22 @@ export class King extends Piece
         {
           if(this.color === 'white')
           {
-              if(newCords.cordX === 'g' && newCords.cordY === 1
-                || newCords.cordX === 'c' && newCords.cordY === 1)
+              if(newCords.cordX === 'g' && newCords.cordY === 1 && this.disallowKingsideCastle === false
+                || newCords.cordX === 'c' && newCords.cordY === 1 && this.disallowQueensideCastle === false)
               {
                   this.allowCastle = false;
+                  this.disallowCastleCompletly = true;
                   return true;
               }
           }
 
           if(this.color === 'black')
           {
-              if(newCords.cordX === 'g' && newCords.cordY === 8
-                || newCords.cordX === 'c' && newCords.cordY === 8)
+              if(newCords.cordX === 'g' && newCords.cordY === 8 && this.disallowKingsideCastle === false
+                || newCords.cordX === 'c' && newCords.cordY === 8 && this.disallowQueensideCastle === false)
                {
                   this.allowCastle = false;
+                  this.disallowCastleCompletly = true;
                   return true;
                }
           }
@@ -47,6 +52,7 @@ export class King extends Piece
               || cords.cordX === this.shiftChar(newCords.cordX, 1))
               {
                   this.allowCastle = false;
+                  this.disallowCastleCompletly = true;
                   return true;
               }
             return false;
@@ -60,11 +66,11 @@ export class King extends Piece
               || cords.cordX === newCords.cordX)
               {
                   this.allowCastle = false;
+                  this.disallowCastleCompletly = true;
                   return true;
               }
         }
 
-        else
-          return false;
+        else return false;
     }
 }

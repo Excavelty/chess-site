@@ -20,6 +20,8 @@ export class CheckmateControl
                 if(this.pieces[i].checkIfCouldMove(kingSquare))
                 {
                   this.addCheckColor(kingSquare);
+                  let index = this.getPieceIndexBySqr(kingSquare);
+                  this.pieces[index].allowCastle = false;
                   return true;
                 }
             }

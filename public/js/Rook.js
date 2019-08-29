@@ -20,7 +20,12 @@ export class Rook extends Piece
 
     move(newSquare)
     {
-        this.allowCastle = false;
-        return super.move(newSquare);
+        if(super.move(newSquare))
+        {
+            this.allowCastle = false;
+            return true;
+        }
+
+        return false;
     }
 }

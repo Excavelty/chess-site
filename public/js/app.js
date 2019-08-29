@@ -52788,6 +52788,8 @@ function () {
 
           if (this.pieces[i].checkIfCouldMove(kingSquare)) {
             this.addCheckColor(kingSquare);
+            var index = this.getPieceIndexBySqr(kingSquare);
+            this.pieces[index].allowCastle = false;
             return true;
           }
         }
@@ -53124,6 +53126,9 @@ function (_Piece) {
     _this.updateDrawings(_this.square);
 
     _this.allowCastle = true;
+    _this.disallowCastleCompletly = false;
+    _this.disallowKingsideCastle = false;
+    _this.disallowQueensideCastle = false;
     return _this;
   }
 
@@ -53135,15 +53140,17 @@ function (_Piece) {
 
       if (this.allowCastle) {
         if (this.color === 'white') {
-          if (newCords.cordX === 'g' && newCords.cordY === 1 || newCords.cordX === 'c' && newCords.cordY === 1) {
+          if (newCords.cordX === 'g' && newCords.cordY === 1 && this.disallowKingsideCastle === false || newCords.cordX === 'c' && newCords.cordY === 1 && this.disallowQueensideCastle === false) {
             this.allowCastle = false;
+            this.disallowCastleCompletly = true;
             return true;
           }
         }
 
         if (this.color === 'black') {
-          if (newCords.cordX === 'g' && newCords.cordY === 8 || newCords.cordX === 'c' && newCords.cordY === 8) {
+          if (newCords.cordX === 'g' && newCords.cordY === 8 && this.disallowKingsideCastle === false || newCords.cordX === 'c' && newCords.cordY === 8 && this.disallowQueensideCastle === false) {
             this.allowCastle = false;
+            this.disallowCastleCompletly = true;
             return true;
           }
         }
@@ -53152,6 +53159,7 @@ function (_Piece) {
       if (cords.cordY === newCords.cordY) {
         if (cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === this.shiftChar(newCords.cordX, 1)) {
           this.allowCastle = false;
+          this.disallowCastleCompletly = true;
           return true;
         }
 
@@ -53159,6 +53167,7 @@ function (_Piece) {
       } else if (cords.cordY === newCords.cordY + 1 || cords.cordY === newCords.cordY - 1) {
         if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1) || cords.cordX === newCords.cordX) {
           this.allowCastle = false;
+          this.disallowCastleCompletly = true;
           return true;
         }
       } else return false;
@@ -53833,8 +53842,12 @@ function (_Piece) {
   }, {
     key: "move",
     value: function move(newSquare) {
-      this.allowCastle = false;
-      return _get(_getPrototypeOf(Rook.prototype), "move", this).call(this, newSquare);
+      if (_get(_getPrototypeOf(Rook.prototype), "move", this).call(this, newSquare)) {
+        this.allowCastle = false;
+        return true;
+      }
+
+      return false;
     }
   }]);
 
@@ -53949,7 +53962,7 @@ function () {
     value: function chooseSquareColor() {
       var emptyLight = '#ffffff'; //'#DEB887';
 
-      var emptyDark = '#F5F5F5'; //'#D3D3D3';//'#DEB887';//'#B0E0E6';//'#8B4513';
+      var emptyDark = '#e8e8e8'; //'#D3D3D3';//'#DEB887';//'#B0E0E6';//'#8B4513';
 
       if (this.cords.cordY % 2 === 1) {
         switch (this.cords.cordX) {
@@ -54013,7 +54026,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SpecialMoves.js */ "./public/js/SpecialMoves.js");
 /* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
 /* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
-/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
+/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
 /* harmony import */ var _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CompPlayer.js */ "./public/js/CompPlayer.js");
 /* harmony import */ var _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PromotionSelector */ "./public/js/PromotionSelector.js");
@@ -54103,10 +54116,10 @@ function () {
             if (this.square === firstCompSquare) {
               var newSquare = this.squares[kingSqrCordXChrCode - 97 + 1][kingSqrCordYIndex];
               potentialPiece = this.getPieceBySquare(newSquare);
-              var rook = this.getPieceBySquare(firstRookSquare);
+              var rookIndex = this.getIndexBySqr(firstRookSquare);
 
-              if (rook) {
-                if (potentialPiece === null && rook.allowCastle) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(rook, newSquare);else couldMove = false;
+              if (rookIndex !== null) {
+                if (potentialPiece === null && this.pieces[rookIndex].allowCastle && this.checkIfWouldCauseCheck(ownedPiece) === false && this.checkmateControl.seeIfWouldCauseCheck(ownedPiece, ownedPiece, this.pieces[ownedPiece].color, newSquare) === false) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(this.pieces[rookIndex], newSquare);else couldMove = false;
               }
             } else if (this.square === secondCompSquare) {
               var _newSquare = this.squares[kingSqrCordXChrCode - 97 - 1][kingSqrCordYIndex];
@@ -54114,10 +54127,10 @@ function () {
               var potentialPiece2 = this.getPieceBySquare(this.squares[kingSqrCordXChrCode - 97 - 3][kingSqrCordYIndex]);
               if (potentialPiece === null) potentialPiece = potentialPiece2;
 
-              var _rook = this.getPieceBySquare(secondRookSquare);
+              var _rookIndex = this.getIndexBySqr(secondRookSquare);
 
-              if (_rook) {
-                if (potentialPiece === null && _rook.allowCastle) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(_rook, _newSquare);else couldMove = false;
+              if (_rookIndex !== null) {
+                if (potentialPiece === null && this.pieces[_rookIndex].allowCastle && this.checkIfWouldCauseCheck(ownedPiece) === false && this.checkmateControl.seeIfWouldCauseCheck(ownedPiece, ownedPiece, this.pieces[ownedPiece].color, _newSquare) === false) _SpecialMoves_js__WEBPACK_IMPORTED_MODULE_0__["SpecialMoves"].castle(this.pieces[_rookIndex], _newSquare);else couldMove = false;
               }
             }
           }
@@ -54197,13 +54210,11 @@ function () {
     key: "putPiece",
     value: function putPiece(pieceIndex) {
       var oldSquare = this.pieces[pieceIndex].square;
-      var kingColor = this.pieces[pieceIndex].color;
-      var kingIndex = this.getKingIndex(kingColor);
       var pieceColor = this.pieces[pieceIndex].color;
       var color = pieceColor === 'white' ? 'black' : 'white';
       var index = this.getKingIndex(color);
 
-      if (this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square) === false) {
+      if (this.checkIfWouldCauseCheck(pieceIndex) === false) {
         if (this.pieces[pieceIndex].move(this.square)) {
           this.pieces[pieceIndex].updateDrawings(oldSquare);
 
@@ -54216,12 +54227,31 @@ function () {
           this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
           this.moveControl.changePlayer();
           this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+          var kingIndex = this.getKingIndex(pieceColor);
+
+          if (this.pieces[pieceIndex] instanceof _Rook_js__WEBPACK_IMPORTED_MODULE_3__["Rook"]) {
+            if (oldSquare.cords.cordX === 'a' && (oldSquare.cords.cordY === 1 || oldSquare.cords.cordY === 8)) this.pieces[kingIndex].disallowQueensideCastle = true;else if (oldSquare.cords.cordX === 'h' && (oldSquare.cords.cordY === 1 || oldSquare.cords.cordY === 8)) this.pieces[kingIndex].disallowKingsideCastle = true;
+
+            if (this.pieces[kingIndex].disallowKingsideCastle && this.pieces[kingIndex].disallowQueensideCastle) {
+              this.pieces[kingIndex].allowCastle = false;
+              this.pieces[kingIndex].disallowCastleCompletly = true;
+            }
+          }
+
+          if (this.pieces[kingIndex].disallowCastleCompletly === false) this.pieces[kingIndex].allowCastle = true;
           return true;
         }
       } else {
         this.ownPiece(pieceIndex);
         return false;
       }
+    }
+  }, {
+    key: "checkIfWouldCauseCheck",
+    value: function checkIfWouldCauseCheck(pieceIndex) {
+      var kingColor = this.pieces[pieceIndex].color;
+      var kingIndex = this.getKingIndex(kingColor);
+      return this.checkmateControl.seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, this.square);
     }
   }, {
     key: "takePiece",
