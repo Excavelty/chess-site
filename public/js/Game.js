@@ -18,20 +18,45 @@ export class Game
     constructor(boardContainer, playersColor)
     {
           this.playersColor = playersColor;
-          this.squaresNum = 8;
-          this.squares = [];
 
-          for(let i = 0; i < this.squaresNum; ++i)
-          {
-              this.squares[i] = [];
-          }
 
           this.boardContainer = boardContainer;
-          const boardContent = this.initializeBoard(this.playersColor);
-          this.boardContainer.innerHTML = boardContent;
-          for(let i = 0; i < this.squaresNum; ++i)
-            for(let j = 0; j < this.squaresNum; ++j)
-                this.squares[i][j].attachCursorEvent();
+    }
+
+    initializeSquares()
+    {
+        this.squaresNum = 8;
+        this.squares = [];
+
+        for(let i = 0; i < this.squaresNum; ++i)
+        {
+            this.squares[i] = [];
+        }
+
+
+        const boardContent = this.initializeBoard(this.playersColor);
+        this.boardContainer.innerHTML = boardContent;
+
+        for(let i = 0; i < this.squaresNum; ++i)
+          for(let j = 0; j < this.squaresNum; ++j)
+              this.squares[i][j].attachCursorEvent();
+    }
+
+    restart()
+    {
+        this.initializeSquares();
+        this.initializePieces();
+        this.initializeSquareInput();
+        this.initializeValidatorAndInject();
+    }
+
+    end()
+    {
+        for(let i = 0; i < this.squareInputs.length; ++i)
+        {
+            let handle = this.squareInputs[i].square.getSquareHandle();
+            handle.removeEventListener('click', this.squareInputs[i].arrowFuncReference);
+        }
     }
 
     initializeBoard(playersColor)
@@ -85,12 +110,12 @@ export class Game
     initializePieces()
     {
           this.pieces = [];
-          this.pieces.push(this.preparePawns());
+          //this.pieces.push(this.preparePawns());
           this.pieces.push(this.prepareRooks());
-          this.pieces.push(this.prepareBishops());
-          this.pieces.push(this.prepareKnights());
+          //this.pieces.push(this.prepareBishops());
+          //this.pieces.push(this.prepareKnights());
           this.pieces.push(this.prepareKings());
-          this.pieces.push(this.prepareQueens());
+          //this.pieces.push(this.prepareQueens());
           this.pieces = this.flatArray(this.pieces);
     }
 
@@ -99,7 +124,7 @@ export class Game
         this.squareInputs = [];
         let moveControl = new MoveControl(this.pieces, this.squares);
         let checkmateControl = new CheckmateControl(this.pieces, this.squares);
-        let gameoverControl = new GameoverControl(this.pieces, this.squares);
+        let gameoverControl = new GameoverControl(this.pieces, this.squares, this);
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)

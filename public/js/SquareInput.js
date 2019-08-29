@@ -18,6 +18,7 @@ export class SquareInput
         this.compPlayer = new CompPlayer('black');
         this.checkmateControl = checkmateControl;
         this.gameoverControl = gameoverControl;
+        this.arrowFuncReference = () => this.squareClick();
 
         this.prepareSquareClick();
     }
@@ -25,10 +26,9 @@ export class SquareInput
     prepareSquareClick()
     {
         const squareHandle = this.square.getSquareHandle();
-        const self = this;
-        squareHandle.addEventListener('click', () => {
-            this.squareClick();
-        });
+        let self = this;
+        let arrowFuncReference = this.arrowFuncReference;
+        squareHandle.addEventListener('click', arrowFuncReference);
     }
 
     squareClick()

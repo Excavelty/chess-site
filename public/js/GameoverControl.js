@@ -5,10 +5,11 @@ import {King} from './King.js';
 
 export class GameoverControl
 {
-    constructor(pieces, squares)
+    constructor(pieces, squares, game)
     {
         this.pieces = pieces;
         this.squares = squares;
+        this.game = game;
     }
 
     checkIfDrawDueToMaterial()
@@ -26,7 +27,26 @@ export class GameoverControl
         }
 
         if(result)
-          swal("Koniec gry! Remis.");
+          swal("Remis.", {
+              buttons: {
+                  end: {
+                      text: "Zakończ",
+                      value: 'end'
+                  },
+
+                  restart: {
+                      text: "Jeszcze raz",
+                      value: 'restart'
+                  }
+              }
+          }).then((value) => {
+              if(value !== 'restart')
+                  value = 'end';
+              if(value === 'restart')
+                  this.restartGame();
+              else
+                  this.endGame();
+          });
         //return result;
     }
 
@@ -84,5 +104,15 @@ export class GameoverControl
         }
 
         return false;
+    }
+
+    restartGame()
+    {
+        this.game.restart();
+    }
+
+    endGame()
+    {
+        this.game.end();
     }
 }

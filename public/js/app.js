@@ -1716,6 +1716,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var boardContainer = document.querySelector('.boardContainer');
     var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer, this.color);
+    game.initializeSquares();
     game.initializePieces();
     game.initializeSquareInput();
     game.initializeValidatorAndInject();
@@ -52968,25 +52969,45 @@ function () {
     _classCallCheck(this, Game);
 
     this.playersColor = playersColor;
-    this.squaresNum = 8;
-    this.squares = [];
-
-    for (var i = 0; i < this.squaresNum; ++i) {
-      this.squares[i] = [];
-    }
-
     this.boardContainer = boardContainer;
-    var boardContent = this.initializeBoard(this.playersColor);
-    this.boardContainer.innerHTML = boardContent;
-
-    for (var _i = 0; _i < this.squaresNum; ++_i) {
-      for (var j = 0; j < this.squaresNum; ++j) {
-        this.squares[_i][j].attachCursorEvent();
-      }
-    }
   }
 
   _createClass(Game, [{
+    key: "initializeSquares",
+    value: function initializeSquares() {
+      this.squaresNum = 8;
+      this.squares = [];
+
+      for (var i = 0; i < this.squaresNum; ++i) {
+        this.squares[i] = [];
+      }
+
+      var boardContent = this.initializeBoard(this.playersColor);
+      this.boardContainer.innerHTML = boardContent;
+
+      for (var _i = 0; _i < this.squaresNum; ++_i) {
+        for (var j = 0; j < this.squaresNum; ++j) {
+          this.squares[_i][j].attachCursorEvent();
+        }
+      }
+    }
+  }, {
+    key: "restart",
+    value: function restart() {
+      this.initializeSquares();
+      this.initializePieces();
+      this.initializeSquareInput();
+      this.initializeValidatorAndInject();
+    }
+  }, {
+    key: "end",
+    value: function end() {
+      for (var i = 0; i < this.squareInputs.length; ++i) {
+        var handle = this.squareInputs[i].square.getSquareHandle();
+        handle.removeEventListener('click', this.squareInputs[i].arrowFuncReference);
+      }
+    }
+  }, {
     key: "initializeBoard",
     value: function initializeBoard(playersColor) {
       var htmlContent = '';
@@ -53025,13 +53046,13 @@ function () {
   }, {
     key: "initializePieces",
     value: function initializePieces() {
-      this.pieces = [];
-      this.pieces.push(this.preparePawns());
-      this.pieces.push(this.prepareRooks());
-      this.pieces.push(this.prepareBishops());
-      this.pieces.push(this.prepareKnights());
-      this.pieces.push(this.prepareKings());
-      this.pieces.push(this.prepareQueens());
+      this.pieces = []; //this.pieces.push(this.preparePawns());
+
+      this.pieces.push(this.prepareRooks()); //this.pieces.push(this.prepareBishops());
+      //this.pieces.push(this.prepareKnights());
+
+      this.pieces.push(this.prepareKings()); //this.pieces.push(this.prepareQueens());
+
       this.pieces = this.flatArray(this.pieces);
     }
   }, {
@@ -53040,7 +53061,7 @@ function () {
       this.squareInputs = [];
       var moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"](this.pieces, this.squares);
       var checkmateControl = new _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_4__["CheckmateControl"](this.pieces, this.squares);
-      var gameoverControl = new _GameoverControl_js__WEBPACK_IMPORTED_MODULE_5__["GameoverControl"](this.pieces, this.squares);
+      var gameoverControl = new _GameoverControl_js__WEBPACK_IMPORTED_MODULE_5__["GameoverControl"](this.pieces, this.squares, this);
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
@@ -53130,16 +53151,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var GameoverControl =
 /*#__PURE__*/
 function () {
-  function GameoverControl(pieces, squares) {
+  function GameoverControl(pieces, squares, game) {
     _classCallCheck(this, GameoverControl);
 
     this.pieces = pieces;
     this.squares = squares;
+    this.game = game;
   }
 
   _createClass(GameoverControl, [{
     key: "checkIfDrawDueToMaterial",
     value: function checkIfDrawDueToMaterial() {
+      var _this = this;
+
       var result = false;
 
       if (this.pieces.length === 4) {
@@ -53148,7 +53172,21 @@ function () {
         result = this.checkIfJustKingsLeft() || this.checkIfJustKingsAndBishopLeft() || this.checkIfJustKingsAndKnightLeft();
       }
 
-      if (result) sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Koniec gry! Remis."); //return result;
+      if (result) sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Remis.", {
+        buttons: {
+          end: {
+            text: "Zakończ",
+            value: 'end'
+          },
+          restart: {
+            text: "Jeszcze raz",
+            value: 'restart'
+          }
+        }
+      }).then(function (value) {
+        if (value !== 'restart') value = 'end';
+        if (value === 'restart') _this.restartGame();else _this.endGame();
+      }); //return result;
     }
   }, {
     key: "checkIfJustKingsLeft",
@@ -53190,6 +53228,16 @@ function () {
       }
 
       return false;
+    }
+  }, {
+    key: "restartGame",
+    value: function restartGame() {
+      this.game.restart();
+    }
+  }, {
+    key: "endGame",
+    value: function endGame() {
+      this.game.end();
     }
   }]);
 
@@ -54166,6 +54214,8 @@ var SquareInput =
 /*#__PURE__*/
 function () {
   function SquareInput(square, pieces, squares, playersColor, moveControl, checkmateControl, gameoverControl) {
+    var _this = this;
+
     _classCallCheck(this, SquareInput);
 
     this.playersColor = playersColor;
@@ -54176,19 +54226,21 @@ function () {
     this.compPlayer = new _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__["CompPlayer"]('black');
     this.checkmateControl = checkmateControl;
     this.gameoverControl = gameoverControl;
+
+    this.arrowFuncReference = function () {
+      return _this.squareClick();
+    };
+
     this.prepareSquareClick();
   }
 
   _createClass(SquareInput, [{
     key: "prepareSquareClick",
     value: function prepareSquareClick() {
-      var _this = this;
-
       var squareHandle = this.square.getSquareHandle();
       var self = this;
-      squareHandle.addEventListener('click', function () {
-        _this.squareClick();
-      });
+      var arrowFuncReference = this.arrowFuncReference;
+      squareHandle.addEventListener('click', arrowFuncReference);
     }
   }, {
     key: "squareClick",
