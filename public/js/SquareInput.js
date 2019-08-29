@@ -8,7 +8,7 @@ import {PromotionSelector} from './PromotionSelector';
 
 export class SquareInput
 {
-    constructor(square, pieces, squares, playersColor, moveControl, checkmateControl)
+    constructor(square, pieces, squares, playersColor, moveControl, checkmateControl, gameoverControl)
     {
         this.playersColor = playersColor;
         this.square = square;
@@ -17,6 +17,8 @@ export class SquareInput
         this.moveControl = moveControl;
         this.compPlayer = new CompPlayer('black');
         this.checkmateControl = checkmateControl;
+        this.gameoverControl = gameoverControl;
+
         this.prepareSquareClick();
     }
 
@@ -212,6 +214,9 @@ export class SquareInput
         const color = pieceColor === 'white'? 'black' : 'white';
         let index = this.getKingIndex(color);
 
+        if(this.checkmateControl.seeIfHaveNoMove(this.getKingIndex(pieceColor), pieceColor))
+            console.log('Koniec gry!');
+
         if(this.checkIfWouldCauseCheck(pieceIndex) === false)
         {
             if(this.pieces[pieceIndex].move(this.square))
@@ -268,5 +273,6 @@ export class SquareInput
     takePiece(pieceIndex)
     {
         this.pieces.splice(pieceIndex, 1);
+        this.gameoverControl.checkIfDrawDueToMaterial();
     }
 }

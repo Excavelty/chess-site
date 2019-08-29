@@ -54,6 +54,26 @@ export class CheckmateControl
         return false;
     }
 
+    seeIfHaveNoMove(kingIndex, kingColor)
+    {
+        let flattenedSquareArray = this.squares.reduce((acc, val) => acc.concat(val), []);
+        for(let i = 0; i < this.pieces.length; ++i)
+        {
+            if(this.pieces[i].color === kingColor)
+            {
+                for(let j = 0; j < flattenedSquareArray.length; ++j)
+                {
+                    let potentialPieceIndex = this.getPieceIndexBySqr(flattenedSquareArray[j]);
+                    if(this.seeIfWouldCauseCheck(i, kingIndex, kingColor, flattenedSquareArray[j]) === false
+                      && this.pieces[i].checkIfCouldMove(flattenedSquareArray[j]));
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     getPieceIndexBySqr(square)
     {
         for(let i = 0; i < this.pieces.length; ++i)

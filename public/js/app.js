@@ -52822,6 +52822,25 @@ function () {
       return false;
     }
   }, {
+    key: "seeIfHaveNoMove",
+    value: function seeIfHaveNoMove(kingIndex, kingColor) {
+      var flattenedSquareArray = this.squares.reduce(function (acc, val) {
+        return acc.concat(val);
+      }, []);
+
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i].color === kingColor) {
+          for (var j = 0; j < flattenedSquareArray.length; ++j) {
+            var potentialPieceIndex = this.getPieceIndexBySqr(flattenedSquareArray[j]);
+            if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, flattenedSquareArray[j]) === false && this.pieces[i].checkIfCouldMove(flattenedSquareArray[j])) ;
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+  }, {
     key: "getPieceIndexBySqr",
     value: function getPieceIndexBySqr(square) {
       for (var i = 0; i < this.pieces.length; ++i) {
@@ -52915,12 +52934,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
 /* harmony import */ var _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MoveControl.js */ "./public/js/MoveControl.js");
 /* harmony import */ var _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CheckmateControl.js */ "./public/js/CheckmateControl.js");
-/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
-/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
-/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
-/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
-/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
-/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
+/* harmony import */ var _GameoverControl_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./GameoverControl.js */ "./public/js/GameoverControl.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Queen_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Queen.js */ "./public/js/Queen.js");
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -52929,6 +52949,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 //thanks to: https://developer.mozilla.org/pl/profiles/raszta
 //author of flat array snippet: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
+
 
 
 
@@ -53019,10 +53040,11 @@ function () {
       this.squareInputs = [];
       var moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"](this.pieces, this.squares);
       var checkmateControl = new _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_4__["CheckmateControl"](this.pieces, this.squares);
+      var gameoverControl = new _GameoverControl_js__WEBPACK_IMPORTED_MODULE_5__["GameoverControl"](this.pieces, this.squares);
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
-          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl));
+          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl, gameoverControl));
         }
       }
     }
@@ -53032,11 +53054,11 @@ function () {
       var pawns = [];
 
       for (var i = 0; i < this.squaresNum; ++i) {
-        pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_9__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
+        pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_10__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
       }
 
       for (var _i3 = 0; _i3 < this.squaresNum; ++_i3) {
-        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_9__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
+        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_10__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
       }
 
       return pawns;
@@ -53051,31 +53073,127 @@ function () {
   }, {
     key: "prepareRooks",
     value: function prepareRooks() {
-      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_10__["Rook"](this.squares[7][7], 'black')];
+      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[7][7], 'black')];
     }
   }, {
     key: "prepareKnights",
     value: function prepareKnights() {
-      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_8__["Knight"](this.squares[6][7], 'black')];
+      return [new _Knight_js__WEBPACK_IMPORTED_MODULE_9__["Knight"](this.squares[1][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_9__["Knight"](this.squares[6][0], 'white'), new _Knight_js__WEBPACK_IMPORTED_MODULE_9__["Knight"](this.squares[1][7], 'black'), new _Knight_js__WEBPACK_IMPORTED_MODULE_9__["Knight"](this.squares[6][7], 'black')];
     }
   }, {
     key: "prepareBishops",
     value: function prepareBishops() {
-      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_7__["Bishop"](this.squares[5][7], 'black')];
+      return [new _Bishop_js__WEBPACK_IMPORTED_MODULE_8__["Bishop"](this.squares[2][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_8__["Bishop"](this.squares[5][0], 'white'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_8__["Bishop"](this.squares[2][7], 'black'), new _Bishop_js__WEBPACK_IMPORTED_MODULE_8__["Bishop"](this.squares[5][7], 'black')];
     }
   }, {
     key: "prepareKings",
     value: function prepareKings() {
-      return [new _King_js__WEBPACK_IMPORTED_MODULE_5__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_5__["King"](this.squares[4][7], 'black')];
+      return [new _King_js__WEBPACK_IMPORTED_MODULE_6__["King"](this.squares[4][0], 'white'), new _King_js__WEBPACK_IMPORTED_MODULE_6__["King"](this.squares[4][7], 'black')];
     }
   }, {
     key: "prepareQueens",
     value: function prepareQueens() {
-      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_6__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_6__["Queen"](this.squares[3][7], 'black')];
+      return [new _Queen_js__WEBPACK_IMPORTED_MODULE_7__["Queen"](this.squares[3][0], 'white'), new _Queen_js__WEBPACK_IMPORTED_MODULE_7__["Queen"](this.squares[3][7], 'black')];
     }
   }]);
 
   return Game;
+}();
+
+/***/ }),
+
+/***/ "./public/js/GameoverControl.js":
+/*!**************************************!*\
+  !*** ./public/js/GameoverControl.js ***!
+  \**************************************/
+/*! exports provided: GameoverControl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameoverControl", function() { return GameoverControl; });
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+
+var GameoverControl =
+/*#__PURE__*/
+function () {
+  function GameoverControl(pieces, squares) {
+    _classCallCheck(this, GameoverControl);
+
+    this.pieces = pieces;
+    this.squares = squares;
+  }
+
+  _createClass(GameoverControl, [{
+    key: "checkIfDrawDueToMaterial",
+    value: function checkIfDrawDueToMaterial() {
+      var result = false;
+
+      if (this.pieces.length === 4) {
+        result = this.checkIfJustKingsAndSameSquareColorBishopsLeft();
+      } else if (this.pieces.length < 4) {
+        result = this.checkIfJustKingsLeft() || this.checkIfJustKingsAndBishopLeft() || this.checkIfJustKingsAndKnightLeft();
+      }
+
+      if (result) sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Koniec gry! Remis."); //return result;
+    }
+  }, {
+    key: "checkIfJustKingsLeft",
+    value: function checkIfJustKingsLeft() {
+      if (this.pieces.length === 2) return true;
+      return false;
+    }
+  }, {
+    key: "checkIfJustKingsAndBishopLeft",
+    value: function checkIfJustKingsAndBishopLeft() {
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i] instanceof _Bishop_js__WEBPACK_IMPORTED_MODULE_1__["Bishop"]) return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "checkIfJustKingsAndKnightLeft",
+    value: function checkIfJustKingsAndKnightLeft() {
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i] instanceof _Knight_js__WEBPACK_IMPORTED_MODULE_2__["Knight"]) return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "checkIfJustKingsAndSameSquareColorBishopsLeft",
+    value: function checkIfJustKingsAndSameSquareColorBishopsLeft() {
+      var previousBishop = undefined;
+
+      for (var i = 0; i < this.pieces.length; ++i) {
+        if (this.pieces[i] instanceof _Bishop_js__WEBPACK_IMPORTED_MODULE_1__["Bishop"]) {
+          if (previousBishop === undefined) {
+            previousBishop = this.pieces[i];
+          } else {
+            if (previousBishop.color !== this.pieces[i].color && previousBishop.square.colorDefault === this.pieces[i].square.colorDefault) return true;else return false;
+          }
+        }
+      }
+
+      return false;
+    }
+  }]);
+
+  return GameoverControl;
 }();
 
 /***/ }),
@@ -54047,7 +54165,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var SquareInput =
 /*#__PURE__*/
 function () {
-  function SquareInput(square, pieces, squares, playersColor, moveControl, checkmateControl) {
+  function SquareInput(square, pieces, squares, playersColor, moveControl, checkmateControl, gameoverControl) {
     _classCallCheck(this, SquareInput);
 
     this.playersColor = playersColor;
@@ -54057,6 +54175,7 @@ function () {
     this.moveControl = moveControl;
     this.compPlayer = new _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__["CompPlayer"]('black');
     this.checkmateControl = checkmateControl;
+    this.gameoverControl = gameoverControl;
     this.prepareSquareClick();
   }
 
@@ -54213,6 +54332,7 @@ function () {
       var pieceColor = this.pieces[pieceIndex].color;
       var color = pieceColor === 'white' ? 'black' : 'white';
       var index = this.getKingIndex(color);
+      if (this.checkmateControl.seeIfHaveNoMove(this.getKingIndex(pieceColor), pieceColor)) console.log('Koniec gry!');
 
       if (this.checkIfWouldCauseCheck(pieceIndex) === false) {
         if (this.pieces[pieceIndex].move(this.square)) {
@@ -54257,6 +54377,7 @@ function () {
     key: "takePiece",
     value: function takePiece(pieceIndex) {
       this.pieces.splice(pieceIndex, 1);
+      this.gameoverControl.checkIfDrawDueToMaterial();
     }
   }]);
 

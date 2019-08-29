@@ -5,6 +5,7 @@ import {SquareInput} from './SquareInput.js';
 import {PieceValidator} from './MoveValidators/PieceValidator.js';
 import {MoveControl} from './MoveControl.js';
 import {CheckmateControl} from './CheckmateControl.js';
+import {GameoverControl} from './GameoverControl.js';
 import {King} from './King.js';
 import {Queen} from './Queen.js';
 import {Bishop} from './Bishop.js';
@@ -98,11 +99,12 @@ export class Game
         this.squareInputs = [];
         let moveControl = new MoveControl(this.pieces, this.squares);
         let checkmateControl = new CheckmateControl(this.pieces, this.squares);
+        let gameoverControl = new GameoverControl(this.pieces, this.squares);
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)
             {
-                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl));
+                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl, gameoverControl));
             }
         }
     }
