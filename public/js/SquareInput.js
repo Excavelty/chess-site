@@ -214,9 +214,6 @@ export class SquareInput
         const color = pieceColor === 'white'? 'black' : 'white';
         let index = this.getKingIndex(color);
 
-        if(this.checkmateControl.seeIfHaveNoMove(this.getKingIndex(pieceColor), pieceColor))
-            console.log('Koniec gry!');
-
         if(this.checkIfWouldCauseCheck(pieceIndex) === false)
         {
             if(this.pieces[pieceIndex].move(this.square))
@@ -234,7 +231,25 @@ export class SquareInput
                 this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
                 this.moveControl.changePlayer();
 
-                this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+                let isCheck = this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+                if(isCheck)
+                    this.pieces[index].square.changeColor('yellow');
+                if(this.checkmateControl.seeIfHaveNoMove(index, color))
+                {
+                    if(isCheck)
+                    {
+                        let winners = 'białe.';
+                        if(pieceColor !== 'white')
+                          winners = 'czarne.';
+                        this.gameoverControl.displayFinishSwal("Koniec gry! Wygrały "+winners+"(mat).");
+                        this.pieces[index].square.changeColor('#581845');
+                    }
+                    else
+                    {
+                        this.gameoverControl.displayFinishSwal("Koniec gry! Remis(pat).");
+                        this.pieces[index].square.changeColor('lightblue');
+                    }
+                }
                 let kingIndex = this.getKingIndex(pieceColor);
                 if(this.pieces[pieceIndex] instanceof Rook)
                 {
@@ -253,6 +268,7 @@ export class SquareInput
                 }
                 if(this.pieces[kingIndex].disallowCastleCompletly === false)
                     this.pieces[kingIndex].allowCastle = true;
+                this.pieces[kingIndex].square.changeColor();
                 return true;
             }
         }

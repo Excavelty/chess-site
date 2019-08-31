@@ -123,12 +123,12 @@ export class Game
     initializePieces()
     {
           this.pieces = [];
-          //this.pieces.push(this.preparePawns());
+          this.pieces.push(this.preparePawns());
           this.pieces.push(this.prepareRooks());
-          //this.pieces.push(this.prepareBishops());
-          //this.pieces.push(this.prepareKnights());
+          this.pieces.push(this.prepareBishops());
+          this.pieces.push(this.prepareKnights());
           this.pieces.push(this.prepareKings());
-          //this.pieces.push(this.prepareQueens());
+          this.pieces.push(this.prepareQueens());
           this.pieces = this.flatArray(this.pieces);
     }
 

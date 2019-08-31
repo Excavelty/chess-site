@@ -28,27 +28,31 @@ export class GameoverControl
         }
 
         if(result)
-          swal("Remis.", {
-              buttons: {
-                  end: {
-                      text: "Zakończ",
-                      value: 'end'
-                  },
+          this.displayFinishSwal("Remis! Niewystarczający materiał do dania mata u obu stron");
+    }
 
-                  restart: {
-                      text: "Jeszcze raz",
-                      value: 'restart'
-                  }
-              }
-          }).then((value) => {
-              if(value !== 'restart')
-                  value = 'end';
-              if(value === 'restart')
-                  this.restartGame();
-              else
-                  this.endGame();
-          });
-        //return result;
+    displayFinishSwal(text)
+    {
+        swal(text, {
+            buttons: {
+                end: {
+                    text: "Zakończ",
+                    value: 'end'
+                },
+
+                restart: {
+                    text: "Jeszcze raz",
+                    value: 'restart'
+                }
+            }
+        }).then((value) => {
+            if(value !== 'restart')
+                value = 'end';
+            if(value === 'restart')
+                this.restartGame();
+            else
+                this.endGame();
+        });
     }
 
     checkIfJustKingsLeft()

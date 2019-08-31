@@ -52786,8 +52786,7 @@ function () {
 
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].color === compareColor) {
-          this.pieces[i].allowTake = true;
-
+          //this.pieces[i].allowTake = true;
           if (this.pieces[i].checkIfCouldMove(kingSquare)) {
             this.addCheckColor(kingSquare);
             var index = this.getPieceIndexBySqr(kingSquare);
@@ -52812,30 +52811,26 @@ function () {
           this.pieces[i].allowTake = true;
 
           if (potentialPieceIndex !== i && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square)) {
+            console.log(oldSquare);
+            console.log(this.pieces[pieceIndex].square);
             this.pieces[pieceIndex].square = oldSquare;
-            this.pieces[kingIndex].square.changeColor('yellow');
             return true;
           }
         }
       }
 
       this.pieces[pieceIndex].square = oldSquare;
-      this.pieces[kingIndex].square.changeColor();
       return false;
     }
   }, {
     key: "seeIfHaveNoMove",
     value: function seeIfHaveNoMove(kingIndex, kingColor) {
-      var flattenedSquareArray = this.squares.reduce(function (acc, val) {
-        return acc.concat(val);
-      }, []);
-
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i].color === kingColor) {
-          for (var j = 0; j < flattenedSquareArray.length; ++j) {
-            var potentialPieceIndex = this.getPieceIndexBySqr(flattenedSquareArray[j]);
-            if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, flattenedSquareArray[j]) === false && this.pieces[i].checkIfCouldMove(flattenedSquareArray[j])) ;
-            return false;
+        if (this.pieces[i].color === kingColor) ;
+
+        for (var j = 0; j < this.squares.length; ++j) {
+          for (var k = 0; k < this.squares[j].length; ++k) {
+            if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false && this.pieces[i].checkIfCouldMove(this.squares[j][k])) return false;
           }
         }
       }
@@ -53070,13 +53065,13 @@ function () {
   }, {
     key: "initializePieces",
     value: function initializePieces() {
-      this.pieces = []; //this.pieces.push(this.preparePawns());
-
-      this.pieces.push(this.prepareRooks()); //this.pieces.push(this.prepareBishops());
-      //this.pieces.push(this.prepareKnights());
-
-      this.pieces.push(this.prepareKings()); //this.pieces.push(this.prepareQueens());
-
+      this.pieces = [];
+      this.pieces.push(this.preparePawns());
+      this.pieces.push(this.prepareRooks());
+      this.pieces.push(this.prepareBishops());
+      this.pieces.push(this.prepareKnights());
+      this.pieces.push(this.prepareKings());
+      this.pieces.push(this.prepareQueens());
       this.pieces = this.flatArray(this.pieces);
     }
   }, {
@@ -53185,8 +53180,6 @@ function () {
   _createClass(GameoverControl, [{
     key: "checkIfDrawDueToMaterial",
     value: function checkIfDrawDueToMaterial() {
-      var _this = this;
-
       var result = false;
 
       if (this.pieces.length === 4) {
@@ -53195,7 +53188,14 @@ function () {
         result = this.checkIfJustKingsLeft() || this.checkIfJustKingsAndBishopLeft() || this.checkIfJustKingsAndKnightLeft();
       }
 
-      if (result) sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Remis.", {
+      if (result) this.displayFinishSwal("Remis! Niewystarczający materiał do dania mata u obu stron");
+    }
+  }, {
+    key: "displayFinishSwal",
+    value: function displayFinishSwal(text) {
+      var _this = this;
+
+      sweetalert__WEBPACK_IMPORTED_MODULE_0___default()(text, {
         buttons: {
           end: {
             text: "Zakończ",
@@ -53209,7 +53209,7 @@ function () {
       }).then(function (value) {
         if (value !== 'restart') value = 'end';
         if (value === 'restart') _this.restartGame();else _this.endGame();
-      }); //return result;
+      });
     }
   }, {
     key: "checkIfJustKingsLeft",
@@ -54419,7 +54419,6 @@ function () {
       var pieceColor = this.pieces[pieceIndex].color;
       var color = pieceColor === 'white' ? 'black' : 'white';
       var index = this.getKingIndex(color);
-      if (this.checkmateControl.seeIfHaveNoMove(this.getKingIndex(pieceColor), pieceColor)) console.log('Koniec gry!');
 
       if (this.checkIfWouldCauseCheck(pieceIndex) === false) {
         if (this.pieces[pieceIndex].move(this.square)) {
@@ -54433,7 +54432,21 @@ function () {
 
           this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
           this.moveControl.changePlayer();
-          this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+          var isCheck = this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+          if (isCheck) this.pieces[index].square.changeColor('yellow');
+
+          if (this.checkmateControl.seeIfHaveNoMove(index, color)) {
+            if (isCheck) {
+              var winners = 'białe.';
+              if (pieceColor !== 'white') winners = 'czarne.';
+              this.gameoverControl.displayFinishSwal("Koniec gry! Wygrały " + winners + "(mat).");
+              this.pieces[index].square.changeColor('#581845');
+            } else {
+              this.gameoverControl.displayFinishSwal("Koniec gry! Remis(pat).");
+              this.pieces[index].square.changeColor('lightblue');
+            }
+          }
+
           var kingIndex = this.getKingIndex(pieceColor);
 
           if (this.pieces[pieceIndex] instanceof _Rook_js__WEBPACK_IMPORTED_MODULE_3__["Rook"]) {
@@ -54446,6 +54459,7 @@ function () {
           }
 
           if (this.pieces[kingIndex].disallowCastleCompletly === false) this.pieces[kingIndex].allowCastle = true;
+          this.pieces[kingIndex].square.changeColor();
           return true;
         }
       } else {
