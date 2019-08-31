@@ -17,9 +17,10 @@
 
         mounted() {
             let boardContainer = document.querySelector('.boardContainer');
-            let game = new Game(boardContainer, this.color);
+            let game = new Game(boardContainer);
             game.initializeSquares();
             game.initializePieces();
+            game.initializeDependenciesToInject();
             game.initializeSquareInput();
             game.initializeValidatorAndInject();
         }

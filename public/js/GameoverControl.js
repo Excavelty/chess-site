@@ -1,4 +1,5 @@
 import swal from 'sweetalert';
+import {Game} from './Game.js';
 import {Bishop} from './Bishop.js';
 import {Knight} from './Knight.js';
 import {King} from './King.js';
@@ -108,7 +109,13 @@ export class GameoverControl
 
     restartGame()
     {
-        this.game.restart();
+        this.game.moveControl.boardRotateHandle.removeEventListener('click', this.game.moveControl.rotateBoardReference);
+        this.game = new Game(this.game.boardContainer);
+        this.game.initializeSquares();
+        this.game.initializePieces();
+        this.game.initializeDependenciesToInject();
+        this.game.initializeSquareInput();
+        this.game.initializeValidatorAndInject();
     }
 
     endGame()

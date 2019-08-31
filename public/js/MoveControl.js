@@ -6,8 +6,9 @@ export class MoveControl
         this.pieces = pieces;
         this.squares = squares;
         this.boardContainer = document.querySelector('.boardContainer');
-        const boardRotateHandle = document.querySelector('.boardRotate');
-        boardRotateHandle.addEventListener('click', () => this.rotateBoard());
+        this.boardRotateHandle = document.querySelector('.boardRotate');
+        this.rotateBoardReference = () => this.rotateBoard();
+        this.boardRotateHandle.addEventListener('click', this.rotateBoardReference);
     }
 
     changePlayer()
@@ -26,7 +27,7 @@ export class MoveControl
     {
         for(let i = 0; i < this.pieces.length; ++i)
         {
-            this.pieces[i].rotate(rotation)
+            this.pieces[i].rotate(rotation);
         }
     }
 

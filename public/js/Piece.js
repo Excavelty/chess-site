@@ -20,7 +20,7 @@ export class Piece
             this.square = newSquare;
             return true;
         }
-        
+
         return false;
     }
 
@@ -49,9 +49,14 @@ export class Piece
     rotate(rotation)
     {
         let pieceIconHandle = this.square.getSquareHandle().querySelector('.pieceIcon');
-        pieceIconHandle.style.transform = rotation;
-        if(rotation === 'rotate(180deg)')
-            pieceIconHandle.style.transform = rotation + ' translateY(25%)'
+        if(pieceIconHandle !== null)
+        {
+          pieceIconHandle.style.transform = rotation;
+          if(rotation === 'rotate(180deg)')
+              pieceIconHandle.style.transform = rotation + ' translateY(25%)'
+        }
+        else
+         console.log('asd');
     }
 
     getRotation()

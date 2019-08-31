@@ -1715,9 +1715,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     var boardContainer = document.querySelector('.boardContainer');
-    var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer, this.color);
+    var game = new _public_js_Game_js__WEBPACK_IMPORTED_MODULE_0__["Game"](boardContainer);
     game.initializeSquares();
     game.initializePieces();
+    game.initializeDependenciesToInject();
     game.initializeSquareInput();
     game.initializeValidatorAndInject();
   }
@@ -52965,11 +52966,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Game =
 /*#__PURE__*/
 function () {
-  function Game(boardContainer, playersColor) {
+  function Game(boardContainer) {
     _classCallCheck(this, Game);
 
-    this.playersColor = playersColor;
     this.boardContainer = boardContainer;
+    this.boardContainer.style.transform = "rotate(0deg)";
   }
 
   _createClass(Game, [{
@@ -52992,12 +52993,27 @@ function () {
       }
     }
   }, {
+    key: "initializeDependenciesToInject",
+    value: function initializeDependenciesToInject() {
+      this.moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"](this.pieces, this.squares);
+      this.checkmateControl = new _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_4__["CheckmateControl"](this.pieces, this.squares);
+      this.gameoverControl = new _GameoverControl_js__WEBPACK_IMPORTED_MODULE_5__["GameoverControl"](this.pieces, this.squares, this);
+    }
+  }, {
     key: "restart",
     value: function restart() {
+      this.squares = null;
+      this.pieces = null;
+      this.squareInputs = null; //this.boardContainer.innerHTML = null;
+
       this.initializeSquares();
       this.initializePieces();
+      this.initializeDependenciesToInject();
       this.initializeSquareInput();
       this.initializeValidatorAndInject();
+      console.log(this.squares);
+      console.log(this.pieces);
+      console.log(this.squareInputs);
     }
   }, {
     key: "end",
@@ -53010,16 +53026,24 @@ function () {
   }, {
     key: "initializeBoard",
     value: function initializeBoard(playersColor) {
-      var htmlContent = '';
-      if (playersColor === 'white') for (var j = this.squaresNum - 1; j >= 0; --j) {
+      var htmlContent = ''; //if(playersColor === 'white')
+
+      for (var j = this.squaresNum - 1; j >= 0; --j) {
         for (var i = 0; i < this.squaresNum; ++i) {
           htmlContent = this.fillSquaresAndAddToContent(htmlContent, i, j);
         }
-      } else for (var _j = 0; _j < this.squaresNum; ++_j) {
-        for (var _i2 = this.squaresNum - 1; _i2 >= 0; --_i2) {
-          htmlContent = this.fillSquaresAndAddToContent(htmlContent, _i2, _j);
-        }
       }
+      /*else
+          for(let j = 0; j < this.squaresNum; ++j)
+          {
+              for(let i = this.squaresNum - 1; i >= 0; --i)
+              {
+                  htmlContent = this.fillSquaresAndAddToContent(htmlContent, i, j)
+              }
+          }
+      */
+
+
       return htmlContent;
     }
   }, {
@@ -53059,13 +53083,10 @@ function () {
     key: "initializeSquareInput",
     value: function initializeSquareInput() {
       this.squareInputs = [];
-      var moveControl = new _MoveControl_js__WEBPACK_IMPORTED_MODULE_3__["MoveControl"](this.pieces, this.squares);
-      var checkmateControl = new _CheckmateControl_js__WEBPACK_IMPORTED_MODULE_4__["CheckmateControl"](this.pieces, this.squares);
-      var gameoverControl = new _GameoverControl_js__WEBPACK_IMPORTED_MODULE_5__["GameoverControl"](this.pieces, this.squares, this);
 
       for (var i = 0; i < this.squaresNum; ++i) {
         for (var j = 0; j < this.squaresNum; ++j) {
-          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl, gameoverControl));
+          this.squareInputs.push(new _SquareInput_js__WEBPACK_IMPORTED_MODULE_1__["SquareInput"](this.squares[i][j], this.pieces, this.squares, this.playersColor, this.moveControl, this.checkmateControl, this.gameoverControl));
         }
       }
     }
@@ -53078,8 +53099,8 @@ function () {
         pawns[i] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_10__["Pawn"](this.squares[i][1], 'white'); //for second line in fact
       }
 
-      for (var _i3 = 0; _i3 < this.squaresNum; ++_i3) {
-        pawns[_i3 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_10__["Pawn"](this.squares[_i3][6], 'black'); //for seventh line in fact
+      for (var _i2 = 0; _i2 < this.squaresNum; ++_i2) {
+        pawns[_i2 + this.squaresNum] = new _Pawn_js__WEBPACK_IMPORTED_MODULE_10__["Pawn"](this.squares[_i2][6], 'black'); //for seventh line in fact
       }
 
       return pawns;
@@ -53135,14 +53156,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameoverControl", function() { return GameoverControl; });
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
-/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
-/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
+/* harmony import */ var _Game_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Game.js */ "./public/js/Game.js");
+/* harmony import */ var _Bishop_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Bishop.js */ "./public/js/Bishop.js");
+/* harmony import */ var _Knight_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Knight.js */ "./public/js/Knight.js");
+/* harmony import */ var _King_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./King.js */ "./public/js/King.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -53198,7 +53221,7 @@ function () {
     key: "checkIfJustKingsAndBishopLeft",
     value: function checkIfJustKingsAndBishopLeft() {
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i] instanceof _Bishop_js__WEBPACK_IMPORTED_MODULE_1__["Bishop"]) return true;
+        if (this.pieces[i] instanceof _Bishop_js__WEBPACK_IMPORTED_MODULE_2__["Bishop"]) return true;
       }
 
       return false;
@@ -53207,7 +53230,7 @@ function () {
     key: "checkIfJustKingsAndKnightLeft",
     value: function checkIfJustKingsAndKnightLeft() {
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i] instanceof _Knight_js__WEBPACK_IMPORTED_MODULE_2__["Knight"]) return true;
+        if (this.pieces[i] instanceof _Knight_js__WEBPACK_IMPORTED_MODULE_3__["Knight"]) return true;
       }
 
       return false;
@@ -53218,7 +53241,7 @@ function () {
       var previousBishop = undefined;
 
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i] instanceof _Bishop_js__WEBPACK_IMPORTED_MODULE_1__["Bishop"]) {
+        if (this.pieces[i] instanceof _Bishop_js__WEBPACK_IMPORTED_MODULE_2__["Bishop"]) {
           if (previousBishop === undefined) {
             previousBishop = this.pieces[i];
           } else {
@@ -53232,7 +53255,13 @@ function () {
   }, {
     key: "restartGame",
     value: function restartGame() {
-      this.game.restart();
+      this.game.moveControl.boardRotateHandle.removeEventListener('click', this.game.moveControl.rotateBoardReference);
+      this.game = new _Game_js__WEBPACK_IMPORTED_MODULE_1__["Game"](this.game.boardContainer);
+      this.game.initializeSquares();
+      this.game.initializePieces();
+      this.game.initializeDependenciesToInject();
+      this.game.initializeSquareInput();
+      this.game.initializeValidatorAndInject();
     }
   }, {
     key: "endGame",
@@ -53445,10 +53474,13 @@ function () {
     this.pieces = pieces;
     this.squares = squares;
     this.boardContainer = document.querySelector('.boardContainer');
-    var boardRotateHandle = document.querySelector('.boardRotate');
-    boardRotateHandle.addEventListener('click', function () {
+    this.boardRotateHandle = document.querySelector('.boardRotate');
+
+    this.rotateBoardReference = function () {
       return _this.rotateBoard();
-    });
+    };
+
+    this.boardRotateHandle.addEventListener('click', this.rotateBoardReference);
   }
 
   _createClass(MoveControl, [{
@@ -53765,8 +53797,11 @@ function () {
     key: "rotate",
     value: function rotate(rotation) {
       var pieceIconHandle = this.square.getSquareHandle().querySelector('.pieceIcon');
-      pieceIconHandle.style.transform = rotation;
-      if (rotation === 'rotate(180deg)') pieceIconHandle.style.transform = rotation + ' translateY(25%)';
+
+      if (pieceIconHandle !== null) {
+        pieceIconHandle.style.transform = rotation;
+        if (rotation === 'rotate(180deg)') pieceIconHandle.style.transform = rotation + ' translateY(25%)';
+      } else console.log('asd');
     }
   }, {
     key: "getRotation",

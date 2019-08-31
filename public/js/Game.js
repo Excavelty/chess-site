@@ -15,12 +15,10 @@ import {Rook} from './Rook.js';
 
 export class Game
 {
-    constructor(boardContainer, playersColor)
+    constructor(boardContainer)
     {
-          this.playersColor = playersColor;
-
-
           this.boardContainer = boardContainer;
+          this.boardContainer.style.transform = "rotate(0deg)";
     }
 
     initializeSquares()
@@ -42,12 +40,27 @@ export class Game
               this.squares[i][j].attachCursorEvent();
     }
 
+    initializeDependenciesToInject()
+    {
+        this.moveControl = new MoveControl(this.pieces, this.squares);
+        this.checkmateControl = new CheckmateControl(this.pieces, this.squares);
+        this.gameoverControl = new GameoverControl(this.pieces, this.squares, this);
+    }
+
     restart()
     {
+        this.squares = null;
+        this.pieces = null;
+        this.squareInputs = null;
+        //this.boardContainer.innerHTML = null;
         this.initializeSquares();
         this.initializePieces();
+        this.initializeDependenciesToInject();
         this.initializeSquareInput();
         this.initializeValidatorAndInject();
+        console.log(this.squares);
+        console.log(this.pieces);
+        console.log(this.squareInputs);
     }
 
     end()
@@ -63,7 +76,7 @@ export class Game
     {
           let htmlContent = '';
 
-          if(playersColor === 'white')
+          //if(playersColor === 'white')
               for(let j = this.squaresNum - 1; j >= 0; --j)
               {
 
@@ -73,7 +86,7 @@ export class Game
                   }
               }
 
-          else
+          /*else
               for(let j = 0; j < this.squaresNum; ++j)
               {
                   for(let i = this.squaresNum - 1; i >= 0; --i)
@@ -81,7 +94,7 @@ export class Game
                       htmlContent = this.fillSquaresAndAddToContent(htmlContent, i, j)
                   }
               }
-
+          */
           return htmlContent;
     }
 
@@ -122,14 +135,11 @@ export class Game
     initializeSquareInput()
     {
         this.squareInputs = [];
-        let moveControl = new MoveControl(this.pieces, this.squares);
-        let checkmateControl = new CheckmateControl(this.pieces, this.squares);
-        let gameoverControl = new GameoverControl(this.pieces, this.squares, this);
         for(let i = 0; i < this.squaresNum; ++i)
         {
             for(let j = 0; j < this.squaresNum; ++j)
             {
-                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, moveControl, checkmateControl, gameoverControl));
+                this.squareInputs.push(new SquareInput(this.squares[i][j], this.pieces, this.squares, this.playersColor, this.moveControl, this.checkmateControl, this.gameoverControl));
             }
         }
     }
