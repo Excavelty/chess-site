@@ -54,5 +54,6 @@ export class PromotionSelector
         moveControl.rotatePieceAfterMoveIfNecessary(index);
         const color = newPiece.color === 'white'? 'black' : 'white';
         checkmateControl.seeIfCheck(color, kingSquare);
+        //here gameoverControl;
     }
 }

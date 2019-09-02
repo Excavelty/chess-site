@@ -52822,18 +52822,39 @@ function () {
         }
       }
 
+      if (pieceIndex === kingIndex) console.log(this.pieces[pieceIndex].square);
       this.pieces[pieceIndex].square = oldSquare;
       return false;
     }
   }, {
     key: "seeIfHaveNoMove",
     value: function seeIfHaveNoMove(kingIndex, kingColor) {
+      var disallowCastleCompletly = this.pieces[kingIndex].disallowCastleCompletly;
+      var allowCastle = this.pieces[kingIndex].allowCastle;
+
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].color === kingColor) {
           for (var j = 0; j < this.squares.length; ++j) {
             for (var k = 0; k < this.squares[j].length; ++k) {
+              var allowDoubleMove = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] ? this.pieces[i].allowDoubleMove : null;
+              var allowTake = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] ? this.pieces[i].allowTake : null;
+
               if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false && this.pieces[i].checkIfCouldMove(this.squares[j][k])) {
+                if (i === kingIndex) {
+                  this.pieces[kingIndex].disallowCastleCompletly = disallowCastleCompletly;
+                  this.pieces[kingIndex].allowCastle = allowCastle;
+                }
+
+                if (allowDoubleMove !== null) {
+                  this.pieces[i].allowDoubleMove = allowDoubleMove; //this.pieces[i].allowTake = allowTake;
+                }
+
                 return false;
+              }
+
+              if (allowDoubleMove !== null) {
+                this.pieces[i].allowDoubleMove = allowDoubleMove;
+                this.pieces[i].allowTake = allowTake;
               }
             }
           }
@@ -53327,7 +53348,7 @@ function (_Piece) {
     key: "checkIfCouldMove",
     value: function checkIfCouldMove(newSquare) {
       var cords = this.square.cords;
-      var newCords = newSquare.cords;
+      var newCords = newSquare.cords; //console.log(this.allowCastle);
 
       if (this.allowCastle) {
         if (this.color === 'white') {
@@ -53694,6 +53715,7 @@ function (_Piece) {
           case 'white':
             {
               if (cords.cordY === newCords.cordY - 2 && cords.cordX === newCords.cordX) {
+                if (this.validator.validateStraight(this.square, newSquare) === false) return false;
                 this.allowDoubleMove = false;
                 return true;
               }
@@ -53703,6 +53725,7 @@ function (_Piece) {
           default:
             {
               if (cords.cordY === newCords.cordY + 2 && cords.cordX === newCords.cordX) {
+                if (this.validator.validateStraight(this.square, newSquare) === false) return false;
                 this.allowDoubleMove = false;
                 return true;
               }
@@ -53909,7 +53932,7 @@ function () {
       pieces[index] = newPiece;
       moveControl.rotatePieceAfterMoveIfNecessary(index);
       var color = newPiece.color === 'white' ? 'black' : 'white';
-      checkmateControl.seeIfCheck(color, kingSquare);
+      checkmateControl.seeIfCheck(color, kingSquare); //here gameoverControl;
     }
   }]);
 

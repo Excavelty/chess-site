@@ -49,6 +49,8 @@ export class Pawn extends Piece
                 case 'white': {
                     if(cords.cordY === newCords.cordY - 2 && cords.cordX === newCords.cordX)
                     {
+                        if(this.validator.validateStraight(this.square, newSquare) === false)
+                          return false;
                         this.allowDoubleMove = false;
                         return true;
                     }
@@ -57,6 +59,8 @@ export class Pawn extends Piece
                 default: {
                     if(cords.cordY === newCords.cordY + 2 && cords.cordX === newCords.cordX)
                     {
+                        if(this.validator.validateStraight(this.square, newSquare) === false)
+                          return false;
                         this.allowDoubleMove = false;
                         return true;
                     }

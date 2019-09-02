@@ -58,12 +58,18 @@ export class CheckmateControl
             }
         }
 
+
+        if(pieceIndex === kingIndex)
+        console.log(this.pieces[pieceIndex].square);
         this.pieces[pieceIndex].square = oldSquare;
         return false;
     }
 
     seeIfHaveNoMove(kingIndex, kingColor)
     {
+        let disallowCastleCompletly = this.pieces[kingIndex].disallowCastleCompletly;
+        let allowCastle = this.pieces[kingIndex].allowCastle;
+
         for(let i = 0; i < this.pieces.length; ++i)
         {
             if(this.pieces[i].color === kingColor)
@@ -71,10 +77,30 @@ export class CheckmateControl
                 for(let j = 0; j < this.squares.length; ++j)
                   for(let k = 0; k < this.squares[j].length; ++k)
                   {
+                      let allowDoubleMove = this.pieces[i] instanceof Pawn? this.pieces[i].allowDoubleMove : null;
+                      let allowTake = this.pieces[i] instanceof Pawn? this.pieces[i].allowTake : null;
+
                       if(this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false
                         && this.pieces[i].checkIfCouldMove(this.squares[j][k]))
                         {
+                           if(i === kingIndex)
+                           {
+                              this.pieces[kingIndex].disallowCastleCompletly = disallowCastleCompletly;
+                              this.pieces[kingIndex].allowCastle = allowCastle;
+                           }
+
+                           if(allowDoubleMove !== null)
+                           {
+                              this.pieces[i].allowDoubleMove = allowDoubleMove;
+                              //this.pieces[i].allowTake = allowTake;
+                           }
                            return false;
+                        }
+
+                        if(allowDoubleMove !== null)
+                        {
+                           this.pieces[i].allowDoubleMove = allowDoubleMove;
+                           this.pieces[i].allowTake = allowTake;
                         }
                   }
             }

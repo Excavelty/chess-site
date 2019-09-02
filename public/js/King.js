@@ -21,6 +21,7 @@ export class King extends Piece
         let cords = this.square.cords;
         let newCords = newSquare.cords;
 
+        //console.log(this.allowCastle);
         if(this.allowCastle)
         {
           if(this.color === 'white')
