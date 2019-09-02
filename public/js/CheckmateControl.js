@@ -1,3 +1,5 @@
+import {Pawn} from './Pawn.js';
+
 export class CheckmateControl
 {
     constructor(pieces, squares)
@@ -16,7 +18,7 @@ export class CheckmateControl
         {
             if(this.pieces[i].color === compareColor)
             {
-                //this.pieces[i].allowTake = true;
+                this.pieces[i].allowTake = true;
                 if(this.pieces[i].checkIfCouldMove(kingSquare))
                 {
                   this.addCheckColor(kingSquare);
@@ -34,8 +36,15 @@ export class CheckmateControl
     {
         let oldSquare = this.pieces[pieceIndex].square;
         let potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
-        
+
+        if(potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color === kingColor)
+          return true;
+        else if(potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color !== kingColor
+          && this.pieces[pieceIndex] instanceof Pawn && (this.pieces[pieceIndex].square.cords.cordX === newSquare.cords.cordX
+            || this.pieces[pieceIndex].square.cords.cordY === newSquare.cords.cordY))//needed to disallow 'taking' with just moving forward
+            return true;
         this.pieces[pieceIndex].square = newSquare;
+
         for(let i = 0; i < this.pieces.length; ++i)
         {
             if(this.pieces[i].color !== kingColor)
@@ -43,8 +52,6 @@ export class CheckmateControl
                 this.pieces[i].allowTake = true;
                 if(potentialPieceIndex !== i && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square))
                 {
-                    console.log(oldSquare);
-                    console.log(this.pieces[pieceIndex].square);
                     this.pieces[pieceIndex].square = oldSquare;
                     return true;
                 }
@@ -59,16 +66,19 @@ export class CheckmateControl
     {
         for(let i = 0; i < this.pieces.length; ++i)
         {
-            if(this.pieces[i].color === kingColor);
-            for(let j = 0; j < this.squares.length; ++j)
-              for(let k = 0; k < this.squares[j].length; ++k)
-              {
-                  if(this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false
-                    && this.pieces[i].checkIfCouldMove(this.squares[j][k]))
-                    return false;
-              }
+            if(this.pieces[i].color === kingColor)
+            {
+                for(let j = 0; j < this.squares.length; ++j)
+                  for(let k = 0; k < this.squares[j].length; ++k)
+                  {
+                      if(this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false
+                        && this.pieces[i].checkIfCouldMove(this.squares[j][k]))
+                        {
+                           return false;
+                        }
+                  }
+            }
         }
-
         return true;
     }
 
@@ -87,12 +97,5 @@ export class CheckmateControl
     {
         let handle = square.getSquareHandle();
         handle.style.backgroundColor = 'yellow';
-    }
-
-    deepClonePieces()
-    {
-        let newArray = [];
-        for(let i = 0; i < this.pieces.length; ++i)
-            newArray[i] = new Piece()
     }
 }

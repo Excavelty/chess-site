@@ -271,6 +271,12 @@ export class SquareInput
                 this.pieces[kingIndex].square.changeColor();
                 return true;
             }
+
+            else
+            {
+                this.ownPiece(pieceIndex);
+                return false;
+            }
         }
         else
         {

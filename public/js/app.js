@@ -52762,11 +52762,13 @@ function (_Piece) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CheckmateControl", function() { return CheckmateControl; });
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 var CheckmateControl =
 /*#__PURE__*/
@@ -52786,7 +52788,8 @@ function () {
 
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].color === compareColor) {
-          //this.pieces[i].allowTake = true;
+          this.pieces[i].allowTake = true;
+
           if (this.pieces[i].checkIfCouldMove(kingSquare)) {
             this.addCheckColor(kingSquare);
             var index = this.getPieceIndexBySqr(kingSquare);
@@ -52804,6 +52807,8 @@ function () {
     {
       var oldSquare = this.pieces[pieceIndex].square;
       var potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
+      if (potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color === kingColor) return true;else if (potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color !== kingColor && this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] && (this.pieces[pieceIndex].square.cords.cordX === newSquare.cords.cordX || this.pieces[pieceIndex].square.cords.cordY === newSquare.cords.cordY)) //needed to disallow 'taking' with just moving forward
+        return true;
       this.pieces[pieceIndex].square = newSquare;
 
       for (var i = 0; i < this.pieces.length; ++i) {
@@ -52811,8 +52816,6 @@ function () {
           this.pieces[i].allowTake = true;
 
           if (potentialPieceIndex !== i && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square)) {
-            console.log(oldSquare);
-            console.log(this.pieces[pieceIndex].square);
             this.pieces[pieceIndex].square = oldSquare;
             return true;
           }
@@ -52826,11 +52829,13 @@ function () {
     key: "seeIfHaveNoMove",
     value: function seeIfHaveNoMove(kingIndex, kingColor) {
       for (var i = 0; i < this.pieces.length; ++i) {
-        if (this.pieces[i].color === kingColor) ;
-
-        for (var j = 0; j < this.squares.length; ++j) {
-          for (var k = 0; k < this.squares[j].length; ++k) {
-            if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false && this.pieces[i].checkIfCouldMove(this.squares[j][k])) return false;
+        if (this.pieces[i].color === kingColor) {
+          for (var j = 0; j < this.squares.length; ++j) {
+            for (var k = 0; k < this.squares[j].length; ++k) {
+              if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false && this.pieces[i].checkIfCouldMove(this.squares[j][k])) {
+                return false;
+              }
+            }
           }
         }
       }
@@ -52851,15 +52856,6 @@ function () {
     value: function addCheckColor(square) {
       var handle = square.getSquareHandle();
       handle.style.backgroundColor = 'yellow';
-    }
-  }, {
-    key: "deepClonePieces",
-    value: function deepClonePieces() {
-      var newArray = [];
-
-      for (var i = 0; i < this.pieces.length; ++i) {
-        newArray[i] = new Piece();
-      }
     }
   }]);
 
@@ -54461,6 +54457,9 @@ function () {
           if (this.pieces[kingIndex].disallowCastleCompletly === false) this.pieces[kingIndex].allowCastle = true;
           this.pieces[kingIndex].square.changeColor();
           return true;
+        } else {
+          this.ownPiece(pieceIndex);
+          return false;
         }
       } else {
         this.ownPiece(pieceIndex);
