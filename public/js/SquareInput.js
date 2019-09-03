@@ -68,6 +68,8 @@ export class SquareInput
             else
             {
                 this.ownPiece(containedPiece);
+                if(this.pieces[containedPiece] instanceof Pawn)
+                  console.log(this.pieces[containedPiece].allowDoubleMove);
             }
         }
 
@@ -224,32 +226,15 @@ export class SquareInput
                     if(this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black'
                       || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white')
                     {
-                        PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square);
+                        PromotionSelector.triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square, this);
                     }
                 }
 
                 this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
                 this.moveControl.changePlayer();
 
-                let isCheck = this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
-                if(isCheck)
-                    this.pieces[index].square.changeColor('yellow');
-                if(this.checkmateControl.seeIfHaveNoMove(index, color))
-                {
-                    if(isCheck)
-                    {
-                        let winners = 'białe.';
-                        if(pieceColor !== 'white')
-                          winners = 'czarne.';
-                        this.gameoverControl.displayFinishSwal("Koniec gry! Wygrały "+winners+"(mat).");
-                        this.pieces[index].square.changeColor('#581845');
-                    }
-                    else
-                    {
-                        this.gameoverControl.displayFinishSwal("Koniec gry! Remis(pat).");
-                        this.pieces[index].square.changeColor('lightblue');
-                    }
-                }
+                this.seeIfCheckmateOrStalemate(index, color, pieceColor);
+
                 let kingIndex = this.getKingIndex(pieceColor);
                 if(this.pieces[pieceIndex] instanceof Rook)
                 {
@@ -282,6 +267,29 @@ export class SquareInput
         {
             this.ownPiece(pieceIndex);
             return false;
+        }
+    }
+
+    seeIfCheckmateOrStalemate(index, color, pieceColor)
+    {
+        let isCheck = this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+        if(isCheck)
+            this.pieces[index].square.changeColor('yellow');
+        if(this.checkmateControl.seeIfHaveNoMove(index, color))
+        {
+            if(isCheck)
+            {
+                let winners = 'białe.';
+                if(pieceColor !== 'white')
+                  winners = 'czarne.';
+                this.gameoverControl.displayFinishSwal("Koniec gry! Wygrały "+winners+"(mat).");
+                this.pieces[index].square.changeColor('#581845');
+            }
+            else
+            {
+                this.gameoverControl.displayFinishSwal("Koniec gry! Remis(pat).");
+                this.pieces[index].square.changeColor('lightblue');
+            }
         }
     }
 

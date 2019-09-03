@@ -50,17 +50,23 @@ export class CheckmateControl
             if(this.pieces[i].color !== kingColor)
             {
                 this.pieces[i].allowTake = true;
+                let allowDoubleMove = this.pieces[i] instanceof Pawn? this.pieces[i].allowDoubleMove : null;
+
                 if(potentialPieceIndex !== i && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square))
                 {
                     this.pieces[pieceIndex].square = oldSquare;
+                    if(this.pieces[i] instanceof Pawn)
+                    {
+                      this.pieces[i].allowDoubleMove = allowDoubleMove;
+                    }
                     return true;
                 }
             }
         }
 
 
-        if(pieceIndex === kingIndex)
-        console.log(this.pieces[pieceIndex].square);
+        //if(pieceIndex === kingIndex)
+        //console.log(this.pieces[pieceIndex].square);
         this.pieces[pieceIndex].square = oldSquare;
         return false;
     }

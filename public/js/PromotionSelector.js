@@ -6,7 +6,7 @@ import {Knight} from './Knight.js';
 
 export class PromotionSelector
 {
-    static triggerModal(pieces, index, moveControl, checkmateControl, kingSquare)
+    static triggerModal(pieces, index, moveControl, checkmateControl, kingSquare, squareInput)
     {
         swal({
             buttons: {
@@ -31,11 +31,11 @@ export class PromotionSelector
                 }
             }
         }).then(value => {
-            PromotionSelector.preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare);
+            PromotionSelector.preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare, squareInput);
         });
     }
 
-    static preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare)
+    static preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare, squareInput)
     {
         let validator = pieces[index].validator;
         let piece = pieces[index];
@@ -54,6 +54,9 @@ export class PromotionSelector
         moveControl.rotatePieceAfterMoveIfNecessary(index);
         const color = newPiece.color === 'white'? 'black' : 'white';
         checkmateControl.seeIfCheck(color, kingSquare);
+        let kingIndex = squareInput.getKingIndex(color);
+
         //here gameoverControl;
+        squareInput.seeIfCheckmateOrStalemate(kingIndex, color, newPiece.color);
     }
 }

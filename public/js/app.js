@@ -52814,15 +52814,22 @@ function () {
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].color !== kingColor) {
           this.pieces[i].allowTake = true;
+          var allowDoubleMove = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] ? this.pieces[i].allowDoubleMove : null;
 
           if (potentialPieceIndex !== i && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square)) {
             this.pieces[pieceIndex].square = oldSquare;
+
+            if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"]) {
+              this.pieces[i].allowDoubleMove = allowDoubleMove;
+            }
+
             return true;
           }
         }
-      }
+      } //if(pieceIndex === kingIndex)
+      //console.log(this.pieces[pieceIndex].square);
 
-      if (pieceIndex === kingIndex) console.log(this.pieces[pieceIndex].square);
+
       this.pieces[pieceIndex].square = oldSquare;
       return false;
     }
@@ -53880,7 +53887,7 @@ function () {
 
   _createClass(PromotionSelector, null, [{
     key: "triggerModal",
-    value: function triggerModal(pieces, index, moveControl, checkmateControl, kingSquare) {
+    value: function triggerModal(pieces, index, moveControl, checkmateControl, kingSquare, squareInput) {
       sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
         buttons: {
           queen: {
@@ -53901,12 +53908,12 @@ function () {
           }
         }
       }).then(function (value) {
-        PromotionSelector.preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare);
+        PromotionSelector.preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare, squareInput);
       });
     }
   }, {
     key: "preparePiece",
-    value: function preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare) {
+    value: function preparePiece(value, pieces, index, moveControl, checkmateControl, kingSquare, squareInput) {
       var validator = pieces[index].validator;
       var piece = pieces[index];
       var newPiece = undefined;
@@ -53932,7 +53939,10 @@ function () {
       pieces[index] = newPiece;
       moveControl.rotatePieceAfterMoveIfNecessary(index);
       var color = newPiece.color === 'white' ? 'black' : 'white';
-      checkmateControl.seeIfCheck(color, kingSquare); //here gameoverControl;
+      checkmateControl.seeIfCheck(color, kingSquare);
+      var kingIndex = squareInput.getKingIndex(color); //here gameoverControl;
+
+      squareInput.seeIfCheckmateOrStalemate(kingIndex, color, newPiece.color);
     }
   }]);
 
@@ -54323,6 +54333,7 @@ function () {
           }
         } else {
           this.ownPiece(containedPiece);
+          if (this.pieces[containedPiece] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) console.log(this.pieces[containedPiece].allowDoubleMove);
         }
       } else {
         var potentialPiece = null;
@@ -54445,27 +54456,13 @@ function () {
 
           if (this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
             if (this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black' || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white') {
-              _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square);
+              _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square, this);
             }
           }
 
           this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
           this.moveControl.changePlayer();
-          var isCheck = this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
-          if (isCheck) this.pieces[index].square.changeColor('yellow');
-
-          if (this.checkmateControl.seeIfHaveNoMove(index, color)) {
-            if (isCheck) {
-              var winners = 'białe.';
-              if (pieceColor !== 'white') winners = 'czarne.';
-              this.gameoverControl.displayFinishSwal("Koniec gry! Wygrały " + winners + "(mat).");
-              this.pieces[index].square.changeColor('#581845');
-            } else {
-              this.gameoverControl.displayFinishSwal("Koniec gry! Remis(pat).");
-              this.pieces[index].square.changeColor('lightblue');
-            }
-          }
-
+          this.seeIfCheckmateOrStalemate(index, color, pieceColor);
           var kingIndex = this.getKingIndex(pieceColor);
 
           if (this.pieces[pieceIndex] instanceof _Rook_js__WEBPACK_IMPORTED_MODULE_3__["Rook"]) {
@@ -54487,6 +54484,24 @@ function () {
       } else {
         this.ownPiece(pieceIndex);
         return false;
+      }
+    }
+  }, {
+    key: "seeIfCheckmateOrStalemate",
+    value: function seeIfCheckmateOrStalemate(index, color, pieceColor) {
+      var isCheck = this.checkmateControl.seeIfCheck(this.pieces[index].color, this.pieces[index].square);
+      if (isCheck) this.pieces[index].square.changeColor('yellow');
+
+      if (this.checkmateControl.seeIfHaveNoMove(index, color)) {
+        if (isCheck) {
+          var winners = 'białe.';
+          if (pieceColor !== 'white') winners = 'czarne.';
+          this.gameoverControl.displayFinishSwal("Koniec gry! Wygrały " + winners + "(mat).");
+          this.pieces[index].square.changeColor('#581845');
+        } else {
+          this.gameoverControl.displayFinishSwal("Koniec gry! Remis(pat).");
+          this.pieces[index].square.changeColor('lightblue');
+        }
       }
     }
   }, {
