@@ -52762,12 +52762,17 @@ function (_Piece) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CheckmateControl", function() { return CheckmateControl; });
-/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _MoveValidators_PieceValidator_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MoveValidators/PieceValidator.js */ "./public/js/MoveValidators/PieceValidator.js");
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pawn.js */ "./public/js/Pawn.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 
 var CheckmateControl =
@@ -52807,19 +52812,19 @@ function () {
     {
       var oldSquare = this.pieces[pieceIndex].square;
       var potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
-      if (potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color === kingColor) return true;else if (potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color !== kingColor && this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] && (this.pieces[pieceIndex].square.cords.cordX === newSquare.cords.cordX || this.pieces[pieceIndex].square.cords.cordY === newSquare.cords.cordY)) //needed to disallow 'taking' with just moving forward
+      if (potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color === kingColor) return true;else if (potentialPieceIndex !== null && this.pieces[potentialPieceIndex].color !== kingColor && this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"] && (this.pieces[pieceIndex].square.cords.cordX === newSquare.cords.cordX || this.pieces[pieceIndex].square.cords.cordY === newSquare.cords.cordY)) //needed to disallow 'taking' with just moving forward
         return true;
       this.pieces[pieceIndex].square = newSquare;
 
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].color !== kingColor) {
           this.pieces[i].allowTake = true;
-          var allowDoubleMove = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] ? this.pieces[i].allowDoubleMove : null;
+          var allowDoubleMove = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"] ? this.pieces[i].allowDoubleMove : null;
 
           if (potentialPieceIndex !== i && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square)) {
             this.pieces[pieceIndex].square = oldSquare;
 
-            if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"]) {
+            if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
               this.pieces[i].allowDoubleMove = allowDoubleMove;
             }
 
@@ -52837,19 +52842,23 @@ function () {
     key: "seeIfHaveNoMove",
     value: function seeIfHaveNoMove(kingIndex, kingColor) {
       var disallowCastleCompletly = this.pieces[kingIndex].disallowCastleCompletly;
+      var disallowKingsideCastle = this.pieces[kingIndex].disallowKingsideCastle;
+      var disallowQueensideCastle = this.pieces[kingIndex].disallowQueensideCastle;
       var allowCastle = this.pieces[kingIndex].allowCastle;
 
       for (var i = 0; i < this.pieces.length; ++i) {
         if (this.pieces[i].color === kingColor) {
           for (var j = 0; j < this.squares.length; ++j) {
             for (var k = 0; k < this.squares[j].length; ++k) {
-              var allowDoubleMove = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] ? this.pieces[i].allowDoubleMove : null;
-              var allowTake = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] ? this.pieces[i].allowTake : null;
+              var allowDoubleMove = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"] ? this.pieces[i].allowDoubleMove : null;
+              var allowTake = this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"] ? this.pieces[i].allowTake : null;
 
               if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false && this.pieces[i].checkIfCouldMove(this.squares[j][k])) {
                 if (i === kingIndex) {
                   this.pieces[kingIndex].disallowCastleCompletly = disallowCastleCompletly;
                   this.pieces[kingIndex].allowCastle = allowCastle;
+                  this.pieces[kingIndex].disallowKingsideCastle = disallowKingsideCastle;
+                  this.pieces[kingIndex].disallowQueensideCastle = disallowQueensideCastle;
                 }
 
                 if (allowDoubleMove !== null) {
@@ -52870,6 +52879,52 @@ function () {
 
       return true;
     }
+    /*seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, newSquare)
+    {
+      //deep cloning
+        let localPieces = cloneDeep(this.pieces);
+        for(let i = 0; i < localPieces.length; ++i)
+        {
+            localPieces[i].square = this.pieces[i].square;
+            let validator = new PieceValidator(localPieces, this.squares);
+            localPieces[i].setValidator(validator);
+        }
+          let potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
+        if(potentialPieceIndex !== null && localPieces[potentialPieceIndex].color === localPieces[pieceIndex].color)
+        {
+            return true;
+        }
+          localPieces[pieceIndex].square = newSquare;//simulate move;
+          for(let i = 0; i < localPieces.length; ++i)
+        {
+            localPieces[i].allowTake = true;
+              if(localPieces[i].color !== kingColor)
+            {
+                if(i !== potentialPieceIndex && localPieces[i].checkIfCouldMove(localPieces[kingIndex].square))
+                  return true;
+            }
+        }
+        return false;
+    }
+      seeIfHaveNoMove(kingIndex, kingColor)
+    {
+        let localPieces = cloneDeep(this.pieces);
+        for(let i = 0; i < this.pieces.length; ++i)
+        {
+          if(this.pieces[i].color === kingColor)
+            for(let j = 0; j < this.squares.length; ++j)
+              for(let k = 0; k < this.squares[j].length; ++k)
+              {
+                  localPieces[i].square =  this.pieces[i].square;
+                  localPieces[i].setValidator(new PieceValidator(localPieces, this.squares));
+                  if(this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false
+                    && localPieces[i].checkIfCouldMove(this.squares[j][k]))
+                    return false;
+              }
+        }
+          return true;
+    }*/
+
   }, {
     key: "getPieceIndexBySqr",
     value: function getPieceIndexBySqr(square) {
@@ -52936,6 +52991,49 @@ function () {
   }]);
 
   return CompPlayer;
+}();
+
+/***/ }),
+
+/***/ "./public/js/EnPassantControl.js":
+/*!***************************************!*\
+  !*** ./public/js/EnPassantControl.js ***!
+  \***************************************/
+/*! exports provided: EnPassantControl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EnPassantControl", function() { return EnPassantControl; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var EnPassantControl =
+/*#__PURE__*/
+function () {
+  function EnPassantControl() {
+    _classCallCheck(this, EnPassantControl);
+  }
+
+  _createClass(EnPassantControl, null, [{
+    key: "enPassant",
+    value: function enPassant(pieces, attackingPawnIndex, takenPawnIndex, newSquare) {
+      var attackingCords = pieces[attackingPawnIndex].square.cords;
+      var takenCords = pieces[attackingPawnIndex].square.cords;
+
+      if (attackingCords.cordY === takenCords.cordY && (attackingCords.cordX.charCodeAt(0) === takenCords.cordY.charCodeAt(0) + 1 || attackingCords.cordX.charCodeAt(0) === takenCords.cordX.charCodeAt(0) - 1)) {
+        pieces[attackingPawnIndex].allowTake = true;
+        return pieces[attackingPawnIndex].move(newSquare);
+      }
+
+      return false;
+    }
+  }]);
+
+  return EnPassantControl;
 }();
 
 /***/ }),
@@ -54259,7 +54357,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Rook_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Rook.js */ "./public/js/Rook.js");
 /* harmony import */ var _Square_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Square.js */ "./public/js/Square.js");
 /* harmony import */ var _CompPlayer_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CompPlayer.js */ "./public/js/CompPlayer.js");
-/* harmony import */ var _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PromotionSelector */ "./public/js/PromotionSelector.js");
+/* harmony import */ var _PromotionSelector_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PromotionSelector.js */ "./public/js/PromotionSelector.js");
+/* harmony import */ var _EnPassantControl_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./EnPassantControl.js */ "./public/js/EnPassantControl.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -54270,6 +54369,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
  //maybe delete later
+
 
 
 
@@ -54323,7 +54423,7 @@ function () {
             if (this.pieces[ownedPiece] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
               var pawn = this.pieces[ownedPiece];
 
-              if (this.pieces[containedPiece].color != pawn.color) {
+              if (this.pieces[containedPiece].color !== pawn.color) {
                 pawn.allowTake = true;
               }
             }
@@ -54332,8 +54432,8 @@ function () {
             if (this.putPiece(ownedPiece)) this.takePiece(containedPiece);
           }
         } else {
-          this.ownPiece(containedPiece);
-          if (this.pieces[containedPiece] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) console.log(this.pieces[containedPiece].allowDoubleMove);
+          this.ownPiece(containedPiece); //if(this.pieces[containedPiece] instanceof Pawn)
+          //console.log(this.pieces[containedPiece].allowDoubleMove);
         }
       } else {
         var potentialPiece = null;
@@ -54456,7 +54556,7 @@ function () {
 
           if (this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) {
             if (this.square.cords.cordY === 1 && this.pieces[pieceIndex].color === 'black' || this.square.cords.cordY === 8 && this.pieces[pieceIndex].color === 'white') {
-              _PromotionSelector__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square, this);
+              _PromotionSelector_js__WEBPACK_IMPORTED_MODULE_6__["PromotionSelector"].triggerModal(this.pieces, pieceIndex, this.moveControl, this.checkmateControl, this.pieces[index].square, this);
             }
           }
 

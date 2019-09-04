@@ -4,7 +4,8 @@ import {Pawn} from './Pawn.js';
 import {Rook} from './Rook.js';//maybe delete later
 import {Square} from './Square.js';
 import {CompPlayer} from './CompPlayer.js';
-import {PromotionSelector} from './PromotionSelector';
+import {PromotionSelector} from './PromotionSelector.js';
+import {EnPassantControl} from './EnPassantControl.js';
 
 export class SquareInput
 {
@@ -49,12 +50,10 @@ export class SquareInput
                 }
                 else
                 {
-
-
                     if(this.pieces[ownedPiece] instanceof Pawn)
                     {
                         let pawn = this.pieces[ownedPiece];
-                        if(this.pieces[containedPiece].color != pawn.color)
+                        if(this.pieces[containedPiece].color !== pawn.color)
                         {
                             pawn.allowTake = true;
                         }
@@ -68,8 +67,8 @@ export class SquareInput
             else
             {
                 this.ownPiece(containedPiece);
-                if(this.pieces[containedPiece] instanceof Pawn)
-                  console.log(this.pieces[containedPiece].allowDoubleMove);
+                //if(this.pieces[containedPiece] instanceof Pawn)
+                  //console.log(this.pieces[containedPiece].allowDoubleMove);
             }
         }
 
