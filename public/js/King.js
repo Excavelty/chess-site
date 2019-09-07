@@ -16,12 +16,23 @@ export class King extends Piece
         this.disallowQueensideCastle = false;
     }
 
+    move(newSquare)
+    {
+        if(super.move(newSquare))
+        {
+            this.allowCastle = false;
+            this.disallowCastleCompletly = true;
+            return true;
+        }
+
+        return false;
+    }
+
     checkIfCouldMove(newSquare)
     {
         let cords = this.square.cords;
         let newCords = newSquare.cords;
 
-        //console.log(this.allowCastle);
         if(this.allowCastle)
         {
           if(this.color === 'white')
@@ -29,8 +40,6 @@ export class King extends Piece
               if(newCords.cordX === 'g' && newCords.cordY === 1 && this.disallowKingsideCastle === false
                 || newCords.cordX === 'c' && newCords.cordY === 1 && this.disallowQueensideCastle === false)
               {
-                  this.allowCastle = false;
-                  this.disallowCastleCompletly = true;
                   return true;
               }
           }
@@ -40,8 +49,6 @@ export class King extends Piece
               if(newCords.cordX === 'g' && newCords.cordY === 8 && this.disallowKingsideCastle === false
                 || newCords.cordX === 'c' && newCords.cordY === 8 && this.disallowQueensideCastle === false)
                {
-                  this.allowCastle = false;
-                  this.disallowCastleCompletly = true;
                   return true;
                }
           }
@@ -52,24 +59,21 @@ export class King extends Piece
             if(cords.cordX === this.shiftChar(newCords.cordX, -1)
               || cords.cordX === this.shiftChar(newCords.cordX, 1))
               {
-                  this.allowCastle = false;
-                  this.disallowCastleCompletly = true;
                   return true;
               }
             return false;
         }
 
-        else if(cords.cordY === newCords.cordY + 1
+        if(cords.cordY === newCords.cordY + 1
           || cords.cordY === newCords.cordY - 1)
         {
             if(cords.cordX === this.shiftChar(newCords.cordX, 1)
               || cords.cordX === this.shiftChar(newCords.cordX, -1)
               || cords.cordX === newCords.cordX)
               {
-                  this.allowCastle = false;
-                  this.disallowCastleCompletly = true;
                   return true;
               }
+            return false;
         }
 
         else return false;

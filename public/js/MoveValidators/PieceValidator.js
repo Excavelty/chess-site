@@ -56,7 +56,6 @@ export class PieceValidator
 
             else if(newCords.cordY > cords.cordY)
             {
-                //console.log('yesyes');
                 return this.validationLoop(cordXIndex, cordYIndex, 1, 1, newSquare);
             }
         }
@@ -96,6 +95,29 @@ export class PieceValidator
 
         else
             return false;
+    }
+
+    validatePawnForwardMove(square, newSquare)
+    {
+        const cords = square.cords;
+        const newCords = newSquare.cords;
+
+        if(cords.cordX === newCords.cordX)
+        {
+            let pieceIndex = this.getPieceIndexBySqr(newSquare)
+            if(pieceIndex !== null)
+              return false;
+            return true;
+        }
+    }
+
+    validateIfOpponentPieceOnTheNewSquare(square, newSquare)
+    {
+        let currentIndex = this.getPieceIndexBySqr(square);
+        let index = this.getPieceIndexBySqr(newSquare);
+        if(index !== null && this.pieces[index].color !== this.pieces[currentIndex].color)
+          return true;
+        return false;
     }
 
     validationLoop(firstIter, secondIter, firstChange, secondChange, newSquare)

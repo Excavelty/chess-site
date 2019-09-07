@@ -14,44 +14,51 @@ export class Pawn extends Piece
           this.allowTake = false;
     }
 
+    move(newSquare)
+    {
+        if(super.move(newSquare))
+        {
+            this.allowDoubleMove = false;
+            this.allowTake = false;
+            return true;
+        }
+
+        return false;
+    }
+
     checkIfCouldMove(newSquare)
     {
         let cords = this.square.cords;
         let newCords = newSquare.cords;
 
-        if(this.allowTake)
+        if(cords.cordX === this.shiftChar(newCords.cordX, 1)
+          || cords.cordX === this.shiftChar(newCords.cordX, -1))
         {
-            this.allowTake = false;
-              if(cords.cordX === this.shiftChar(newCords.cordX, 1)
-                || cords.cordX === this.shiftChar(newCords.cordX, -1))
-                {
-                    if(this.color === 'white' && cords.cordY === newCords.cordY - 1)
-                    {
-                        this.allowDoubleMove = false;
-                        return true;
-                    }
-                    else if(this.color === 'black' && cords.cordY === newCords.cordY + 1)
-                    {
-                        this.allowDoubleMove = false;
-                        return true;
-                    }
-                    else
-                      return false;
-                }
-              else
+            if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false)
                 return false;
+            if(this.color === 'white' && cords.cordY === newCords.cordY - 1)
+            {
+                return true;
+            }
+            else if(this.color === 'black' && cords.cordY === newCords.cordY + 1)
+            {
+                return true;
+            }
         }
 
         if(this.allowDoubleMove)
         {
+            if(this.validator.validateStraight(this.square, newSquare) === false)
+            {
+                return false;
+            }
             switch(this.color)
             {
                 case 'white': {
                     if(cords.cordY === newCords.cordY - 2 && cords.cordX === newCords.cordX)
                     {
-                        if(this.validator.validateStraight(this.square, newSquare) === false)
-                          return false;
-                        this.allowDoubleMove = false;
+                        if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true)
+                            return false;
                         return true;
                     }
                 } break;
@@ -59,9 +66,8 @@ export class Pawn extends Piece
                 default: {
                     if(cords.cordY === newCords.cordY + 2 && cords.cordX === newCords.cordX)
                     {
-                        if(this.validator.validateStraight(this.square, newSquare) === false)
+                        if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true)
                           return false;
-                        this.allowDoubleMove = false;
                         return true;
                     }
                 }
@@ -70,16 +76,21 @@ export class Pawn extends Piece
 
         if(this.color === 'white' && cords.cordY === newCords.cordY - 1 && cords.cordX === newCords.cordX)
         {
-            this.allowDoubleMove = false;
+            if(this.validator.validatePawnForwardMove(this.square, newSquare) === false)
+              return false;
             return true;
         }
 
         else if(this.color === 'black' && cords.cordY === newCords.cordY + 1 && cords.cordX === newCords.cordX)
         {
-            this.allowDoubleMove = false;
-            return true;
+          if(this.validator.validatePawnForwardMove(this.square, newSquare) === false)
+            return false;
+          return true;
         }
 
-        else return false;
+        else
+        {
+            return false
+        };
     }
 }

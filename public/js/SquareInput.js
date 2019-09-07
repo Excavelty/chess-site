@@ -50,17 +50,15 @@ export class SquareInput
                 }
                 else
                 {
-                    if(this.pieces[ownedPiece] instanceof Pawn)
-                    {
-                        let pawn = this.pieces[ownedPiece];
-                        if(this.pieces[containedPiece].color !== pawn.color)
-                        {
-                            pawn.allowTake = true;
-                        }
-                    }
+                    let pieceColor = this.pieces[ownedPiece].color;
                     this.unOwnPiece(ownedPiece);
                     if(this.putPiece(ownedPiece))
+                    {
+                        let color = this.pieces[containedPiece].color;
                         this.takePiece(containedPiece);
+                        let index = this.getKingIndex(color);
+                        this.seeIfCheckmateOrStalemate(index, color, pieceColor);
+                    }
                 }
             }
 
@@ -214,6 +212,7 @@ export class SquareInput
         const pieceColor = this.pieces[pieceIndex].color;
         const color = pieceColor === 'white'? 'black' : 'white';
         let index = this.getKingIndex(color);
+        let containedPieceIndex = this.getIndexBySqr(this.square);
 
         if(this.checkIfWouldCauseCheck(pieceIndex) === false)
         {
@@ -232,7 +231,8 @@ export class SquareInput
                 this.moveControl.rotatePieceAfterMoveIfNecessary(pieceIndex);
                 this.moveControl.changePlayer();
 
-                this.seeIfCheckmateOrStalemate(index, color, pieceColor);
+                if(containedPieceIndex === null)
+                    this.seeIfCheckmateOrStalemate(index, color, pieceColor);
 
                 let kingIndex = this.getKingIndex(pieceColor);
                 if(this.pieces[pieceIndex] instanceof Rook)
