@@ -20,6 +20,7 @@ export class Pawn extends Piece
         {
             this.allowDoubleMove = false;
             this.allowTake = false;
+            this.specialTakeAllowed = false;
             return true;
         }
 
@@ -34,8 +35,10 @@ export class Pawn extends Piece
         if(cords.cordX === this.shiftChar(newCords.cordX, 1)
           || cords.cordX === this.shiftChar(newCords.cordX, -1))
         {
-            if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false)
+            if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false
+            && this.specialTakeAllowed !== true)
                 return false;
+            this.specialTakeAllowed = false;
             if(this.color === 'white' && cords.cordY === newCords.cordY - 1)
             {
                 return true;
@@ -59,6 +62,7 @@ export class Pawn extends Piece
                     {
                         if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true)
                             return false;
+                        this.allowEnPassant = true;
                         return true;
                     }
                 } break;
@@ -68,6 +72,7 @@ export class Pawn extends Piece
                     {
                         if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true)
                           return false;
+                        this.allowEnPassant = true;  
                         return true;
                     }
                 }

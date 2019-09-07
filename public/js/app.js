@@ -52820,6 +52820,10 @@ function () {
 
       for (var i = 0; i < this.pieces.length; ++i) {
         if (kingColor !== this.pieces[i].color) {
+          if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_3__["Pawn"]) {
+            this.pieces[i].specialTakeAllowed = true;
+          }
+
           if (i !== potentialyTakenPieceIndex && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square)) {
             this.pieces[pieceIndex].square = oldSquare;
             return true;
@@ -53805,6 +53809,7 @@ function (_Piece) {
       if (_get(_getPrototypeOf(Pawn.prototype), "move", this).call(this, newSquare)) {
         this.allowDoubleMove = false;
         this.allowTake = false;
+        this.specialTakeAllowed = false;
         return true;
       }
 
@@ -53817,7 +53822,8 @@ function (_Piece) {
       var newCords = newSquare.cords;
 
       if (cords.cordX === this.shiftChar(newCords.cordX, 1) || cords.cordX === this.shiftChar(newCords.cordX, -1)) {
-        if (this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false) return false;
+        if (this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false && this.specialTakeAllowed !== true) return false;
+        this.specialTakeAllowed = false;
 
         if (this.color === 'white' && cords.cordY === newCords.cordY - 1) {
           return true;
@@ -53836,6 +53842,7 @@ function (_Piece) {
             {
               if (cords.cordY === newCords.cordY - 2 && cords.cordX === newCords.cordX) {
                 if (this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true) return false;
+                this.allowEnPassant = true;
                 return true;
               }
             }
@@ -53845,6 +53852,7 @@ function (_Piece) {
             {
               if (cords.cordY === newCords.cordY + 2 && cords.cordX === newCords.cordX) {
                 if (this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true) return false;
+                this.allowEnPassant = true;
                 return true;
               }
             }

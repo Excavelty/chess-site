@@ -48,6 +48,10 @@ export class CheckmateControl
         {
             if(kingColor !== this.pieces[i].color)
             {
+                if(this.pieces[i] instanceof Pawn)
+                {
+                    this.pieces[i].specialTakeAllowed = true;
+                }
                 if(i !== potentialyTakenPieceIndex && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square))
                 {
                     this.pieces[pieceIndex].square = oldSquare;
