@@ -52798,6 +52798,7 @@ function () {
           if (this.pieces[i].checkIfCouldMove(kingSquare)) {
             this.addCheckColor(kingSquare);
             var index = this.getPieceIndexBySqr(kingSquare);
+            this.pieces[index].allowCastle = false;
             return true;
           }
         }
@@ -52826,7 +52827,16 @@ function () {
 
           if (i !== potentialyTakenPieceIndex && this.pieces[i].checkIfCouldMove(this.pieces[kingIndex].square)) {
             this.pieces[pieceIndex].square = oldSquare;
+
+            if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_3__["Pawn"]) {
+              this.pieces[i].specialTakeAllowed = false;
+            }
+
             return true;
+          }
+
+          if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_3__["Pawn"]) {
+            this.pieces[i].specialTakeAllowed = false;
           }
         }
       }
@@ -52842,8 +52852,6 @@ function () {
           for (var j = 0; j < this.squares.length; ++j) {
             for (var k = 0; k < this.squares.length; ++k) {
               if (this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false && this.pieces[i].checkIfCouldMove(this.squares[j][k])) {
-                //console.log(this.pieces[i]);
-                //console.log(this.squares[j][k]);
                 return false;
               }
             }
@@ -52853,52 +52861,6 @@ function () {
 
       return true;
     }
-    /*seeIfWouldCauseCheck(pieceIndex, kingIndex, kingColor, newSquare)
-    {
-      //deep cloning
-        let localPieces = cloneDeep(this.pieces);
-        for(let i = 0; i < localPieces.length; ++i)
-        {
-            localPieces[i].square = this.pieces[i].square;
-            let validator = new PieceValidator(localPieces, this.squares);
-            localPieces[i].setValidator(validator);
-        }
-          let potentialPieceIndex = this.getPieceIndexBySqr(newSquare);
-        if(potentialPieceIndex !== null && localPieces[potentialPieceIndex].color === localPieces[pieceIndex].color)
-        {
-            return true;
-        }
-          localPieces[pieceIndex].square = newSquare;//simulate move;
-          for(let i = 0; i < localPieces.length; ++i)
-        {
-            localPieces[i].allowTake = true;
-              if(localPieces[i].color !== kingColor)
-            {
-                if(i !== potentialPieceIndex && localPieces[i].checkIfCouldMove(localPieces[kingIndex].square))
-                  return true;
-            }
-        }
-        return false;
-    }
-      seeIfHaveNoMove(kingIndex, kingColor)
-    {
-        let localPieces = cloneDeep(this.pieces);
-        for(let i = 0; i < this.pieces.length; ++i)
-        {
-          if(this.pieces[i].color === kingColor)
-            for(let j = 0; j < this.squares.length; ++j)
-              for(let k = 0; k < this.squares[j].length; ++k)
-              {
-                  localPieces[i].square =  this.pieces[i].square;
-                  localPieces[i].setValidator(new PieceValidator(localPieces, this.squares));
-                  if(this.seeIfWouldCauseCheck(i, kingIndex, kingColor, this.squares[j][k]) === false
-                    && localPieces[i].checkIfCouldMove(this.squares[j][k]))
-                    return false;
-              }
-        }
-          return true;
-    }*/
-
   }, {
     key: "getPieceIndexBySqr",
     value: function getPieceIndexBySqr(square) {
@@ -52993,17 +52955,36 @@ function () {
   }
 
   _createClass(EnPassantControl, null, [{
-    key: "enPassant",
-    value: function enPassant(pieces, attackingPawnIndex, takenPawnIndex, newSquare) {
-      var attackingCords = pieces[attackingPawnIndex].square.cords;
-      var takenCords = pieces[attackingPawnIndex].square.cords;
+    key: "execute",
+    value: function execute(pieces, squares, attackingPawnIndex, newSquare) {
+      var potentialIndex = null;
 
-      if (attackingCords.cordY === takenCords.cordY && (attackingCords.cordX.charCodeAt(0) === takenCords.cordY.charCodeAt(0) + 1 || attackingCords.cordX.charCodeAt(0) === takenCords.cordX.charCodeAt(0) - 1)) {
-        pieces[attackingPawnIndex].allowTake = true;
-        return pieces[attackingPawnIndex].move(newSquare);
+      switch (pieces[attackingPawnIndex].color) {
+        case 'white':
+          {
+            potentialIndex = pieces[attackingPawnIndex].validator.getPieceIndexBySqr(squares[newSquare.cords.cordX.charCodeAt(0) - 97][newSquare.cords.cordY - 2]);
+          }
+          break;
+
+        default:
+          {
+            potentialIndex = pieces[attackingPawnIndex].validator.getPieceIndexBySqr(squares[newSquare.cords.cordX.charCodeAt(0) - 97][newSquare.cords.cordY]);
+          }
       }
 
+      if (potentialIndex !== null && pieces[potentialIndex].color !== pieces[attackingPawnIndex].color && pieces[potentialIndex].allowEnPassant === true) return EnPassantControl.visualizeEnPassant(pieces, squares, attackingPawnIndex, newSquare, potentialIndex);
       return false;
+    }
+  }, {
+    key: "visualizeEnPassant",
+    value: function visualizeEnPassant(pieces, squares, attackingPawnIndex, newSquare, takenPawnIndex) {
+      var oldSquare = pieces[attackingPawnIndex].square;
+      pieces[attackingPawnIndex].square.changeColor();
+      pieces[attackingPawnIndex].square = newSquare;
+      pieces[attackingPawnIndex].updateDrawings(oldSquare);
+      pieces[takenPawnIndex].cleanIconFromPreviousSquare(pieces[takenPawnIndex].square.getSquareHandle());
+      pieces.splice(takenPawnIndex, 1);
+      return true;
     }
   }]);
 
@@ -53631,11 +53612,13 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PieceValidator", function() { return PieceValidator; });
+/* harmony import */ var _Pawn_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Pawn.js */ "./public/js/Pawn.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 var PieceValidator =
 /*#__PURE__*/
@@ -53722,6 +53705,39 @@ function () {
       return false;
     }
   }, {
+    key: "validateIfEnPassantAllowed",
+    value: function validateIfEnPassantAllowed(square, newSquare) {
+      var cords = square.cords;
+      var newCords = newSquare.cords;
+      var currentIndex = this.getPieceIndexBySqr(square);
+      var change = 0;
+
+      switch (this.pieces[currentIndex].color) {
+        case 'white':
+          {
+            change -= 1;
+          }
+          break;
+
+        default:
+          {
+            change += 1;
+          }
+      }
+
+      var potentialIndex = this.getPieceIndexBySqr(this.squares[newCords.cordX.charCodeAt(0) - 97][newCords.cordY - 1 + change]);
+
+      if (potentialIndex !== null && this.pieces[potentialIndex].color !== this.pieces[currentIndex].color && this.pieces[potentialIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_0__["Pawn"] && this.pieces[potentialIndex].allowEnPassant === true) {
+        console.log(this.pieces[potentialIndex]);
+        this.pieces[potentialIndex].square.changeColor();
+        this.pieces[potentialIndex].cleanIconFromPreviousSquare(this.pieces[potentialIndex].square.getSquareHandle());
+        this.pieces.splice(potentialIndex, 1);
+        return true;
+      }
+
+      return false;
+    }
+  }, {
     key: "validationLoop",
     value: function validationLoop(firstIter, secondIter, firstChange, secondChange, newSquare) {
       firstIter += firstChange;
@@ -53741,6 +53757,11 @@ function () {
       }
 
       return false;
+    }
+  }, {
+    key: "shiftChar",
+    value: function shiftChar(character, change) {
+      return String.fromCharCode(character.charCodeAt(0) - 97 + change);
     }
   }]);
 
@@ -53808,7 +53829,6 @@ function (_Piece) {
     value: function move(newSquare) {
       if (_get(_getPrototypeOf(Pawn.prototype), "move", this).call(this, newSquare)) {
         this.allowDoubleMove = false;
-        this.allowTake = false;
         this.specialTakeAllowed = false;
         return true;
       }
@@ -54456,8 +54476,7 @@ function () {
             }
           }
         } else {
-          this.ownPiece(containedPiece); //if(this.pieces[containedPiece] instanceof Pawn)
-          //console.log(this.pieces[containedPiece].allowDoubleMove);
+          this.ownPiece(containedPiece);
         }
       } else {
         var potentialPiece = null;
@@ -54496,8 +54515,13 @@ function () {
           }
 
           if (couldMove) {
+            var enPassantResult = false;
+            if (this.pieces[ownedPiece] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_2__["Pawn"]) enPassantResult = _EnPassantControl_js__WEBPACK_IMPORTED_MODULE_7__["EnPassantControl"].execute(this.pieces, this.squares, ownedPiece, this.square);
             this.unOwnPiece(ownedPiece);
-            this.putPiece(ownedPiece);
+            if (enPassantResult === false) this.putPiece(ownedPiece);else {
+              this.moveControl.rotatePieceAfterMoveIfNecessary(this.getIndexBySqr(this.square));
+              this.moveControl.changePlayer();
+            }
           }
         }
       }

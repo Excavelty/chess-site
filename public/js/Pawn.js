@@ -19,7 +19,6 @@ export class Pawn extends Piece
         if(super.move(newSquare))
         {
             this.allowDoubleMove = false;
-            this.allowTake = false;
             this.specialTakeAllowed = false;
             return true;
         }
@@ -72,7 +71,7 @@ export class Pawn extends Piece
                     {
                         if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === true)
                           return false;
-                        this.allowEnPassant = true;  
+                        this.allowEnPassant = true;
                         return true;
                     }
                 }

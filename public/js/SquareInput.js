@@ -65,8 +65,6 @@ export class SquareInput
             else
             {
                 this.ownPiece(containedPiece);
-                //if(this.pieces[containedPiece] instanceof Pawn)
-                  //console.log(this.pieces[containedPiece].allowDoubleMove);
             }
         }
 
@@ -130,8 +128,17 @@ export class SquareInput
 
                 if(couldMove)
                 {
+                    let enPassantResult = false;
+                    if(this.pieces[ownedPiece] instanceof Pawn)
+                        enPassantResult = EnPassantControl.execute(this.pieces, this.squares, ownedPiece, this.square);
                     this.unOwnPiece(ownedPiece);
-                    this.putPiece(ownedPiece);
+                    if(enPassantResult === false)
+                      this.putPiece(ownedPiece);
+                    else
+                    {
+                        this.moveControl.rotatePieceAfterMoveIfNecessary(this.getIndexBySqr(this.square));
+                        this.moveControl.changePlayer();
+                    }
                 }
             }
         }

@@ -1,3 +1,5 @@
+import {Pawn} from '../Pawn.js';
+
 export class PieceValidator
 {
     constructor(pieces, squares)
@@ -120,6 +122,41 @@ export class PieceValidator
         return false;
     }
 
+    validateIfEnPassantAllowed(square, newSquare)
+    {
+        const cords = square.cords;
+        let newCords = newSquare.cords;
+        let currentIndex = this.getPieceIndexBySqr(square);
+        let change = 0;
+
+        switch(this.pieces[currentIndex].color)
+        {
+            case 'white': {
+                change -= 1;
+            }break;
+
+            default: {
+                change += 1;
+            }
+        }
+
+        let potentialIndex = this.getPieceIndexBySqr(this.squares[newCords.cordX.charCodeAt(0) - 97]
+        [newCords.cordY - 1 + change]);
+
+        if(potentialIndex !== null && this.pieces[potentialIndex].color !== this.pieces[currentIndex].color
+        && this.pieces[potentialIndex] instanceof Pawn
+        && this.pieces[potentialIndex].allowEnPassant === true)
+        {
+            console.log(this.pieces[potentialIndex]);
+            this.pieces[potentialIndex].square.changeColor();
+            this.pieces[potentialIndex].cleanIconFromPreviousSquare(this.pieces[potentialIndex].square.getSquareHandle());
+            this.pieces.splice(potentialIndex, 1);
+            return true;
+        }
+
+        return false;
+    }
+
     validationLoop(firstIter, secondIter, firstChange, secondChange, newSquare)
     {
        firstIter += firstChange;
@@ -143,5 +180,10 @@ export class PieceValidator
         }
 
         return false;
+    }
+
+    shiftChar(character, change)
+    {
+        return String.fromCharCode(character.charCodeAt(0) - 97 + change);
     }
 }
