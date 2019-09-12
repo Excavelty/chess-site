@@ -1,4 +1,5 @@
 import {Piece} from './Piece.js';
+import {EnPassantControl} from './EnPassantControl.js';
 
 export class Pawn extends Piece
 {
@@ -12,6 +13,7 @@ export class Pawn extends Piece
           this.updateDrawings(this.square);
           this.allowDoubleMove = true;
           this.allowTake = false;
+          this.enPassantIndex = false;
     }
 
     move(newSquare)
@@ -34,7 +36,10 @@ export class Pawn extends Piece
         if(cords.cordX === this.shiftChar(newCords.cordX, 1)
           || cords.cordX === this.shiftChar(newCords.cordX, -1))
         {
-            if(this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false
+            let enPassantResult = EnPassantControl.execute(this.validator.pieces, this.validator.squares, this.validator.getPieceIndexBySqr(this.square), newSquare);
+            if(enPassantResult !== false)
+              this.enPassantIndex = enPassantResult;
+            if(enPassantResult === false && this.validator.validateIfOpponentPieceOnTheNewSquare(this.square, newSquare) === false
             && this.specialTakeAllowed !== true)
                 return false;
             this.specialTakeAllowed = false;

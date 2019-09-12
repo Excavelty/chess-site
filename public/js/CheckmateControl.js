@@ -43,12 +43,22 @@ export class CheckmateControl
         {
             return true;
         }
+
+        if(potentialyTakenPieceIndex === null && this.pieces[pieceIndex] instanceof Pawn)
+        {
+            potentialyTakenPieceIndex = this.getEnPassantedPawnIfPossible(newSquare, kingColor);
+            console.log(this.pieces[potentialyTakenPieceIndex]);
+            //if(potentialyTakenPieceIndex !== null && this.pieces[potentialyTakenPieceIndex].allowEnPassant === false)
+              //return true;
+        }
+
         this.pieces[pieceIndex].square = newSquare;
 
         for(let i = 0; i < this.pieces.length; ++i)
         {
             if(kingColor !== this.pieces[i].color)
             {
+                let allowEnPassantRemember = false;
                 if(this.pieces[i] instanceof Pawn)
                 {
                     this.pieces[i].specialTakeAllowed = true;
@@ -60,6 +70,7 @@ export class CheckmateControl
                     if(this.pieces[i] instanceof Pawn)
                     {
                         this.pieces[i].specialTakeAllowed = false;
+                        //this.pieces[i].allowEnPassant = allowEnPassantRemember;
                     }
                     return true;
                 }
@@ -67,6 +78,7 @@ export class CheckmateControl
                 if(this.pieces[i] instanceof Pawn)
                 {
                     this.pieces[i].specialTakeAllowed = false;
+                    //this.pieces[i].allowEnPassant = allowEnPassantRemember;
                 }
             }
         }
@@ -107,6 +119,18 @@ export class CheckmateControl
         }
 
         return null;
+    }
+
+    getEnPassantedPawnIfPossible(square, color)
+    {
+        switch(color)
+        {
+            case 'white': {
+                return this.getPieceIndexBySqr(this.squares[square.cords.cordX.charCodeAt(0) - 97][square.cords.cordY - 2]);
+            } break;
+
+            default : return this.getPieceIndexBySqr(this.squares[square.cords.cordX.charCodeAt(0) - 97][square.cords.cordY]);
+        }
     }
 
     addCheckColor(square)

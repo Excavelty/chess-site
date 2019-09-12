@@ -31,6 +31,7 @@
 .boardContainer {
     width: 72vh;
     height: 72vh;
+    outline: 3px solid #000;
 }
 .square {
     border: 1px solid #ddd;

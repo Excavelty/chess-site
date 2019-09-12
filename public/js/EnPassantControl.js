@@ -1,3 +1,5 @@
+import {Pawn} from './Pawn.js';
+
 export class EnPassantControl
 {
     static execute(pieces, squares, attackingPawnIndex, newSquare)
@@ -25,12 +27,24 @@ export class EnPassantControl
 
     static visualizeEnPassant(pieces, squares, attackingPawnIndex, newSquare, takenPawnIndex)
     {
-        let oldSquare = pieces[attackingPawnIndex].square;
+        /*let oldSquare = pieces[attackingPawnIndex].square;
         pieces[attackingPawnIndex].square.changeColor();
         pieces[attackingPawnIndex].square = newSquare;
         pieces[attackingPawnIndex].updateDrawings(oldSquare);
         pieces[takenPawnIndex].cleanIconFromPreviousSquare(pieces[takenPawnIndex].square.getSquareHandle());
-        pieces.splice(takenPawnIndex, 1);
-        return true;
+        */
+        //EnPassantControl.disallow(pieces, null);
+        return takenPawnIndex;
+    }
+
+    static disallow(pieces, exceptionIndex)
+    {
+        for(let i = 0; i < pieces.length; ++i)
+        {
+            if(i !== exceptionIndex && pieces[i] instanceof Pawn)
+            {
+                pieces[i].allowEnPassant = false;
+            }
+        }
     }
 }

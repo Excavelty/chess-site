@@ -128,17 +128,8 @@ export class SquareInput
 
                 if(couldMove)
                 {
-                    let enPassantResult = false;
-                    if(this.pieces[ownedPiece] instanceof Pawn)
-                        enPassantResult = EnPassantControl.execute(this.pieces, this.squares, ownedPiece, this.square);
-                    this.unOwnPiece(ownedPiece);
-                    if(enPassantResult === false)
+                      this.unOwnPiece(ownedPiece);
                       this.putPiece(ownedPiece);
-                    else
-                    {
-                        this.moveControl.rotatePieceAfterMoveIfNecessary(this.getIndexBySqr(this.square));
-                        this.moveControl.changePlayer();
-                    }
                 }
             }
         }
@@ -186,7 +177,7 @@ export class SquareInput
 
     ownPiece(pieceIndex)
     {
-        if(this.pieces[pieceIndex].color === this.moveControl.moveOf)//this.pieces[pieceIndex].color === this.playersColor)
+        if(this.pieces[pieceIndex].color === this.moveControl.moveOf)
         {
             this.pieces[pieceIndex].square.changeColor('#26C281');
             this.pieces[pieceIndex].isOwned = true;
@@ -257,9 +248,27 @@ export class SquareInput
                         this.pieces[kingIndex].disallowCastleCompletly = true;
                     }
                 }
+
                 if(this.pieces[kingIndex].disallowCastleCompletly === false)
                     this.pieces[kingIndex].allowCastle = true;
+
                 this.pieces[kingIndex].square.changeColor();
+                EnPassantControl.disallow(this.pieces, pieceIndex);
+
+
+                if(this.pieces[pieceIndex] instanceof Pawn && this.pieces[pieceIndex].enPassantIndex !== false)
+                {
+                    let piece = this.pieces[pieceIndex];
+                    let color = this.pieces[piece.enPassantIndex].color;
+                    let squareHandle = this.pieces[piece.enPassantIndex].square.getSquareHandle();//important for en passant;
+                    this.pieces[piece.enPassantIndex].cleanIconFromPreviousSquare(squareHandle);
+                    this.takePiece(piece.enPassantIndex);
+                    piece.enPassantIndex = false;
+                    let localKingIndex = this.getKingIndex(color);
+                    this.seeIfCheckmateOrStalemate(localKingIndex, this.pieces[localKingIndex].color, piece.color);
+                    this.gameoverControl.checkIfDrawDueToMaterial();
+                }
+
                 return true;
             }
 
