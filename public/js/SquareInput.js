@@ -317,6 +317,17 @@ export class SquareInput
 
     takePiece(pieceIndex)
     {
+      if(this.pieces[pieceIndex] instanceof Rook)
+      {
+        let kingIndex = this.getKingIndex(this.pieces[pieceIndex].color);
+        if(this.pieces[pieceIndex].side === 'kingside')
+        {
+          console.log('asd');
+          this.pieces[kingIndex].disallowKingsideCastle = true;
+        }
+        else
+          this.pieces[kingIndex].disallowQueensideCastle = true;
+      }
         this.pieces.splice(pieceIndex, 1);
         this.gameoverControl.checkIfDrawDueToMaterial();
     }

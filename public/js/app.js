@@ -52819,8 +52819,6 @@ function () {
 
       if (potentialyTakenPieceIndex === null && this.pieces[pieceIndex] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_3__["Pawn"]) {
         potentialyTakenPieceIndex = this.getEnPassantedPawnIfPossible(newSquare, kingColor);
-        console.log(this.pieces[potentialyTakenPieceIndex]); //if(potentialyTakenPieceIndex !== null && this.pieces[potentialyTakenPieceIndex].allowEnPassant === false)
-        //return true;
       }
 
       this.pieces[pieceIndex].square = newSquare;
@@ -52837,14 +52835,14 @@ function () {
             this.pieces[pieceIndex].square = oldSquare;
 
             if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_3__["Pawn"]) {
-              this.pieces[i].specialTakeAllowed = false; //this.pieces[i].allowEnPassant = allowEnPassantRemember;
+              this.pieces[i].specialTakeAllowed = false;
             }
 
             return true;
           }
 
           if (this.pieces[i] instanceof _Pawn_js__WEBPACK_IMPORTED_MODULE_3__["Pawn"]) {
-            this.pieces[i].specialTakeAllowed = false; //this.pieces[i].allowEnPassant = allowEnPassantRemember;
+            this.pieces[i].specialTakeAllowed = false;
           }
         }
       }
@@ -53221,7 +53219,12 @@ function () {
   }, {
     key: "prepareRooks",
     value: function prepareRooks() {
-      return [new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[7][7], 'black')];
+      var rooks = [new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[0][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[7][0], 'white'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[0][7], 'black'), new _Rook_js__WEBPACK_IMPORTED_MODULE_11__["Rook"](this.squares[7][7], 'black')];
+      rooks[0].side = 'kingside';
+      rooks[1].side = 'queenside';
+      rooks[2].side = 'queenside';
+      rooks[3].side = 'kingside';
+      return rooks;
     }
   }, {
     key: "prepareKnights",
@@ -54711,6 +54714,15 @@ function () {
   }, {
     key: "takePiece",
     value: function takePiece(pieceIndex) {
+      if (this.pieces[pieceIndex] instanceof _Rook_js__WEBPACK_IMPORTED_MODULE_3__["Rook"]) {
+        var kingIndex = this.getKingIndex(this.pieces[pieceIndex].color);
+
+        if (this.pieces[pieceIndex].side === 'kingside') {
+          console.log('asd');
+          this.pieces[kingIndex].disallowKingsideCastle = true;
+        } else this.pieces[kingIndex].disallowQueensideCastle = true;
+      }
+
       this.pieces.splice(pieceIndex, 1);
       this.gameoverControl.checkIfDrawDueToMaterial();
     }

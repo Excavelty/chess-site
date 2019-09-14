@@ -168,12 +168,18 @@ export class Game
 
     prepareRooks()
     {
-        return [
+        let rooks = [
             new Rook(this.squares[0][0], 'white'),
             new Rook(this.squares[7][0], 'white'),
             new Rook(this.squares[0][7], 'black'),
             new Rook(this.squares[7][7], 'black')
         ];
+
+        rooks[0].side = 'kingside';
+        rooks[1].side = 'queenside';
+        rooks[2].side = 'queenside';
+        rooks[3].side = 'kingside';
+        return rooks;
     }
 
     prepareKnights()

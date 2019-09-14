@@ -47,9 +47,6 @@ export class CheckmateControl
         if(potentialyTakenPieceIndex === null && this.pieces[pieceIndex] instanceof Pawn)
         {
             potentialyTakenPieceIndex = this.getEnPassantedPawnIfPossible(newSquare, kingColor);
-            console.log(this.pieces[potentialyTakenPieceIndex]);
-            //if(potentialyTakenPieceIndex !== null && this.pieces[potentialyTakenPieceIndex].allowEnPassant === false)
-              //return true;
         }
 
         this.pieces[pieceIndex].square = newSquare;
@@ -70,7 +67,6 @@ export class CheckmateControl
                     if(this.pieces[i] instanceof Pawn)
                     {
                         this.pieces[i].specialTakeAllowed = false;
-                        //this.pieces[i].allowEnPassant = allowEnPassantRemember;
                     }
                     return true;
                 }
@@ -78,7 +74,6 @@ export class CheckmateControl
                 if(this.pieces[i] instanceof Pawn)
                 {
                     this.pieces[i].specialTakeAllowed = false;
-                    //this.pieces[i].allowEnPassant = allowEnPassantRemember;
                 }
             }
         }
