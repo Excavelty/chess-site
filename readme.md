@@ -4,3 +4,9 @@ Used work:
     by https://developer.mozilla.org/pl/profiles/raszta
     Any copyright is dedicated to the Public Domain. http://creativecommons.org/publicdomain/zero/1.0/
 }
+
+Chess pieces images: 
+{
+JohnPablok's improved Cburnett chess set.
+https://creativecommons.org/licenses/by-sa/3.0/
+}
