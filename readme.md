@@ -8,5 +8,6 @@ Used work:
 Chess pieces images: 
 {
 JohnPablok's improved Cburnett chess set.
-https://creativecommons.org/licenses/by-sa/3.0/
+Link to work: https://opengameart.org/art-search?keys=John+Poblok
+License: https://creativecommons.org/licenses/by-sa/3.0/
 }
