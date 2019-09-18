@@ -9,6 +9,7 @@ export class Queen extends Piece
             this.pieceIcon = '♕';
         else
             this.pieceIcon = '♛';
+        this.pieceImg = this.color + 'Queen.png';
         this.updateDrawings(this.square);
     }
 

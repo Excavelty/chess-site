@@ -6,6 +6,7 @@ export class Pawn extends Piece
     constructor(square, color)
     {
           super(square, color);
+          this.pieceImg = this.color + 'Pawn.png';
           if(color === 'white')
               this.pieceIcon = '♙';
           else

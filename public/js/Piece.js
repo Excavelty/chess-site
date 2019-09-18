@@ -29,9 +29,17 @@ export class Piece
           const oldSquareHTMLHandle = oldSquare.getSquareHandle();
           this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
           const currentSquareHTMLHandle = this.square.getSquareHandle();
-          let pieceIcon = document.createElement('div');
+          let pieceIcon = document.createElement('img');
           pieceIcon.classList += 'pieceIcon';
-          pieceIcon.textContent = this.pieceIcon;
+          pieceIcon.src = '../img/' + this.pieceImg;
+          pieceIcon.style.height = '80%';
+          //pieceIcon.style.display = 'block';
+          pieceIcon.style.position = 'relative';
+          pieceIcon.style.marginBottom = '3%';
+          pieceIcon.style.width = 'auto';
+          //let pieceIcon = document.createElement('div');
+          //pieceIcon.classList += 'pieceIcon';
+          //pieceIcon.textContent = this.pieceIcon;
           currentSquareHTMLHandle.innerHTML = '';
           currentSquareHTMLHandle.append(pieceIcon);
           //currentSquareHTMLHandle.textContent = this.pieceIcon;
@@ -53,10 +61,8 @@ export class Piece
         {
           pieceIconHandle.style.transform = rotation;
           if(rotation === 'rotate(180deg)')
-              pieceIconHandle.style.transform = rotation + ' translateY(25%)'
+              pieceIconHandle.style.transform = rotation + ' translateY(25%)';
         }
-        else
-         console.log('asd');
     }
 
     getRotation()

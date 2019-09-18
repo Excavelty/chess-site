@@ -9,6 +9,7 @@ export class Knight extends Piece
             this.pieceIcon = '♘';
         else
             this.pieceIcon = '♞';
+        this.pieceImg = this.color + 'Knight.png';
         this.updateDrawings(this.square);
     }
 

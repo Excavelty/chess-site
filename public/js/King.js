@@ -9,6 +9,7 @@ export class King extends Piece
             this.pieceIcon = '♔';
         else
             this.pieceIcon = '♚';
+        this.pieceImg = this.color + 'King.png';
         this.updateDrawings(this.square);
         this.allowCastle = true;
         this.disallowCastleCompletly = false;

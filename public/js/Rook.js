@@ -9,6 +9,7 @@ export class Rook extends Piece
             this.pieceIcon = '♖';
         else
             this.pieceIcon = '♜';
+        this.pieceImg = this.color + 'Rook.png';
         this.updateDrawings(this.square);
         this.allowCastle = true;
     }

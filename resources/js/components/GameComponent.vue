@@ -29,8 +29,8 @@
 
 <style scoped>
 .boardContainer {
-    width: 72vh;
-    height: 72vh;
+    width: 88vh;
+    height: 88vh;
     outline: 3px solid #000;
 }
 .square {

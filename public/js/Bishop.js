@@ -9,6 +9,7 @@ export class Bishop extends Piece
             this.pieceIcon = '♗';
         else
             this.pieceIcon = '♝';
+        this.pieceImg = this.color + 'Bishop.png';
         this.updateDrawings(this.square);
     }
 

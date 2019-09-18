@@ -6183,7 +6183,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.boardContainer[data-v-5cec6160] {\r\n    width: 72vh;\r\n    height: 72vh;\r\n    outline: 3px solid #000;\n}\n.square[data-v-5cec6160] {\r\n    border: 1px solid #ddd;\n}\n.square[data-v-5cec6160]:hover {\r\n    cursour: pointer;\n}\n.boardRotate[data-v-5cec6160] {\r\n    display: block;\r\n    margin: 2vh;\n}\r\n", ""]);
+exports.push([module.i, "\n.boardContainer[data-v-5cec6160] {\r\n    width: 88vh;\r\n    height: 88vh;\r\n    outline: 3px solid #000;\n}\n.square[data-v-5cec6160] {\r\n    border: 1px solid #ddd;\n}\n.square[data-v-5cec6160]:hover {\r\n    cursour: pointer;\n}\n.boardRotate[data-v-5cec6160] {\r\n    display: block;\r\n    margin: 2vh;\n}\r\n", ""]);
 
 // exports
 
@@ -52734,6 +52734,7 @@ function (_Piece) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Bishop).call(this, square, color));
     if (color === 'white') _this.pieceIcon = '♗';else _this.pieceIcon = '♝';
+    _this.pieceImg = _this.color + 'Bishop.png';
 
     _this.updateDrawings(_this.square);
 
@@ -53435,6 +53436,7 @@ function (_Piece) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(King).call(this, square, color));
     if (color === 'white') _this.pieceIcon = '♔';else _this.pieceIcon = '♚';
+    _this.pieceImg = _this.color + 'King.png';
 
     _this.updateDrawings(_this.square);
 
@@ -53541,6 +53543,7 @@ function (_Piece) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Knight).call(this, square, color));
     if (color === 'white') _this.pieceIcon = '♘';else _this.pieceIcon = '♞';
+    _this.pieceImg = _this.color + 'Knight.png';
 
     _this.updateDrawings(_this.square);
 
@@ -53854,6 +53857,7 @@ function (_Piece) {
     _classCallCheck(this, Pawn);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Pawn).call(this, square, color));
+    _this.pieceImg = _this.color + 'Pawn.png';
     if (color === 'white') _this.pieceIcon = '♙';else _this.pieceIcon = '♟';
 
     _this.updateDrawings(_this.square);
@@ -53989,9 +53993,17 @@ function () {
       var oldSquareHTMLHandle = oldSquare.getSquareHandle();
       this.cleanIconFromPreviousSquare(oldSquareHTMLHandle);
       var currentSquareHTMLHandle = this.square.getSquareHandle();
-      var pieceIcon = document.createElement('div');
+      var pieceIcon = document.createElement('img');
       pieceIcon.classList += 'pieceIcon';
-      pieceIcon.textContent = this.pieceIcon;
+      pieceIcon.src = '../img/' + this.pieceImg;
+      pieceIcon.style.height = '80%'; //pieceIcon.style.display = 'block';
+
+      pieceIcon.style.position = 'relative';
+      pieceIcon.style.marginBottom = '3%';
+      pieceIcon.style.width = 'auto'; //let pieceIcon = document.createElement('div');
+      //pieceIcon.classList += 'pieceIcon';
+      //pieceIcon.textContent = this.pieceIcon;
+
       currentSquareHTMLHandle.innerHTML = '';
       currentSquareHTMLHandle.append(pieceIcon); //currentSquareHTMLHandle.textContent = this.pieceIcon;
     }
@@ -54012,7 +54024,7 @@ function () {
       if (pieceIconHandle !== null) {
         pieceIconHandle.style.transform = rotation;
         if (rotation === 'rotate(180deg)') pieceIconHandle.style.transform = rotation + ' translateY(25%)';
-      } else console.log('asd');
+      }
     }
   }, {
     key: "getRotation",
@@ -54178,6 +54190,7 @@ function (_Piece) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Queen).call(this, square, color));
     if (color === 'white') _this.pieceIcon = '♕';else _this.pieceIcon = '♛';
+    _this.pieceImg = _this.color + 'Queen.png';
 
     _this.updateDrawings(_this.square);
 
@@ -54242,6 +54255,7 @@ function (_Piece) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Rook).call(this, square, color));
     if (color === 'white') _this.pieceIcon = '♖';else _this.pieceIcon = '♜';
+    _this.pieceImg = _this.color + 'Rook.png';
 
     _this.updateDrawings(_this.square);
 
@@ -54344,8 +54358,8 @@ function () {
     this.colorDefault = this.chooseSquareColor();
     this.squareRep.style.backgroundColor = this.colorDefault; //this.chooseSquareColor();
 
-    this.squareRep.style.width = '9vh';
-    this.squareRep.style.height = '9vh'; //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
+    this.squareRep.style.width = '12.5%';
+    this.squareRep.style.height = '12.5%'; //const text = document.createTextNode(this.cords.cordX + this.cords.cordY);
     //this.squareRep.append(text);
 
     this.squareRep.style["float"] = 'left';
@@ -54377,7 +54391,7 @@ function () {
     value: function chooseSquareColor() {
       var emptyLight = '#ffffff'; //'#DEB887';
 
-      var emptyDark = '#e8e8e8'; //'#D3D3D3';//'#DEB887';//'#B0E0E6';//'#8B4513';
+      var emptyDark = 'brown'; //'#e8e8e8';//'#D3D3D3';//'#DEB887';//'#B0E0E6';//'#8B4513';
 
       if (this.cords.cordY % 2 === 1) {
         switch (this.cords.cordX) {
